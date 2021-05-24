@@ -13,7 +13,7 @@ import re
 from nautobot.extras.plugins import PluginCustomValidator
 from nautobot.extras.registry import registry
 
-from nautobot_data_validation_engine.models import RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
 
 
 class BaseValidator(PluginCustomValidator):
@@ -31,9 +31,32 @@ class BaseValidator(PluginCustomValidator):
 
         # Regex rules
         for rule in RegularExpressionValidationRule.objects.get_for_model(self.model):
-            if not re.match(rule.regular_expression, getattr(obj, rule.field)):
+            field_value = getattr(obj, rule.field)
+            if field_value is None:
+                # Coerce to a string for regex validation
+                field_value = ""
+            if not re.match(rule.regular_expression, field_value):
                 self.validation_error(
                     {rule.field: rule.error_message or f"Value does not conform to regex: {rule.regular_expression}"}
+                )
+
+        # Min/Max rules
+        for rule in MinMaxValidationRule.objects.get_for_model(self.model):
+            field_value = getattr(obj, rule.field)
+            if rule.min is not None and field_value is not None and field_value < rule.min:
+                self.validation_error(
+                    {rule.field: rule.error_message or f"Value is less than minimum value: {rule.min}"}
+                )
+            elif rule.max is not None and field_value is not None and field_value > rule.max:
+                self.validation_error(
+                    {rule.field: rule.error_message or f"Value is more than maximum value: {rule.max}"}
+                )
+            elif field_value is None:
+                self.validation_error(
+                    {
+                        rule.field: rule.error_message
+                        or f"Value does not conform to mix/max validation: min {rule.min}, max {rule.max}"
+                    }
                 )
 
 
