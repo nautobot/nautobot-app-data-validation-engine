@@ -9,6 +9,7 @@ A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
 import re
+from django.db.models.query_utils import Q
 
 from nautobot.extras.plugins import PluginCustomValidator
 from nautobot.extras.registry import registry
@@ -43,20 +44,30 @@ class BaseValidator(PluginCustomValidator):
         # Min/Max rules
         for rule in MinMaxValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
-            if rule.min is not None and field_value is not None and field_value < rule.min:
-                self.validation_error(
-                    {rule.field: rule.error_message or f"Value is less than minimum value: {rule.min}"}
-                )
-            elif rule.max is not None and field_value is not None and field_value > rule.max:
-                self.validation_error(
-                    {rule.field: rule.error_message or f"Value is more than maximum value: {rule.max}"}
-                )
-            elif field_value is None:
+
+            if field_value is None:
                 self.validation_error(
                     {
                         rule.field: rule.error_message
                         or f"Value does not conform to mix/max validation: min {rule.min}, max {rule.max}"
                     }
+                )
+
+            elif not isinstance(field_value, (int, float)):
+                self.validation_error(
+                    {
+                        rule.field: f"Unable to validate against min/max rule {rule} because the field value is not numeric."
+                    }
+                )
+
+            elif rule.min is not None and field_value is not None and field_value < rule.min:
+                self.validation_error(
+                    {rule.field: rule.error_message or f"Value is less than minimum value: {rule.min}"}
+                )
+
+            elif rule.max is not None and field_value is not None and field_value > rule.max:
+                self.validation_error(
+                    {rule.field: rule.error_message or f"Value is more than maximum value: {rule.max}"}
                 )
 
 

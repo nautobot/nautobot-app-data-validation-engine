@@ -4,7 +4,7 @@ import os
 from invoke import task
 
 PYTHON_VER = os.getenv("PYTHON_VER", "3.7")
-NAUTOBOT_VER = os.getenv("NAUTOBOT_VER", "1.0.1")
+NAUTOBOT_VER = os.getenv("NAUTOBOT_VER", "1.0.2")
 NAUTOBOT_SRC_URL = os.getenv("NAUTOBOT_SRC_URL", f"https://github.com/nautobot/nautobot/archive/{NAUTOBOT_VER}.tar.gz")
 
 # Name of the docker image/container

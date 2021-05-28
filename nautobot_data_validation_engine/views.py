@@ -1,10 +1,7 @@
 """
 Django views.
 """
-from django.shortcuts import reverse
-
 from nautobot.core.views import generic
-from nautobot.utilities.utils import prepare_cloned_fields
 
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
@@ -24,7 +21,6 @@ class RegularExpressionValidationRuleListView(generic.ObjectListView):
     filterset = filters.RegularExpressionValidationRuleFilterSet
     filterset_form = forms.RegularExpressionValidationRuleFilterForm
     table = tables.RegularExpressionValidationRuleTable
-    template_name = "nautobot_data_validation_engine/regularexpressionvalidationrule_list.html"
 
 
 class RegularExpressionValidationRuleView(generic.ObjectView):
@@ -33,29 +29,6 @@ class RegularExpressionValidationRuleView(generic.ObjectView):
     """
 
     queryset = RegularExpressionValidationRule.objects.all()
-    template_name = "nautobot_data_validation_engine/regularexpressionvalidationrule.html"
-
-    def get_extra_context(self, request, instance):
-        """
-        Generate the urls for the UI buttons since the core templatetags do not understand the plugins namespace.
-        """
-        clone_url = reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_add")
-        cloned_param_string = prepare_cloned_fields(instance)
-        if cloned_param_string:
-            clone_url = f"{clone_url}?{cloned_param_string}"
-
-        edit_url = reverse(
-            "plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_edit", args=[instance.pk]
-        )
-        delete_url = reverse(
-            "plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_delete", args=[instance.pk]
-        )
-
-        return {
-            "clone_url": clone_url,
-            "edit_url": edit_url,
-            "delete_url": delete_url,
-        }
 
 
 class RegularExpressionValidationRuleEditView(generic.ObjectEditView):
@@ -120,7 +93,6 @@ class MinMaxValidationRuleListView(generic.ObjectListView):
     filterset = filters.MinMaxValidationRuleFilterSet
     filterset_form = forms.MinMaxValidationRuleFilterForm
     table = tables.MinMaxValidationRuleTable
-    template_name = "nautobot_data_validation_engine/minmaxvalidationrule_list.html"
 
 
 class MinMaxValidationRuleView(generic.ObjectView):
@@ -129,25 +101,6 @@ class MinMaxValidationRuleView(generic.ObjectView):
     """
 
     queryset = MinMaxValidationRule.objects.all()
-    template_name = "nautobot_data_validation_engine/minmaxvalidationrule.html"
-
-    def get_extra_context(self, request, instance):
-        """
-        Generate the urls for the UI buttons since the core templatetags do not understand the plugins namespace.
-        """
-        clone_url = reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule_add")
-        cloned_param_string = prepare_cloned_fields(instance)
-        if cloned_param_string:
-            clone_url = f"{clone_url}?{cloned_param_string}"
-
-        edit_url = reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule_edit", args=[instance.pk])
-        delete_url = reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule_delete", args=[instance.pk])
-
-        return {
-            "clone_url": clone_url,
-            "edit_url": edit_url,
-            "delete_url": delete_url,
-        }
 
 
 class MinMaxValidationRuleEditView(generic.ObjectEditView):

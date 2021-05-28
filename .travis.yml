@@ -16,7 +16,7 @@ python:
 
 env:
   matrix:
-    - "NAUTOBOT_VER=1.0.1"
+    - "NAUTOBOT_VER=1.0.2"
 
 services:
   - "docker"

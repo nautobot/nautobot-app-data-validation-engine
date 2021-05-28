@@ -48,6 +48,7 @@ class ValidationRule(BaseModel, ChangeLoggedModel):
     """
 
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
     content_type = models.ForeignKey(
         to=ContentType, on_delete=models.CASCADE, limit_choices_to=FeatureQuery("custom_validators")
     )
@@ -78,7 +79,7 @@ class RegularExpressionValidationRule(ValidationRule):
     )
     regular_expression = models.TextField(validators=[validate_regex])
 
-    csv_headers = ["name", "enabled", "content_type", "field", "regular_expression", "error_message"]
+    csv_headers = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
     clone_fields = ["enabled", "content_type", "regular_expression", "error_message"]
 
     class Meta:
@@ -89,7 +90,7 @@ class RegularExpressionValidationRule(ValidationRule):
         """
         Absolute url for the instance.
         """
-        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.pk])
+        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.slug])
 
     def to_csv(self):
         """
@@ -97,6 +98,7 @@ class RegularExpressionValidationRule(ValidationRule):
         """
         return (
             self.name,
+            self.slug,
             self.enabled,
             f"{self.content_type.app_label}.{self.content_type.model}",
             self.field,
@@ -136,7 +138,7 @@ class RegularExpressionValidationRule(ValidationRule):
         model_field = self.content_type.model_class()._meta.get_field(self.field)
 
         if self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types):
-            raise ValidationError({"field": "This field does not support regular expression validation."})
+            raise ValidationError({"field": "This field's type does not support regular expression validation."})
 
 
 class MinMaxValidationRule(ValidationRule):
@@ -147,14 +149,14 @@ class MinMaxValidationRule(ValidationRule):
     field = models.CharField(
         max_length=50,
     )
-    min = models.IntegerField(
+    min = models.FloatField(
         null=True, blank=True, help_text="When set, apply a minimum value contraint to the value of the model field."
     )
-    max = models.IntegerField(
+    max = models.FloatField(
         null=True, blank=True, help_text="When set, apply a maximum value contraint to the value of the model field."
     )
 
-    csv_headers = ["name", "enabled", "content_type", "field", "min", "max", "error_message"]
+    csv_headers = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
     clone_fields = ["enabled", "content_type", "min", "max", "error_message"]
 
     class Meta:
@@ -165,7 +167,7 @@ class MinMaxValidationRule(ValidationRule):
         """
         Absolute url for the instance.
         """
-        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.pk])
+        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.slug])
 
     def to_csv(self):
         """
@@ -173,6 +175,7 @@ class MinMaxValidationRule(ValidationRule):
         """
         return (
             self.name,
+            self.slug,
             self.enabled,
             f"{self.content_type.app_label}.{self.content_type.model}",
             self.field,
@@ -205,15 +208,15 @@ class MinMaxValidationRule(ValidationRule):
 
         model_field = self.content_type.model_class()._meta.get_field(self.field)
 
-        if isinstance(model_field, whitelisted_field_types) and (
+        if not isinstance(model_field, whitelisted_field_types) or (
             self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types)
         ):
-            raise ValidationError({"field": "This field does not min/max validation."})
+            raise ValidationError({"field": "This field's type does not support min/max validation."})
 
-        if not self.min and not self.max:
+        if self.min is None and self.max is None:
             raise ValidationError("At least a minimum or maximum value must be specified.")
 
-        if self.min and self.max and self.min > self.max:
+        if self.min is not None and self.max is not None and self.min > self.max:
             raise ValidationError(
                 {
                     "min": "Minimum value cannot be more than the maximum value.",

@@ -21,12 +21,12 @@ class RegularExpressionValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilt
         label="Search",
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False
+        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
 
     class Meta:
         model = RegularExpressionValidationRule
-        fields = ["id", "name", "regular_expression", "enabled", "content_type", "field", "error_message"]
+        fields = ["id", "name", "slug", "regular_expression", "enabled", "content_type", "field", "error_message"]
 
     def search(self, queryset, name, value):
         """
@@ -36,6 +36,7 @@ class RegularExpressionValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilt
             return queryset
         qs_filter = (
             Q(name__icontains=value)
+            | Q(slug__icontains=value)
             | Q(regular_expression__icontains=value)
             | Q(error_message__icontains=value)
             | Q(content_type__app_label=value)
@@ -55,12 +56,12 @@ class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
         label="Search",
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False
+        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
 
     class Meta:
         model = MinMaxValidationRule
-        fields = ["id", "name", "min", "max", "enabled", "content_type", "field", "error_message"]
+        fields = ["id", "name", "slug", "min", "max", "enabled", "content_type", "field", "error_message"]
 
     def search(self, queryset, name, value):
         """
@@ -70,6 +71,7 @@ class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
             return queryset
         qs_filter = (
             Q(name__icontains=value)
+            | Q(slug__icontains=value)
             | Q(error_message__icontains=value)
             | Q(content_type__app_label=value)
             | Q(content_type__model=value)

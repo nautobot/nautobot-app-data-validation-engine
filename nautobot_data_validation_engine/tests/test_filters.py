@@ -18,6 +18,7 @@ class RegularExpressionValidationRuleFilterTestCase(TestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
     """
+
     queryset = RegularExpressionValidationRule.objects.all()
     filterset = RegularExpressionValidationRuleFilterSet
 
@@ -28,6 +29,7 @@ class RegularExpressionValidationRuleFilterTestCase(TestCase):
         """
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
+            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Rack),
             field="name",
             regular_expression="^ABC$",
@@ -35,16 +37,18 @@ class RegularExpressionValidationRuleFilterTestCase(TestCase):
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 2",
+            slug="regex-rule-2",
             content_type=ContentType.objects.get_for_model(Region),
             field="description",
-            regular_expression="^DEF$",
+            regular_expression="DEF$",
             error_message="B",
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 3",
+            slug="regex-rule-3",
             content_type=ContentType.objects.get_for_model(Site),
             field="comments",
-            regular_expression="^GHI$",
+            regular_expression="GHI",
             error_message="C",
         )
 
@@ -84,6 +88,7 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
     """
     Filterset test cases for the MinMaxValidationRule model
     """
+
     queryset = MinMaxValidationRule.objects.all()
     filterset = MinMaxValidationRuleFilterSet
 
@@ -94,6 +99,7 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
         """
         MinMaxValidationRule.objects.create(
             name="Min max rule 1",
+            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
@@ -101,6 +107,7 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 2",
+            slug="min-max-rule-2",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="max_utilization",
             min=1,
@@ -108,6 +115,7 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 3",
+            slug="min-max-rule-3",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="voltage",
             min=1,

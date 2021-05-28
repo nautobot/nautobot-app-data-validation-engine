@@ -4,6 +4,8 @@ Django forms.
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 
+from nautobot.extras.forms import AddRemoveTagsForm
+from nautobot.extras.models.tags import Tag
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.forms import (
     BootstrapMixin,
@@ -12,6 +14,8 @@ from nautobot.utilities.forms import (
     CSVContentTypeField,
     CSVMultipleContentTypeField,
     CSVModelForm,
+    DynamicModelMultipleChoiceField,
+    SlugField,
 )
 
 from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
@@ -27,6 +31,7 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
     Base model form for the RegularExpressionValidationRule model.
     """
 
+    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -35,7 +40,7 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = RegularExpressionValidationRule
-        fields = ["name", "enabled", "content_type", "field", "regular_expression", "error_message"]
+        fields = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
 
 
 class RegularExpressionValidationRuleCSVForm(CSVModelForm):
@@ -43,6 +48,7 @@ class RegularExpressionValidationRuleCSVForm(CSVModelForm):
     Base csv form for the RegularExpressionValidationRule model.
     """
 
+    slug = SlugField()
     content_type = CSVContentTypeField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
         help_text="The object type to which this regular expression rule applies.",
@@ -100,6 +106,7 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
     Base model form for the MinMaxValidationRule model.
     """
 
+    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -108,7 +115,7 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = MinMaxValidationRule
-        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message"]
+        fields = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
 
 
 class MinMaxValidationRuleCSVForm(CSVModelForm):
@@ -116,6 +123,7 @@ class MinMaxValidationRuleCSVForm(CSVModelForm):
     Base csv form for the MinMaxValidationRule model.
     """
 
+    slug = SlugField()
     content_type = CSVContentTypeField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
         help_text="The object type to which this regular expression rule applies.",

@@ -10,10 +10,10 @@ router = OrderedDefaultRouter()
 router.APIRootView = views.DataValidationEngineRootView
 
 # Regular expression rules
-router.register("regex-rules", views.RegularExpressionValidationRuleViewSet)
+router.register("rules/regex", views.RegularExpressionValidationRuleViewSet)
 
-# Min/max expression rules
-router.register("min-max-rules", views.MinMaxValidationRuleViewSet)
+# Min/max rules
+router.register("rules/min-max", views.MinMaxValidationRuleViewSet)
 
 
 urlpatterns = router.urls
