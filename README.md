@@ -1,6 +1,51 @@
 # Nautobot Data Validation Engine Plugin
 
-A plugin for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for data.
+A plugin for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for Source of Truth data.
+
+## Usage
+
+The data validation engine plugin offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case. There are currently two supported rule types, regular expressions, and min/max numeric rules.
+
+![Dropdown](docs/images/dropdown.png)
+
+### Regular Expression Rules
+
+![Regex Rules List](docs/images/regex-rules-list.png)
+
+Each rule is defined with these fields:
+
+* name - A unique name for the rule.
+* enabled - A boolean to toggle enforcement of the rule on and off.
+* content type - The Nautobot model to which the rule should apply (device, site, etc.).
+* field - The name of the character based field on the model to which the regular expression is validated.
+* regular expression - The body of the regular expression used for validation.
+* error message - An optional error message to display to the use when validation fails. By default, a message indicating validation against the defined regular expression has failed is shown.
+
+![Regex Rules Edit](docs/images/regex-rules-edit.png)
+
+In this example, a device hostname validation rule has been created and prevents device records from being created or updated that do not conform to the naming standard.
+
+![Regex Rules Enforcement](docs/images/regex-rules-enforcement.png)
+
+### Min/Max Rules
+
+![Min/Max List](docs/images/min-max-rules-list.png)
+
+Each rule is defined with these fields:
+
+* name - A unique name for the rule.
+* enabled - A boolean to toggle enforcement of the rule on and off.
+* content type - The Nautobot model to which the rule should apply (device, site, etc.).
+* field - The name of the numeric based field on the model to which the min/max value is validated.
+* min - The min value to validate value against (greater than or equal).
+* max - The max value to validate value against (less than or equal).
+* error message - An optional error message to display to the use when validation fails. By default, a message indicating validation against the defined min/max value has failed is shown.
+
+![Min/Max Rules Edit](docs/images/min-max-rules-edit.png)
+
+In this example, a max value for VLAN IDs has been configured, preventing VLANs greater than 3999 from being created.
+
+![Min/Max Rules Enforcement](docs/images/min-max-rules-enforcement.png)
 
 ## Installation
 
@@ -30,12 +75,6 @@ Once installed, the plugin needs to be enabled in your `nautobot_config.py`
 ```python
 # In your configuration.py
 PLUGINS = ["nautobot_data_validation_engine"]
-
-# PLUGINS_CONFIG = {
-#   "nautobot_data_validation_engine": {
-#     ADD YOUR SETTINGS HERE
-#   }
-# }
 ```
 
 Finally, make sure to run the migrations for this plugin
@@ -47,10 +86,6 @@ nautobot-server migrate
 ## Upgrades
 
 When a new release comes out it may be necessary to run a migration of the database to account for any changes in the data models used by this plugin. Execute the command `nautobot-server migrate` from the Nautobot install `nautobot/` directory after updating the package.
-
-## Usage
-
-TODO
 
 ## Contributing
 
