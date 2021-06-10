@@ -8,16 +8,21 @@ stages:
     if: "tag IS present"
 
 language: "python"
-python:
-  - 3.6
-  - 3.7
-  - 3.8
-  - 3.9
+# python:
+#   - 3.6
+#   - 3.7
+#   - 3.8
+#   - 3.9
 
 env:
-  matrix:
+  global:
+    - "INVOKE_LOCAL=True"
     - "NAUTOBOT_VER=1.0.2"
-
+  matrix:
+    - "PYTHON_VER=3.6"
+    - "PYTHON_VER=3.7"
+    - "PYTHON_VER=3.8"
+    - "PYTHON_VER=3.9"
 services:
   - "docker"
 # --------------------------------------------------------------------------
@@ -33,14 +38,17 @@ jobs:
   include:
     - stage: "lint"
       before_script:
-        - "pip install invoke toml"
-        - "invoke build --nocache"
+        - "pip install --upgrade pip"
+        - "pip install invoke poetry toml"
+        - "poetry config virtualenvs.create false"
+        - "poetry install --no-interaction"
+        # - "invoke build --nocache"
       script:
         - "invoke black"
         - "invoke bandit"
         # - "invoke pydocstyle"
-        - "invoke flake8"
-        - "invoke yamllint"
+        # - "invoke flake8"
+        # - "invoke yamllint"
         # - "invoke pylint"
 
     - stage: "deploy-github"
