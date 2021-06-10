@@ -356,6 +356,7 @@ def tests(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
 
     print("All tests have passed!")
 
+
 @task
 def check_pypi_version(context, name=PROJECT_NAME, version=PROJECT_VERSION):
     """Verify if the version specified already exists on PyPI.
