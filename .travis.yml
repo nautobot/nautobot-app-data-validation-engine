@@ -31,7 +31,7 @@ services:
 before_script:
   - "pip install invoke toml docker-compose poetry"
 script:
-  - "invoke build --nocache --python-ver $TRAVIS_PYTHON_VERSION"
+  - "invoke build"
   # - "invoke unittest"
 
 jobs:
