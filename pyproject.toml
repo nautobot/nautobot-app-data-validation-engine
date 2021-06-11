@@ -28,6 +28,8 @@ pylint = "*"
 pylint-django = "*"
 pydocstyle = "*"
 flake8 = "*"
+toml = "0.10.1"
+requests = "^2.25.1"
 
 [tool.black]
 line-length = 120
