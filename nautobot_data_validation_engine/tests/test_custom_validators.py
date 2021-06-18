@@ -2,7 +2,7 @@
 Model test cases
 """
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import ValidationError
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from nautobot.dcim.models import Site

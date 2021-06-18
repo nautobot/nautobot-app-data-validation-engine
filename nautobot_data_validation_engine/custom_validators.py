@@ -9,7 +9,6 @@ A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
 import re
-from django.db.models.query_utils import Q
 
 from nautobot.extras.plugins import PluginCustomValidator
 from nautobot.extras.registry import registry
