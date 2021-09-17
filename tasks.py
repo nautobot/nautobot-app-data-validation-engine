@@ -4,42 +4,6 @@ from distutils.util import strtobool
 from invoke import Collection, task as invoke_task
 import os
 
-# try:
-#     import toml
-# except ImportError:
-#     sys.exit("Please make sure to `pip install toml` or enable the Poetry shell and run `poetry install`.")
-
-# PYTHON_VER = os.getenv("PYTHON_VER", "3.7")
-# NAUTOBOT_VER = os.getenv("NAUTOBOT_VER", "1.0.2")
-# NAUTOBOT_SRC_URL = os.getenv("NAUTOBOT_SRC_URL", f"https://github.com/nautobot/nautobot/archive/{NAUTOBOT_VER}.tar.gz")
-
-# # Name of the docker image/container
-# NAME = os.getenv("IMAGE_NAME", "nautobot-data-validation-engine")
-# PWD = os.getcwd()
-
-# COMPOSE_FILE = "development/docker-compose.yml"
-# COMPOSE_OVERRIDE = "docker-compose.override.yml"
-# BUILD_NAME = "nautobot_data_validation_engine"
-
-# DEFAULT_ENV = {
-#     "NAUTOBOT_VER": NAUTOBOT_VER,
-#     "PYTHON_VER": PYTHON_VER,
-#     "NAUTOBOT_SRC_URL": NAUTOBOT_SRC_URL,
-# }
-
-# COMPOSE_APPEND = ""
-# if os.path.isfile(COMPOSE_OVERRIDE):
-#     COMPOSE_APPEND = f"-f {COMPOSE_OVERRIDE}"
-# COMPOSE_COMMAND = f"docker-compose -f {COMPOSE_FILE} {COMPOSE_APPEND} -p {BUILD_NAME}"
-
-# PYPROJECT_CONFIG = toml.load("pyproject.toml")
-# # Get project name from the toml file
-# PROJECT_NAME = PYPROJECT_CONFIG["tool"]["poetry"]["name"]
-# # Get current project version from the toml file
-# PROJECT_VERSION = PYPROJECT_CONFIG["tool"]["poetry"]["version"]
-
-# environment = DEFAULT_ENV
-
 
 def is_truthy(arg):
     """Convert "truthy" strings into Booleans.
@@ -70,9 +34,7 @@ namespace.configure(
             "python_ver": "3.7",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
-            "compose_files": [
-                "docker-compose.yml"
-            ],
+            "compose_files": ["docker-compose.yml"],
         }
     }
 )
@@ -154,7 +116,6 @@ def build(context, force_rm=False, cache=True):
 
     print(f"Building Nautobot with Python {context.nautobot_data_validation_engine.python_ver}...")
     docker_compose(context, command)
-
 
 
 # ------------------------------------------------------------------------------
@@ -265,7 +226,9 @@ def unittest(context, keepdb=False, label="nautobot_data_validation_engine", fai
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    command = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml nautobot_data_validation_engine'
+    command = (
+        'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml nautobot_data_validation_engine'
+    )
     run_command(context, command)
 
 
