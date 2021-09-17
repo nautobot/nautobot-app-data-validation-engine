@@ -258,6 +258,13 @@ def pydocstyle(context):
 
 
 @task
+def flake8(context):
+    """Check for PEP8 compliance and other style issues."""
+    command = "flake8 ."
+    run_command(context, command)
+
+
+@task
 def bandit(context):
     """Run bandit to validate basic static code security analysis."""
     command = "bandit --recursive . --configfile .bandit.yml"
