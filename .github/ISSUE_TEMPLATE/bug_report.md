@@ -1,12 +1,12 @@
 ---
 name: 🐛 Bug Report
-about: Report a reproducible bug in the current release of nautobot-device-onboarding
+about: Report a reproducible bug in the current release of nautobot-data-validation-engine 
 ---
 
 ### Environment
 * Python version:  <!-- Example: 3.7.7 -->
 * Nautobot version:  <!-- Example: 1.0.0 -->
-* nautobot-device-onboarding version:  <!-- Example: 1.0.0 -->
+* nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
 
 <!--
     Describe in detail the exact steps that someone else can take to reproduce
