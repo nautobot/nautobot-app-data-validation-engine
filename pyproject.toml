@@ -30,6 +30,7 @@ pydocstyle = "*"
 flake8 = "*"
 toml = "0.10.1"
 requests = "^2.25.1"
+coverage = "^5.5"
 
 [tool.black]
 line-length = 120
