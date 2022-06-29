@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from nautobot.dcim.models import Site
+from nautobot.extras.models import Status
+from nautobot.extras.plugins.validators import wrap_model_clean_methods
 
 from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
 
@@ -14,6 +16,10 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
     """
     Test cases related to the RegularExpressionValidationRule model
     """
+
+    def setUp(self) -> None:
+        wrap_model_clean_methods()
+        return super().setUp()
 
     def test_invalid_regex_matches_raise_validation_error(self):
         RegularExpressionValidationRule.objects.create(
@@ -24,7 +30,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             regular_expression="^ABC$",
         )
 
-        site = Site(name="does not match the regex", slug="site")
+        site = Site(name="does not match the regex", slug="site", status=Status.objects.get(slug="active"))
 
         with self.assertRaises(ValidationError):
             site.clean()
@@ -38,7 +44,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             regular_expression="^ABC$",
         )
 
-        site = Site(name="ABC", slug="site")
+        site = Site(name="ABC", slug="site", status=Status.objects.get(slug="active"))
 
         try:
             site.clean()
@@ -58,6 +64,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             description=None,  # empty value not allowed by the regex
+            status=Status.objects.get(slug="active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -68,6 +75,10 @@ class MinMaxValidationRuleModelTestCase(TestCase):
     """
     Test cases related to the MinMaxValidationRule model
     """
+
+    def setUp(self) -> None:
+        wrap_model_clean_methods()
+        return super().setUp()
 
     def test_empty_field_values_raise_validation_error(self):
         MinMaxValidationRule.objects.create(
@@ -83,6 +94,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=None,  # empty value not allowed by the rule
+            status=Status.objects.get(slug="active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -102,6 +114,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude="foobar",  # wrong type
+            status=Status.objects.get(slug="active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -121,6 +134,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=4,  # less than min of 5
+            status=Status.objects.get(slug="active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -140,6 +154,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=11,  # more than max of 10
+            status=Status.objects.get(slug="active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -159,6 +174,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=-5,
+            status=Status.objects.get(slug="active"),
         )
 
         try:
@@ -180,6 +196,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=30,
+            status=Status.objects.get(slug="active"),
         )
 
         try:
@@ -201,6 +218,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             name="does not match the regex",
             slug="site",
             latitude=8,  # within bounds
+            status=Status.objects.get(slug="active"),
         )
 
         try:
