@@ -1,6 +1,6 @@
 ---
 name: "CI"
-on: # yamllint disable
+on:  # yamllint disable
   - "push"
   - "pull_request"
 
