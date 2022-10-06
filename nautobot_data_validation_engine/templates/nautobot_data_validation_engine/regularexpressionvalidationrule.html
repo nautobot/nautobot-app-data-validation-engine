@@ -27,13 +27,13 @@
         </div>
     </div>
     <div class="pull-right noprint">
-        {% if perms.nautobot_data_validation.add_regularexpressionvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.add_regularexpressionvalidationrule %}
             {% clone_button object %}
         {% endif %}
-        {% if perms.nautobot_data_validation.change_regularexpressionvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.change_regularexpressionvalidationrule %}
             {% edit_button object %}
         {% endif %}
-        {% if perms.nautobot_data_validation.delete_regularexpressionvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.delete_regularexpressionvalidationrule %}
             {% delete_button object %}
         {% endif %}
     </div>

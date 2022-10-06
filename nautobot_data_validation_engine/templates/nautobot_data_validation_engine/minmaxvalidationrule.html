@@ -27,13 +27,13 @@
         </div>
     </div>
     <div class="pull-right noprint">
-        {% if perms.nautobot_data_validation.add_minmaxvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.add_minmaxvalidationrule %}
             {% clone_button object %}
         {% endif %}
-        {% if perms.nautobot_data_validation.change_minmaxvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.change_minmaxvalidationrule %}
             {% edit_button object %}
         {% endif %}
-        {% if perms.nautobot_data_validation.delete_minmaxvalidationrule %}
+        {% if perms.nautobot_data_validation_engine.delete_minmaxvalidationrule %}
             {% delete_button object %}
         {% endif %}
     </div>
