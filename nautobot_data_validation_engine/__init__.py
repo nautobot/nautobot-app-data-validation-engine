@@ -1,7 +1,13 @@
 """Nautobot data validation engine plugin."""
-__version__ = "1.0.0"
-
 from nautobot.extras.plugins import PluginConfig
+
+try:
+    from importlib import metadata
+except ImportError:
+    # Python version < 3.8
+    import importlib_metadata as metadata
+
+__version__ = metadata.version(__name__)
 
 
 class NautobotDataValidationEngineConfig(PluginConfig):
