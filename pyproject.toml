@@ -27,7 +27,7 @@ bandit = "*"
 pylint = "*"
 pylint-django = "*"
 pydocstyle = "*"
-flake8 = "*"
+flake8 = "^3.9.2"
 toml = "0.10.1"
 requests = "^2.25.1"
 coverage = "^5.5"
@@ -43,7 +43,7 @@ mkdocstrings-python = "0.7.1"
 
 [tool.black]
 line-length = 120
-target-version = ['py36']
+target-version = ['py37']
 include = '\.pyi?$'
 exclude = '''
 (
