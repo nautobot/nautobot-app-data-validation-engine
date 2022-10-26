@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-data-validation-engine"
-version = "1.0.1-alpha.0"
+version = "1.0.1a0"
 description = "Provides UI to build custom data validation rules for data in Nautobot"
 authors = ["Network to Code, LLC <opensource@networktocode.com>"]
 license = "Apache-2.0"
@@ -17,7 +17,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 invoke = "*"
@@ -27,14 +27,23 @@ bandit = "*"
 pylint = "*"
 pylint-django = "*"
 pydocstyle = "*"
-flake8 = "*"
+flake8 = "^3.9.2"
 toml = "0.10.1"
 requests = "^2.25.1"
 coverage = "^5.5"
+# Rendering docs to HTML
+mkdocs = "1.3.1"
+# Material for MkDocs theme
+mkdocs-material = "8.4.2"
+# Render custom markdown for version added/changed/remove notes
+mkdocs-version-annotations = "1.0.0"
+# Automatic documentation from sources, for MkDocs
+mkdocstrings = "0.19"
+mkdocstrings-python = "0.7.1"
 
 [tool.black]
 line-length = 120
-target-version = ['py36']
+target-version = ['py37']
 include = '\.pyi?$'
 exclude = '''
 (
