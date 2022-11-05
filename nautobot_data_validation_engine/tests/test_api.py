@@ -4,10 +4,15 @@ API test cases
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
-from nautobot.dcim.models import PowerFeed, Site
+from nautobot.dcim.models import PowerFeed, Site, Region, Platform, Manufacturer
 from nautobot.utilities.testing import APITestCase, APIViewTestCases
 
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
 
 
 class AppTest(APITestCase):
@@ -31,20 +36,7 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = RegularExpressionValidationRule
-    brief_fields = [
-        "content_type",
-        "created",
-        "display",
-        "enabled",
-        "error_message",
-        "field",
-        "id",
-        "last_updated",
-        "name",
-        "regular_expression",
-        "slug",
-        "url",
-    ]
+    brief_fields = ["display", "id", "name", "slug", "url"]
 
     create_data = [
         {
@@ -107,21 +99,7 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = MinMaxValidationRule
-    brief_fields = [
-        "content_type",
-        "created",
-        "display",
-        "enabled",
-        "error_message",
-        "field",
-        "id",
-        "last_updated",
-        "max",
-        "min",
-        "name",
-        "slug",
-        "url",
-    ]
+    brief_fields = ["display", "id", "name", "slug", "url"]
 
     create_data = [
         {
@@ -178,4 +156,124 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="voltage",
             min=1,
+        )
+
+
+class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
+    """
+    API view test cases for the RequiredValidationRule model
+    """
+
+    model = RequiredValidationRule
+    brief_fields = ["display", "id", "name", "slug", "url"]
+
+    create_data = [
+        {
+            "name": "Required rule 4",
+            "slug": "required-rule-4",
+            "content_type": "dcim.site",
+            "field": "description",
+        },
+        {
+            "name": "Required rule 5",
+            "slug": "required-rule-5",
+            "content_type": "dcim.site",
+            "field": "asn",
+        },
+        {
+            "name": "Required rule 6",
+            "slug": "required-rule-6",
+            "content_type": "dcim.site",
+            "field": "facility",
+        },
+    ]
+    bulk_update_data = {
+        "enabled": False,
+    }
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Region),
+            field="description",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 2",
+            slug="required-rule-2",
+            content_type=ContentType.objects.get_for_model(Platform),
+            field="description",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 3",
+            slug="required-rule-3",
+            content_type=ContentType.objects.get_for_model(Manufacturer),
+            field="description",
+        )
+
+
+class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
+    """
+    API view test cases for the UniqueValidationRule model
+    """
+
+    model = UniqueValidationRule
+    brief_fields = ["display", "id", "name", "slug", "url"]
+
+    create_data = [
+        {
+            "name": "Required rule 4",
+            "slug": "required-rule-4",
+            "content_type": "dcim.site",
+            "field": "description",
+            "max_instances": 1,
+        },
+        {
+            "name": "Required rule 5",
+            "slug": "required-rule-5",
+            "content_type": "dcim.site",
+            "field": "asn",
+            "max_instances": 2,
+        },
+        {
+            "name": "Required rule 6",
+            "slug": "required-rule-6",
+            "content_type": "dcim.site",
+            "field": "facility",
+            "max_instances": 3,
+        },
+    ]
+    bulk_update_data = {
+        "enabled": False,
+    }
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        UniqueValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Region),
+            field="description",
+            max_instances=1,
+        )
+        UniqueValidationRule.objects.create(
+            name="Required rule 2",
+            slug="required-rule-2",
+            content_type=ContentType.objects.get_for_model(Platform),
+            field="description",
+            max_instances=2,
+        )
+        UniqueValidationRule.objects.create(
+            name="Required rule 3",
+            slug="required-rule-3",
+            content_type=ContentType.objects.get_for_model(Manufacturer),
+            field="description",
+            max_instances=3,
         )

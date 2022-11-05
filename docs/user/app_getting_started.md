@@ -8,7 +8,7 @@ To install the App, please follow the instructions detailed in the [Installation
 
 ## First steps with the App
 
-One the App is installed, under "Plugins" tab, you will find the supported Data Validation Engine rules. For example, "Min/Max Rules", or "Regex Rule".
+One the App is installed, under "Extensibility" tab, you will find the supported Data Validation Engine rules in the "Data Validation" section. For example, "Min/Max Rules", or "Regex Rule".
 
 There you can list the existing validation rules of each type, or create them (one by one, or dumping them).
 

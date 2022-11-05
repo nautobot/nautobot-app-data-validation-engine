@@ -4,16 +4,14 @@ Django models.
 import re
 
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import ValidationError
+from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.db.models.query_utils import Q
 from django.shortcuts import reverse
 
-from nautobot.extras.models import ChangeLoggedModel
-from nautobot.extras.utils import FeatureQuery
+from nautobot.core.models.generics import PrimaryModel
+from nautobot.extras.utils import FeatureQuery, extras_features
 from nautobot.utilities.querysets import RestrictedQuerySet
-
-from nautobot.core.models import BaseModel
 
 
 def validate_regex(value):
@@ -42,7 +40,7 @@ class ValidationRuleManager(RestrictedQuerySet):
         return self.filter(enabled=True, content_type__app_label=app_label, content_type__model=model)
 
 
-class ValidationRule(BaseModel, ChangeLoggedModel):
+class ValidationRule(PrimaryModel):
     """
     Base model for all validation engine rule models
     """
@@ -69,6 +67,15 @@ class ValidationRule(BaseModel, ChangeLoggedModel):
         return self.name
 
 
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
 class RegularExpressionValidationRule(ValidationRule):
     """
     A type of validation rule that applies a regular expression to a given model field.
@@ -141,6 +148,15 @@ class RegularExpressionValidationRule(ValidationRule):
             raise ValidationError({"field": "This field's type does not support regular expression validation."})
 
 
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
 class MinMaxValidationRule(ValidationRule):
     """
     A type of validation rule that applies min/max constraints to a given numeric model field.
@@ -223,3 +239,151 @@ class MinMaxValidationRule(ValidationRule):
                     "max": "Maximum value cannot be less than the minimum value.",
                 }
             )
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class RequiredValidationRule(ValidationRule):
+    """
+    A type of validation rule that applies a required constraint to a given model field.
+    """
+
+    field = models.CharField(
+        max_length=50,
+    )
+
+    csv_headers = ["name", "slug", "enabled", "content_type", "field", "error_message"]
+    clone_fields = ["enabled", "content_type", "error_message"]
+
+    class Meta:
+        ordering = ("name",)
+        unique_together = [["content_type", "field"]]
+
+    def get_absolute_url(self):
+        """
+        Absolute url for the instance.
+        """
+        return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.slug])
+
+    def to_csv(self):
+        """
+        Return tuple representing the instance, which this used for CSV export.
+        """
+        return (
+            self.name,
+            self.slug,
+            self.enabled,
+            f"{self.content_type.app_label}.{self.content_type.model}",
+            self.field,
+            self.error_message,
+        )
+
+    def clean(self):
+        """
+        Ensure field is valid for the model and has not been blacklisted.
+        """
+        if self.field not in [f.name for f in self.content_type.model_class()._meta.get_fields()]:
+            raise ValidationError(
+                {
+                    "field": f"Not a valid field for content type {self.content_type.app_label}.{self.content_type.model}."
+                }
+            )
+
+        blacklisted_field_types = (
+            models.AutoField,
+            models.Manager,
+            models.fields.related.RelatedField,
+            models.ManyToManyField,
+        )
+
+        model_field = self.content_type.model_class()._meta.get_field(self.field)
+
+        if self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types):
+            raise ValidationError({"field": "This field's type does not support min/max validation."})
+
+        # Generally, only Field(null=True) is considered except for the case of Field(null=False, blank=True)
+        # which is commonly seen on CharFields and results in a default of empty string which is unacceptable
+        # if the field is to be marked as required.
+        if not model_field.null and not (model_field.null == False and model_field.blank == True):
+            raise ValidationError({"field": "This field is already required by default."})
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class UniqueValidationRule(ValidationRule):
+    """
+    A type of validation rule that applies a unique constraint to a given model field.
+
+    Optionally specify the max number of similar values for the field accross all model instances. Default of 1.
+    """
+
+    field = models.CharField(
+        max_length=50,
+    )
+    max_instances = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+
+    csv_headers = ["name", "slug", "enabled", "content_type", "field", "max_instances", "error_message"]
+    clone_fields = ["enabled", "content_type", "max_instances", "error_message"]
+
+    class Meta:
+        ordering = ("name",)
+        unique_together = [["content_type", "field"]]
+
+    def get_absolute_url(self):
+        """
+        Absolute url for the instance.
+        """
+        return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.slug])
+
+    def to_csv(self):
+        """
+        Return tuple representing the instance, which this used for CSV export.
+        """
+        return (
+            self.name,
+            self.slug,
+            self.enabled,
+            f"{self.content_type.app_label}.{self.content_type.model}",
+            self.field,
+            self.max_instances,
+            self.error_message,
+        )
+
+    def clean(self):
+        """
+        Ensure field is valid for the model and has not been blacklisted.
+        """
+        if self.field not in [f.name for f in self.content_type.model_class()._meta.get_fields()]:
+            raise ValidationError(
+                {
+                    "field": f"Not a valid field for content type {self.content_type.app_label}.{self.content_type.model}."
+                }
+            )
+
+        blacklisted_field_types = (
+            models.Manager,
+            models.fields.related.RelatedField,
+            models.ManyToManyField,
+        )
+
+        model_field = self.content_type.model_class()._meta.get_field(self.field)
+
+        if self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types):
+            raise ValidationError({"field": "This field's type does not support min/max validation."})
+
+        if getattr(model_field, "unique", False):
+            raise ValidationError({"field": "This field is already unique by default."})

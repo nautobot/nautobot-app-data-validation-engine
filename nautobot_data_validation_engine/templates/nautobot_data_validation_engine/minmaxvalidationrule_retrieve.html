@@ -1,0 +1,47 @@
+{% extends 'generic/object_detail.html' %}
+{% load helpers %}
+{% load tz %}
+
+{% block content_left_page %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Min/Max Rule</strong>
+    </div>
+    <table class="table table-hover panel-body attr-table">
+        <tr>
+            <td>Name</td>
+            <td>{{ object.name }}</td>
+        </tr>
+        <tr>
+            <td>Enabled</td>
+            <td>
+                {% if object.enabled %}
+                    <i class="mdi mdi-check-bold text-success" title="Yes"></i>
+                {% else %}
+                    <i class="mdi mdi-close-thick text-danger" title="No"></i>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Content type</td>
+            <td>{{ object.content_type.app_label }}.{{ object.content_type.model }}</td>
+        </tr>
+        <tr>
+            <td>Field</td>
+            <td>{{ object.field }}</td>
+        </tr>
+        <tr>
+            <td>Min</td>
+            <td>{{ object.min|placeholder }}</td>
+        </tr>
+        <tr>
+            <td>Max</td>
+            <td>{{ object.max|placeholder }}</td>
+        </tr>
+        <tr>
+            <td>Error message</td>
+            <td>{{ object.error_message|placeholder }}</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

@@ -5,10 +5,15 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import ValidationError
 from django.test import TestCase
 
-from nautobot.dcim.models import Cable, Device, PowerFeed
+from nautobot.dcim.models import Cable, Device, PowerFeed, Site
 from nautobot.extras.models import Job
 
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
 
 
 class RegularExpressionValidationRuleModelTestCase(TestCase):
@@ -167,3 +172,125 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             rule.clean()
         except ValidationError as e:
             self.fail(f"rule.clean() failed validation: {e}")
+
+
+class RequiredValidationRuleModelTestCase(TestCase):
+    """
+    Test cases related to the RequiredValidationRule model
+    """
+
+    def test_invalid_field_name(self):
+        """Test that a non-existent model field is rejected."""
+        rule = RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(PowerFeed),
+            field="afieldthatdoesnotexist",
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_private_fields_cannot_be_used(self):
+        """Test that a private model field is rejected."""
+        rule = RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Cable),
+            field="_abs_length",  # this is a private field used for caching a denormalized value
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_blacklisted_fields_cannot_be_used(self):
+        """Test that a blacklisted model field is rejected."""
+        rule = RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Job),
+            field="id",  # Job.id is an AutoField which is blacklisted
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_default_required_field_cannot_be_used(self):
+        """Test that a field that is already required cannot be used."""
+        rule = RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="name",
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_null_false_blank_true_can_be_used(self):
+        """Test that Field(null=False, blank=True) can be used."""
+        rule = RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="physical_address",
+        )
+
+        try:
+            rule.clean()
+        except ValidationError as e:
+            self.fail(f"rule.clean() failed validation: {e}")
+
+
+class UniqueValidationRuleModelTestCase(TestCase):
+    """
+    Test cases related to the UniqueValidationRule model
+    """
+
+    def test_invalid_field_name(self):
+        """Test that a non-existent model field is rejected."""
+        rule = UniqueValidationRule.objects.create(
+            name="Unique rule 1",
+            slug="unique-rule-1",
+            content_type=ContentType.objects.get_for_model(PowerFeed),
+            field="afieldthatdoesnotexist",
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_private_fields_cannot_be_used(self):
+        """Test that a private model field is rejected."""
+        rule = UniqueValidationRule.objects.create(
+            name="Unique rule 1",
+            slug="unique-rule-1",
+            content_type=ContentType.objects.get_for_model(Cable),
+            field="_abs_length",  # this is a private field used for caching a denormalized value
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_blacklisted_fields_cannot_be_used(self):
+        """Test that a blacklisted model field is rejected."""
+        rule = UniqueValidationRule.objects.create(
+            name="Unique rule 1",
+            slug="unique-rule-1",
+            content_type=ContentType.objects.get_for_model(Job),
+            field="id",  # Job.id is an AutoField which is blacklisted
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()
+
+    def test_default_unique_field_cannot_be_used(self):
+        """Test that a field that is already unique cannot be used."""
+        rule = UniqueValidationRule.objects.create(
+            name="Unique rule 1",
+            slug="unique-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="name",
+        )
+
+        with self.assertRaises(ValidationError):
+            rule.clean()

@@ -4,16 +4,28 @@ API serializers
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from nautobot.core.api import (
-    ContentTypeField,
-    ValidatedModelSerializer,
-)
+from nautobot.core.api import ContentTypeField
+from nautobot.extras.api.serializers import NautobotModelSerializer
 from nautobot.extras.utils import FeatureQuery
 
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
+
+# Not all of these variable(s) are not actually used anywhere in this file, but required for the
+# automagically replacing a Serializer with its corresponding NestedSerializer.
+from nautobot_data_validation_engine.api.nested_serializers import (  # noqa: F401
+    NestedMinMaxValidationRuleSerializer,
+    NestedRegularExpressionValidationRuleSerializer,
+    NestedRequiredValidationRuleSerializer,
+    NestedUniqueValidationRuleSerializer,
+)
 
 
-class RegularExpressionValidationRuleSerializer(ValidatedModelSerializer):
+class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
     """Serializer for `RegularExpressionValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -40,7 +52,7 @@ class RegularExpressionValidationRuleSerializer(ValidatedModelSerializer):
         ]
 
 
-class MinMaxValidationRuleSerializer(ValidatedModelSerializer):
+class MinMaxValidationRuleSerializer(NautobotModelSerializer):
     """Serializer for `MinMaxValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -61,6 +73,59 @@ class MinMaxValidationRuleSerializer(ValidatedModelSerializer):
             "field",
             "min",
             "max",
+            "enabled",
+            "error_message",
+            "created",
+            "last_updated",
+        ]
+
+
+class RequiredValidationRuleSerializer(NautobotModelSerializer):
+    """Serializer for `RequiredValidationRule` objects."""
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name="plugins-api:nautobot_data_validation_engine-api:requiredvalidationrule-detail"
+    )
+    content_type = ContentTypeField(
+        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
+    )
+
+    class Meta:
+        model = RequiredValidationRule
+        fields = [
+            "id",
+            "url",
+            "name",
+            "slug",
+            "content_type",
+            "field",
+            "enabled",
+            "error_message",
+            "created",
+            "last_updated",
+        ]
+
+
+class UniqueValidationRuleSerializer(NautobotModelSerializer):
+    """Serializer for `UniqueValidationRule` objects."""
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name="plugins-api:nautobot_data_validation_engine-api:uniquevalidationrule-detail"
+    )
+    content_type = ContentTypeField(
+        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
+    )
+
+    class Meta:
+        model = UniqueValidationRule
+        fields = [
+            "id",
+            "url",
+            "name",
+            "slug",
+            "content_type",
+            "field",
+            "max_instances",
             "enabled",
             "error_message",
             "created",

@@ -10,10 +10,17 @@ validation rules that have been defined for the given model.
 """
 import re
 
+from django.template.defaultfilters import pluralize
+
 from nautobot.extras.plugins import PluginCustomValidator
 from nautobot.extras.registry import registry
 
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
 
 
 class BaseValidator(PluginCustomValidator):
@@ -67,6 +74,26 @@ class BaseValidator(PluginCustomValidator):
             elif rule.max is not None and field_value is not None and field_value > rule.max:
                 self.validation_error(
                     {rule.field: rule.error_message or f"Value is more than maximum value: {rule.max}"}
+                )
+
+        # Required rules
+        for rule in RequiredValidationRule.objects.get_for_model(self.model):
+            field_value = getattr(obj, rule.field)
+            if field_value is None or field_value == "":
+                self.validation_error({rule.field: rule.error_message or f"This field cannot be blank."})
+
+        # Unique rules
+        for rule in UniqueValidationRule.objects.get_for_model(self.model):
+            field_value = getattr(obj, rule.field)
+            if (
+                field_value is not None
+                and obj.__class__._default_manager.filter(**{rule.field: field_value}).count() >= rule.max_instances
+            ):
+                self.validation_error(
+                    {
+                        rule.field: rule.error_message
+                        or f"There can only be {rule.max_instances} instance{pluralize(rule.max_instances)} with this value."
+                    }
                 )
 
 

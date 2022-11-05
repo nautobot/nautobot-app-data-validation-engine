@@ -5,13 +5,20 @@ from logging import error
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from nautobot.dcim.models import PowerFeed, Rack, Region, Site
+from nautobot.dcim.models import PowerFeed, Rack, Region, Site, Platform, Manufacturer
 
 from nautobot_data_validation_engine.filters import (
     MinMaxValidationRuleFilterSet,
     RegularExpressionValidationRuleFilterSet,
+    RequiredValidationRuleFilterSet,
+    UniqueValidationRuleFilterSet,
 )
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
 
 
 class RegularExpressionValidationRuleFilterTestCase(TestCase):
@@ -145,4 +152,134 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
     def test_field(self):
         """Test field lookups."""
         params = {"field": ["voltage", "max_utilization"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+
+class RequiredValidationRuleFilterTestCase(TestCase):
+    """
+    Filterset test cases for the RequiredValidationRule model
+    """
+
+    queryset = RequiredValidationRule.objects.all()
+    filterset = RequiredValidationRuleFilterSet
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="asn",
+            error_message="A",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 2",
+            slug="required-rule-2",
+            content_type=ContentType.objects.get_for_model(Platform),
+            field="description",
+            error_message="B",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 3",
+            slug="required-rule-3",
+            content_type=ContentType.objects.get_for_model(Manufacturer),
+            field="description",
+            error_message="C",
+        )
+
+    def test_id(self):
+        """Test ID lookups."""
+        params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_name(self):
+        """Test name lookups."""
+        params = {"name": ["Required rule 1", "Required rule 2"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_content_type(self):
+        """Test content type lookups."""
+        params = {"content_type": ["dcim.site"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+    def test_error_message(self):
+        """Test error message lookups."""
+        params = {"error_message": ["A", "B"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_field(self):
+        """Test field lookups."""
+        params = {"field": ["asn"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+
+class UniqueValidationRuleFilterTestCase(TestCase):
+    """
+    Filterset test cases for the UniqueValidationRule model
+    """
+
+    queryset = UniqueValidationRule.objects.all()
+    filterset = UniqueValidationRuleFilterSet
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        UniqueValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="asn",
+            max_instances=1,
+            error_message="A",
+        )
+        UniqueValidationRule.objects.create(
+            name="Required rule 2",
+            slug="required-rule-2",
+            content_type=ContentType.objects.get_for_model(Platform),
+            field="description",
+            max_instances=2,
+            error_message="B",
+        )
+        UniqueValidationRule.objects.create(
+            name="Required rule 3",
+            slug="required-rule-3",
+            content_type=ContentType.objects.get_for_model(Manufacturer),
+            field="description",
+            max_instances=3,
+            error_message="C",
+        )
+
+    def test_id(self):
+        """Test ID lookups."""
+        params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_name(self):
+        """Test name lookups."""
+        params = {"name": ["Required rule 1", "Required rule 2"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_content_type(self):
+        """Test content type lookups."""
+        params = {"content_type": ["dcim.site"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+    def test_error_message(self):
+        """Test error message lookups."""
+        params = {"error_message": ["A", "B"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_field(self):
+        """Test field lookups."""
+        params = {"field": ["asn"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+    def test_max_instances(self):
+        """Test field lookups."""
+        params = {"max_instances__gte": [2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)

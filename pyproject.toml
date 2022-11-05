@@ -18,6 +18,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
+nautobot = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 invoke = "*"
