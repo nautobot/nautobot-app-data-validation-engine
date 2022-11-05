@@ -13,23 +13,37 @@
 
 ## Overview
 
-A plugin for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for Source of Truth data.
+An app for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for Source of Truth data.
 
-The data validation engine plugin offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case. There are currently two supported rule types, regular expressions, and min/max numeric rules.
+The data validation engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
+
+Supported rule types include:
+- Regular expression
+- Min/max value
+- Required fields
+- Unique values
 
 ![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/dropdown.png)
 
 ### Screenshots
 
-More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the plugin's added functionality:
+More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
+
+**Min/Max Rules**
+
+![Min/Max List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/min-max-rules-list.png)
 
 **Regular Expression Rules**
 
 ![Regex Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/regex-rules-list.png)
 
-**Min/Max Rules**
+**Rquired Rules**
 
-![Min/Max List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/min-max-rules-list.png)
+![Required Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/required-rules-list.png)
+
+**Unique Rules**
+
+![Unique Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/unique-rules-list.png)
 
 ## Try it out!
 

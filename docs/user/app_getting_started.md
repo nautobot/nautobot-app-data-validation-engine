@@ -13,4 +13,4 @@ One the App is installed, under "Extensibility" tab, you will find the supported
 There you can list the existing validation rules of each type, or create them (one by one, or dumping them).
 
 !!! note
-    The validation rules only take effect for new data entries, not for previous existing data. So, when you create a new object, for instance, a `ipam.VLAN`, is when the existing validation rules will be enforced.
+    The validation rules only take effect for new data entries, not for previous existing data. So, when you create a new object, for instance, a `ipam.VLAN`, is when the existing validation rules will be enforced. Validation rules will be enforced when explicitly editing existing data.
