@@ -45,6 +45,7 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
             "content_type",
             "field",
             "regular_expression",
+            "context_processing",
             "enabled",
             "error_message",
             "created",

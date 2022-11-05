@@ -43,7 +43,16 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = RegularExpressionValidationRule
-        fields = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
+        fields = [
+            "name",
+            "slug",
+            "enabled",
+            "content_type",
+            "field",
+            "regular_expression",
+            "context_processing",
+            "error_message",
+        ]
 
 
 class RegularExpressionValidationRuleCSVForm(CSVModelForm):
@@ -76,6 +85,10 @@ class RegularExpressionValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     )
     regular_expression = forms.CharField(required=False)
     error_message = forms.CharField(required=False)
+    context_processing = forms.NullBooleanField(
+        required=False,
+        widget=BulkEditNullBooleanSelect(),
+    )
 
     class Meta:
         nullable_fields = ["error_message"]
@@ -87,7 +100,16 @@ class RegularExpressionValidationRuleFilterForm(BootstrapMixin, forms.Form):
     """
 
     model = RegularExpressionValidationRule
-    field_order = ["q", "name", "enabled", "content_type", "field", "regular_expression", "error_message"]
+    field_order = [
+        "q",
+        "name",
+        "enabled",
+        "content_type",
+        "field",
+        "regular_expression",
+        "context_processing",
+        "error_message",
+    ]
     q = forms.CharField(required=False, label="Search")
     # "CSV" field is being used here because it is using the slug-form input for
     # content-types, which improves UX.

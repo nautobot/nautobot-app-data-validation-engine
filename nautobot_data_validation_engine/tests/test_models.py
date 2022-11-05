@@ -86,6 +86,22 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         with self.assertRaises(ValidationError):
             rule.full_clean()
 
+    def test_regex_is_only_validataed_if_context_processing_is_disabled(self):
+        """Test that an invalid regex string fails validation."""
+        rule = RegularExpressionValidationRule.objects.create(
+            name="Regex rule 1",
+            slug="regex-rule-1",
+            content_type=ContentType.objects.get_for_model(Device),
+            field="name",
+            regular_expression="[",  # this is an invalid regex pattern
+            context_processing=True,
+        )
+
+        try:
+            rule.clean()
+        except ValidationError as e:
+            self.fail(f"rule.clean() failed validation: {e}")
+
 
 class MinMaxValidationRuleModelTestCase(TestCase):
     """

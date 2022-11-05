@@ -84,7 +84,11 @@ class RegularExpressionValidationRule(ValidationRule):
     field = models.CharField(
         max_length=50,
     )
-    regular_expression = models.TextField(validators=[validate_regex])
+    regular_expression = models.TextField()
+    context_processing = models.BooleanField(
+        default=False,
+        help_text="When enabled, the regular expression value is first processed as a Jinja2 template with access to the context of the data being validated in a variable named <code>object</code>.",
+    )
 
     csv_headers = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
     clone_fields = ["enabled", "content_type", "regular_expression", "error_message"]
@@ -117,6 +121,12 @@ class RegularExpressionValidationRule(ValidationRule):
         """
         Ensure field is valid for the model and has not been blacklisted.
         """
+
+        # Only validate the regular_expression if context processing is disabled
+        if self.context_processing is False:
+            validate_regex(self.regular_expression)
+
+        # Check that field exists on model
         if self.field not in [f.name for f in self.content_type.model_class()._meta.get_fields()]:
             raise ValidationError(
                 {
@@ -311,7 +321,7 @@ class RequiredValidationRule(ValidationRule):
         # Generally, only Field(null=True) is considered except for the case of Field(null=False, blank=True)
         # which is commonly seen on CharFields and results in a default of empty string which is unacceptable
         # if the field is to be marked as required.
-        if not model_field.null and not (model_field.null == False and model_field.blank == True):
+        if model_field.null is False and not (model_field.null is False and model_field.blank is True):
             raise ValidationError({"field": "This field is already required by default."})
 
 

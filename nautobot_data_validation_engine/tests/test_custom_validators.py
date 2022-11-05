@@ -75,6 +75,64 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         with self.assertRaises(ValidationError):
             site.clean()
 
+    def test_context_processing_happy_path(self):
+        RegularExpressionValidationRule.objects.create(
+            name="Regex rule 1",
+            slug="regex-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="description",
+            regular_expression="{{ object.name[0:3] }}.*",
+        )
+
+        site = Site(
+            name="AMS-195",
+            slug="site",
+            description="AMS-195 is really cool",  # This should match `AMS.*`
+            status=Status.objects.get(slug="active"),
+        )
+
+        try:
+            site.clean()
+        except ValidationError as e:
+            self.fail(f"rule.clean() failed validation: {e}")
+
+    def test_context_processing_sad_path(self):
+        RegularExpressionValidationRule.objects.create(
+            name="Regex rule 1",
+            slug="regex-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="description",
+            regular_expression="{{ object.name[0:3] }}.*",
+        )
+
+        site = Site(
+            name="AMS-195",
+            slug="site",
+            description="I don't like AMS-195",  # This should *not* match `AMS.*`
+            status=Status.objects.get(slug="active"),
+        )
+
+        with self.assertRaises(ValidationError):
+            site.clean()
+
+    def test_context_processing_invalid_regex_fails_validation(self):
+        RegularExpressionValidationRule.objects.create(
+            name="Regex rule 1",
+            slug="regex-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="description",
+            regular_expression="[{{ object.name[0:3] }}.*",  # once processed, this is an invalid regex
+        )
+
+        site = Site(
+            name="AMS-195",
+            slug="site",
+            status=Status.objects.get(slug="active"),
+        )
+
+        with self.assertRaises(ValidationError):
+            site.clean()
+
 
 class MinMaxValidationRuleModelTestCase(TestCase):
     """

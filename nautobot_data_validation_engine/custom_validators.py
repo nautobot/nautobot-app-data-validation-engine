@@ -9,18 +9,23 @@ A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
 import re
+import logging
 
 from django.template.defaultfilters import pluralize
 
 from nautobot.extras.plugins import PluginCustomValidator
 from nautobot.extras.registry import registry
+from nautobot.utilities.utils import render_jinja2
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    validate_regex,
 )
+
+LOGGER = logging.getLogger(__name__)
 
 
 class BaseValidator(PluginCustomValidator):
@@ -39,12 +44,33 @@ class BaseValidator(PluginCustomValidator):
         # Regex rules
         for rule in RegularExpressionValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
+
             if field_value is None:
                 # Coerce to a string for regex validation
                 field_value = ""
-            if not re.match(rule.regular_expression, field_value):
+
+            if rule.context_processing:
+                # Render the regular_expression as a jinja2 string and ensure it is valid
+                try:
+                    regular_expression = render_jinja2(rule.regular_expression, self.context)
+                    validate_regex(regular_expression)
+                except Exception:
+                    self.validation_error(
+                        {
+                            rule.field: f"There was an error rendering the regular expression in the data validation rule '{rule}'. "
+                            "Either fix the validation rule or disable it in order to save this data."
+                        }
+                    )
+                    LOGGER.exception(
+                        f"There was an error rendering the regular expression in the data validation rule '{rule}' and a ValidationError was raised!"
+                    )
+
+            else:
+                regular_expression = rule.regular_expression
+
+            if not re.match(regular_expression, field_value):
                 self.validation_error(
-                    {rule.field: rule.error_message or f"Value does not conform to regex: {rule.regular_expression}"}
+                    {rule.field: rule.error_message or f"Value does not conform to regex: {regular_expression}"}
                 )
 
         # Min/Max rules
@@ -80,7 +106,7 @@ class BaseValidator(PluginCustomValidator):
         for rule in RequiredValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
             if field_value is None or field_value == "":
-                self.validation_error({rule.field: rule.error_message or f"This field cannot be blank."})
+                self.validation_error({rule.field: rule.error_message or "This field cannot be blank."})
 
         # Unique rules
         for rule in UniqueValidationRule.objects.get_for_model(self.model):

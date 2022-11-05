@@ -35,6 +35,16 @@
             <td>{{ object.regular_expression }}</td>
         </tr>
         <tr>
+            <td>Context processing</td>
+            <td>
+                {% if object.context_processing %}
+                    <i class="mdi mdi-check-bold text-success" title="Yes"></i>
+                {% else %}
+                    <i class="mdi mdi-close-thick text-danger" title="No"></i>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
             <td>Error message</td>
             <td>{{ object.error_message|placeholder }}</td>
         </tr>

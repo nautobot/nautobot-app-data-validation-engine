@@ -28,8 +28,26 @@ class RegularExpressionValidationRuleTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = RegularExpressionValidationRule
-        fields = ("pk", "name", "enabled", "content_type", "field", "regular_expression", "error_message")
-        default_columns = ("pk", "name", "enabled", "content_type", "field", "regular_expression", "error_message")
+        fields = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "regular_expression",
+            "context_processing",
+            "error_message",
+        )
+        default_columns = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "regular_expression",
+            "context_processing",
+            "error_message",
+        )
 
 
 #

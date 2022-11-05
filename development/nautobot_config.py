@@ -58,6 +58,10 @@ if not TESTING:
                 "handlers": ["verbose_console" if DEBUG else "normal_console"],
                 "level": LOG_LEVEL,
             },
+            "": {
+                "handlers": ["verbose_console" if DEBUG else "normal_console"],
+                "level": LOG_LEVEL,
+            },
             "rq.worker": {
                 "handlers": ["verbose_console" if DEBUG else "normal_console"],
                 "level": LOG_LEVEL,

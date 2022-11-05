@@ -38,7 +38,17 @@ class RegularExpressionValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilt
 
     class Meta:
         model = RegularExpressionValidationRule
-        fields = ["id", "name", "slug", "regular_expression", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "regular_expression",
+            "context_processing",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
