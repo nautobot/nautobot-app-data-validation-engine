@@ -144,7 +144,7 @@ class RequiredValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
             name="Required rule 1",
             slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Site),
-            field="name",
+            field="asn",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 2",
@@ -195,7 +195,7 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
             name="Unique rule 1",
             slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Site),
-            field="name",
+            field="asn",
             max_instances=1,
         )
         UniqueValidationRule.objects.create(

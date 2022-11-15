@@ -82,6 +82,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             content_type=ContentType.objects.get_for_model(Site),
             field="description",
             regular_expression="{{ object.name[0:3] }}.*",
+            context_processing=True,
         )
 
         site = Site(
@@ -103,6 +104,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             content_type=ContentType.objects.get_for_model(Site),
             field="description",
             regular_expression="{{ object.name[0:3] }}.*",
+            context_processing=True,
         )
 
         site = Site(
@@ -122,6 +124,7 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             content_type=ContentType.objects.get_for_model(Site),
             field="description",
             regular_expression="[{{ object.name[0:3] }}.*",  # once processed, this is an invalid regex
+            context_processing=True,
         )
 
         site = Site(
