@@ -1,6 +1,5 @@
 {% extends 'generic/object_detail.html' %}
 {% load helpers %}
-{% load tz %}
 
 {% block content_left_page %}
 <div class="panel panel-default">
@@ -15,11 +14,7 @@
         <tr>
             <td>Enabled</td>
             <td>
-                {% if object.enabled %}
-                    <i class="mdi mdi-check-bold text-success" title="Yes"></i>
-                {% else %}
-                    <i class="mdi mdi-close-thick text-danger" title="No"></i>
-                {% endif %}
+                {{ object.enabled | render_boolean }}
             </td>
         </tr>
         <tr>
@@ -37,11 +32,7 @@
         <tr>
             <td>Context processing</td>
             <td>
-                {% if object.context_processing %}
-                    <i class="mdi mdi-check-bold text-success" title="Yes"></i>
-                {% else %}
-                    <i class="mdi mdi-close-thick text-danger" title="No"></i>
-                {% endif %}
+                {{ object.context_processing | render_boolean }}
             </td>
         </tr>
         <tr>

@@ -37,7 +37,7 @@ More screenshots can be found in the [Using the App](https://docs.nautobot.com/p
 
 ![Regex Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/regex-rules-list.png)
 
-**Rquired Rules**
+**Required Rules**
 
 ![Required Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/required-rules-list.png)
 

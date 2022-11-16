@@ -123,7 +123,7 @@ class RegularExpressionValidationRule(ValidationRule):
         """
 
         # Only validate the regular_expression if context processing is disabled
-        if self.context_processing is False:
+        if not self.context_processing:
             validate_regex(self.regular_expression)
 
         # Check that field exists on model
