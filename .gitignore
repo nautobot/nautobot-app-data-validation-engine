@@ -1,3 +1,4 @@
+.idea/
 nautobot_data_validation_engine.egg-info
 __pycache__
 *.swp

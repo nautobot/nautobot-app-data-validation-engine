@@ -23,6 +23,7 @@ class NautobotDataValidationEngineConfig(PluginConfig):
     required_settings = []
     default_settings = {}
     caching_config = {}
+    min_version = "1.2"
 
 
 config = NautobotDataValidationEngineConfig  # pylint: disable=invalid-name
