@@ -28,6 +28,10 @@ from nautobot_data_validation_engine.models import (
 LOGGER = logging.getLogger(__name__)
 
 
+def is_empty_value(value):
+    return value is None or value == "" or value == [] or value == {}
+
+
 class BaseValidator(PluginCustomValidator):
     """
     Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this plugin.
@@ -105,14 +109,14 @@ class BaseValidator(PluginCustomValidator):
         # Required rules
         for rule in RequiredValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
-            if field_value is None or field_value == "":
+            if is_empty_value(field_value):
                 self.validation_error({rule.field: rule.error_message or "This field cannot be blank."})
 
         # Unique rules
         for rule in UniqueValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
             if (
-                field_value is not None
+                not is_empty_value(field_value)
                 and obj.__class__._default_manager.filter(**{rule.field: field_value}).count() >= rule.max_instances
             ):
                 self.validation_error(
