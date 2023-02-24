@@ -43,12 +43,12 @@ if not TESTING:
         "handlers": {
             "normal_console": {
                 "level": "INFO",
-                "class": "rq.utils.ColorizingStreamHandler",
+                "class": "logging.StreamHandler",
                 "formatter": "normal",
             },
             "verbose_console": {
                 "level": "DEBUG",
-                "class": "rq.utils.ColorizingStreamHandler",
+                "class": "logging.StreamHandler",
                 "formatter": "verbose",
             },
         },
@@ -59,10 +59,6 @@ if not TESTING:
                 "level": LOG_LEVEL,
             },
             "": {
-                "handlers": ["verbose_console" if DEBUG else "normal_console"],
-                "level": LOG_LEVEL,
-            },
-            "rq.worker": {
                 "handlers": ["verbose_console" if DEBUG else "normal_console"],
                 "level": LOG_LEVEL,
             },
@@ -81,11 +77,7 @@ REDIS_SSL = is_truthy(os.environ.get("NAUTOBOT_REDIS_SSL", False))
 if REDIS_SSL:
     REDIS_SCHEME = "rediss"
 
-# The django-redis cache is used to establish concurrent locks using Redis. The
-# django-rq settings will use the same instance/database by default.
-#
-# This "default" server is now used by RQ_QUEUES.
-# >> See: nautobot.core.settings.RQ_QUEUES
+# The django-redis cache is used to establish concurrent locks using Redis.
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -97,9 +89,6 @@ CACHES = {
         },
     }
 }
-
-# RQ_QUEUES is not set here because it just uses the default that gets imported
-# up top via `from nautobot.core.settings import *`.
 
 # REDIS CACHEOPS
 CACHEOPS_REDIS = f"{REDIS_SCHEME}://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/1"
