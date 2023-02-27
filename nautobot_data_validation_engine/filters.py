@@ -72,7 +72,17 @@ class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
 
     class Meta:
         model = MinMaxValidationRule
-        fields = ["id", "name", "slug", "min", "max", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "min",
+            "max",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class RequiredValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
@@ -96,7 +106,15 @@ class RequiredValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
 
     class Meta:
         model = RequiredValidationRule
-        fields = ["id", "name", "slug", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class UniqueValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
@@ -120,4 +138,13 @@ class UniqueValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
 
     class Meta:
         model = UniqueValidationRule
-        fields = ["id", "name", "slug", "max_instances", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "max_instances",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]

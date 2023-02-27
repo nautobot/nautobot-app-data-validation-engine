@@ -36,7 +36,13 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = RegularExpressionValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -99,7 +105,13 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = MinMaxValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -165,7 +177,13 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = RequiredValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -222,7 +240,13 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = UniqueValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
