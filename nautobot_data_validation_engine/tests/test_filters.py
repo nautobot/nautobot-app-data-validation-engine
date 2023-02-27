@@ -229,24 +229,24 @@ class UniqueValidationRuleFilterTestCase(TestCase):
         Create test data
         """
         UniqueValidationRule.objects.create(
-            name="Required rule 1",
-            slug="required-rule-1",
+            name="Unique rule 1",
+            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Site),
             field="asn",
             max_instances=1,
             error_message="A",
         )
         UniqueValidationRule.objects.create(
-            name="Required rule 2",
-            slug="required-rule-2",
+            name="Unique rule 2",
+            slug="unique-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             max_instances=2,
             error_message="B",
         )
         UniqueValidationRule.objects.create(
-            name="Required rule 3",
-            slug="required-rule-3",
+            name="Unique rule 3",
+            slug="unique-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             max_instances=3,
@@ -260,7 +260,7 @@ class UniqueValidationRuleFilterTestCase(TestCase):
 
     def test_name(self):
         """Test name lookups."""
-        params = {"name": ["Required rule 1", "Required rule 2"]}
+        params = {"name": ["Unique rule 1", "Unique rule 2"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
     def test_content_type(self):
