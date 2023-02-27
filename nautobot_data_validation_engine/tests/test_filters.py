@@ -1,7 +1,6 @@
 """
 Filterset test cases
 """
-from logging import error
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 

@@ -6,7 +6,6 @@ import re
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
-from django.db.models.query_utils import Q
 from django.shortcuts import reverse
 
 from nautobot.core.models.generics import PrimaryModel
