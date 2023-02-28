@@ -18,7 +18,7 @@ class NautobotDataValidationEngineConfig(PluginConfig):
     version = __version__
     author = "Network to Code"
     author_email = "opensource@networktocode.com"
-    description = "Nautobot App that provides a data validation rules engine to easily codify data standards in the UI. Includes RegEx and Min/Max validation rules."
+    description = "Nautobot App that provides a data validation rules engine to easily codify data standards in the UI."
     base_url = "data-validation-engine"
     required_settings = []
     default_settings = {}
