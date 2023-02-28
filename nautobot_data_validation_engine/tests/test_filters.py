@@ -2,7 +2,7 @@
 Filterset test cases
 """
 from django.contrib.contenttypes.models import ContentType
-from django.test import TestCase
+from nautobot.utilities.testing.filters import FilterTestCases
 
 from nautobot.dcim.models import PowerFeed, Rack, Region, Site, Platform, Manufacturer
 
@@ -20,7 +20,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleFilterTestCase(TestCase):
+class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
     """
@@ -63,11 +63,6 @@ class RegularExpressionValidationRuleFilterTestCase(TestCase):
         params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
-    def test_name(self):
-        """Test name lookups."""
-        params = {"name": ["Regex rule 1", "Regex rule 2"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-
     def test_content_type(self):
         """Test content type lookups."""
         params = {"content_type": ["dcim.rack", "dcim.site"]}
@@ -90,7 +85,7 @@ class RegularExpressionValidationRuleFilterTestCase(TestCase):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class MinMaxValidationRuleFilterTestCase(TestCase):
+class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
     """
     Filterset test cases for the MinMaxValidationRule model
     """
@@ -133,11 +128,6 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
         params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
-    def test_name(self):
-        """Test name lookups."""
-        params = {"name": ["Min max rule 1", "Min max rule 2"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-
     def test_content_type(self):
         """Test content type lookups."""
         params = {"content_type": ["dcim.powerfeed"]}
@@ -154,7 +144,7 @@ class MinMaxValidationRuleFilterTestCase(TestCase):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class RequiredValidationRuleFilterTestCase(TestCase):
+class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
     """
     Filterset test cases for the RequiredValidationRule model
     """
@@ -194,11 +184,6 @@ class RequiredValidationRuleFilterTestCase(TestCase):
         params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
-    def test_name(self):
-        """Test name lookups."""
-        params = {"name": ["Required rule 1", "Required rule 2"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-
     def test_content_type(self):
         """Test content type lookups."""
         params = {"content_type": ["dcim.site"]}
@@ -215,7 +200,7 @@ class RequiredValidationRuleFilterTestCase(TestCase):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
 
-class UniqueValidationRuleFilterTestCase(TestCase):
+class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
     """
     Filterset test cases for the UniqueValidationRule model
     """
@@ -256,11 +241,6 @@ class UniqueValidationRuleFilterTestCase(TestCase):
     def test_id(self):
         """Test ID lookups."""
         params = {"id": self.queryset.values_list("pk", flat=True)[:2]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-
-    def test_name(self):
-        """Test name lookups."""
-        params = {"name": ["Unique rule 1", "Unique rule 2"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
     def test_content_type(self):
