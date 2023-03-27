@@ -1,12 +1,9 @@
 """
 Django filters.
 """
-import django_filters
-from django.db.models import Q
-
-from nautobot.extras.filters import CreatedUpdatedFilterSet
+from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
-from nautobot.utilities.filters import BaseFilterSet, ContentTypeMultipleChoiceFilter, SearchFilter
+from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
@@ -16,7 +13,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
+class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     """
     Base filterset for the RegularExpressionValidationRule model.
     """
@@ -51,7 +48,7 @@ class RegularExpressionValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilt
         ]
 
 
-class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
+class MinMaxValidationRuleFilterSet(NautobotFilterSet):
     """
     Base filterset for the MinMaxValidationRule model.
     """
@@ -85,7 +82,7 @@ class MinMaxValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
         ]
 
 
-class RequiredValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
+class RequiredValidationRuleFilterSet(NautobotFilterSet):
     """
     Base filterset for the RequiredValidationRule model.
     """
@@ -117,7 +114,7 @@ class RequiredValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
         ]
 
 
-class UniqueValidationRuleFilterSet(BaseFilterSet, CreatedUpdatedFilterSet):
+class UniqueValidationRuleFilterSet(NautobotFilterSet):
     """
     Base filterset for the UniqueValidationRule model.
     """

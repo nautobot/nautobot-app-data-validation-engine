@@ -26,16 +26,6 @@ services:
       - "redis"
     <<: *nautobot-build
     <<: *nautobot-base
-  worker:
-    entrypoint: "nautobot-server rqworker"
-    volumes:
-      - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
-      - "../:/source"
-    depends_on:
-      - "nautobot"
-    healthcheck:
-      disable: true
-    <<: *nautobot-base
   postgres:
     image: "postgres:13-alpine"
     env_file:
