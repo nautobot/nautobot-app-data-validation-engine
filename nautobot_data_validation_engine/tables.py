@@ -65,8 +65,26 @@ class MinMaxValidationRuleTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = MinMaxValidationRule
-        fields = ("pk", "name", "enabled", "content_type", "field", "min", "max", "error_message")
-        default_columns = ("pk", "name", "enabled", "content_type", "field", "min", "max", "error_message")
+        fields = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "min",
+            "max",
+            "error_message",
+        )
+        default_columns = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "min",
+            "max",
+            "error_message",
+        )
 
 
 #
@@ -84,8 +102,22 @@ class RequiredValidationRuleTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = RequiredValidationRule
-        fields = ("pk", "name", "enabled", "content_type", "field", "error_message")
-        default_columns = ("pk", "name", "enabled", "content_type", "field", "error_message")
+        fields = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        )
+        default_columns = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        )
 
 
 #
@@ -103,5 +135,21 @@ class UniqueValidationRuleTable(BaseTable):
 
     class Meta(BaseTable.Meta):
         model = UniqueValidationRule
-        fields = ("pk", "name", "enabled", "content_type", "field", "max_instances", "error_message")
-        default_columns = ("pk", "name", "enabled", "content_type", "field", "max_instances", "error_message")
+        fields = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "max_instances",
+            "error_message",
+        )
+        default_columns = (
+            "pk",
+            "name",
+            "enabled",
+            "content_type",
+            "field",
+            "max_instances",
+            "error_message",
+        )

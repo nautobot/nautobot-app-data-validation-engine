@@ -55,14 +55,14 @@ class BaseValidator(PluginCustomValidator):
                     regular_expression = render_jinja2(rule.regular_expression, self.context)
                     validate_regex(regular_expression)
                 except Exception:
+                    LOGGER.exception(
+                        f"There was an error rendering the regular expression in the data validation rule '{rule}' and a ValidationError was raised!"
+                    )
                     self.validation_error(
                         {
                             rule.field: f"There was an error rendering the regular expression in the data validation rule '{rule}'. "
                             "Either fix the validation rule or disable it in order to save this data."
                         }
-                    )
-                    LOGGER.exception(
-                        f"There was an error rendering the regular expression in the data validation rule '{rule}' and a ValidationError was raised!"
                     )
 
             else:

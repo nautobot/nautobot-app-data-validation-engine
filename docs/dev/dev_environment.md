@@ -400,7 +400,7 @@ namespace.configure(
 )
 ```
 
-Or set the `INVOKE_NAUTOBOT_GOLDEN_CONFIG_PYTHON_VER` variable.
+Or set the `INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_PYTHON_VER` variable.
 
 ### Updating Nautobot Version
 

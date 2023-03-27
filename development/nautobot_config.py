@@ -58,7 +58,7 @@ if not TESTING:
                 "handlers": ["verbose_console" if DEBUG else "normal_console"],
                 "level": LOG_LEVEL,
             },
-            "": {
+            "nautobot_data_validation_engine": {
                 "handlers": ["verbose_console" if DEBUG else "normal_console"],
                 "level": LOG_LEVEL,
             },

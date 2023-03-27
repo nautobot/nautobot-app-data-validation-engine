@@ -69,7 +69,17 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
 
     class Meta:
         model = MinMaxValidationRule
-        fields = ["id", "name", "slug", "min", "max", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "min",
+            "max",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class RequiredValidationRuleFilterSet(NautobotFilterSet):
@@ -93,7 +103,15 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
 
     class Meta:
         model = RequiredValidationRule
-        fields = ["id", "name", "slug", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class UniqueValidationRuleFilterSet(NautobotFilterSet):
@@ -117,4 +135,13 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
 
     class Meta:
         model = UniqueValidationRule
-        fields = ["id", "name", "slug", "max_instances", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "max_instances",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]

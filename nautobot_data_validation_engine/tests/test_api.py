@@ -36,7 +36,13 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = RegularExpressionValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -99,7 +105,13 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = MinMaxValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -165,7 +177,13 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = RequiredValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
@@ -222,26 +240,32 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
     """
 
     model = UniqueValidationRule
-    brief_fields = ["display", "id", "name", "slug", "url"]
+    brief_fields = [
+        "display",
+        "id",
+        "name",
+        "slug",
+        "url",
+    ]
 
     create_data = [
         {
-            "name": "Required rule 4",
-            "slug": "required-rule-4",
+            "name": "Unique rule 4",
+            "slug": "unique-rule-4",
             "content_type": "dcim.site",
             "field": "description",
             "max_instances": 1,
         },
         {
-            "name": "Required rule 5",
-            "slug": "required-rule-5",
+            "name": "Unique rule 5",
+            "slug": "unique-rule-5",
             "content_type": "dcim.site",
             "field": "asn",
             "max_instances": 2,
         },
         {
-            "name": "Required rule 6",
-            "slug": "required-rule-6",
+            "name": "Unique rule 6",
+            "slug": "unique-rule-6",
             "content_type": "dcim.site",
             "field": "facility",
             "max_instances": 3,
@@ -257,22 +281,22 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
         Create test data
         """
         UniqueValidationRule.objects.create(
-            name="Required rule 1",
-            slug="required-rule-1",
+            name="Unique rule 1",
+            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Region),
             field="description",
             max_instances=1,
         )
         UniqueValidationRule.objects.create(
-            name="Required rule 2",
-            slug="required-rule-2",
+            name="Unique rule 2",
+            slug="unique-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             max_instances=2,
         )
         UniqueValidationRule.objects.create(
-            name="Required rule 3",
-            slug="required-rule-3",
+            name="Unique rule 3",
+            slug="unique-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             max_instances=3,

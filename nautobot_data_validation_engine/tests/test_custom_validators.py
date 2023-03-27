@@ -392,8 +392,8 @@ class UniqueValidationRuleModelTestCase(TestCase):
 
     def test_blank_value_does_not_raise_error(self):
         UniqueValidationRule.objects.create(
-            name="Required rule 1",
-            slug="required-rule-1",
+            name="Unique rule 1",
+            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Site),
             field="asn",
             max_instances=1,
@@ -411,8 +411,8 @@ class UniqueValidationRuleModelTestCase(TestCase):
 
     def test_max_instances_reached_raises_error(self):
         UniqueValidationRule.objects.create(
-            name="Required rule 1",
-            slug="required-rule-1",
+            name="Unique rule 1",
+            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Site),
             field="description",
             max_instances=2,

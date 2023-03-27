@@ -216,7 +216,14 @@ class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = RequiredValidationRule
-        fields = ["name", "slug", "enabled", "content_type", "field", "error_message"]
+        fields = [
+            "name",
+            "slug",
+            "enabled",
+            "content_type",
+            "field",
+            "error_message",
+        ]
 
 
 class RequiredValidationRuleCSVForm(CSVModelForm):
@@ -257,7 +264,14 @@ class RequiredValidationRuleFilterForm(BootstrapMixin, forms.Form):
     """
 
     model = RequiredValidationRule
-    field_order = ["q", "name", "enabled", "content_type", "field", "error_message"]
+    field_order = [
+        "q",
+        "name",
+        "enabled",
+        "content_type",
+        "field",
+        "error_message",
+    ]
     q = forms.CharField(required=False, label="Search")
     # "CSV" field is being used here because it is using the slug-form input for
     # content-types, which improves UX.
@@ -288,7 +302,15 @@ class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = UniqueValidationRule
-        fields = ["name", "slug", "enabled", "content_type", "field", "max_instances", "error_message"]
+        fields = [
+            "name",
+            "slug",
+            "enabled",
+            "content_type",
+            "field",
+            "max_instances",
+            "error_message",
+        ]
 
 
 class UniqueValidationRuleCSVForm(CSVModelForm):
@@ -330,7 +352,15 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
     """
 
     model = UniqueValidationRule
-    field_order = ["q", "name", "enabled", "content_type", "field", "max_instances", "error_message"]
+    field_order = [
+        "q",
+        "name",
+        "enabled",
+        "content_type",
+        "field",
+        "max_instances",
+        "error_message",
+    ]
     q = forms.CharField(required=False, label="Search")
     # "CSV" field is being used here because it is using the slug-form input for
     # content-types, which improves UX.

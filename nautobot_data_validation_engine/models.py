@@ -6,7 +6,6 @@ import re
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
-from django.db.models.query_utils import Q
 from django.shortcuts import reverse
 
 from nautobot.core.models.generics import PrimaryModel
@@ -316,7 +315,7 @@ class RequiredValidationRule(ValidationRule):
         model_field = self.content_type.model_class()._meta.get_field(self.field)
 
         if self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types):
-            raise ValidationError({"field": "This field's type does not support min/max validation."})
+            raise ValidationError({"field": "This field's type does not support required validation."})
 
         # Generally, only Field(null=True) is considered except for the case of Field(null=False, blank=True)
         # which is commonly seen on CharFields and results in a default of empty string which is unacceptable
@@ -393,7 +392,7 @@ class UniqueValidationRule(ValidationRule):
         model_field = self.content_type.model_class()._meta.get_field(self.field)
 
         if self.field.startswith("_") or not model_field.editable or isinstance(model_field, blacklisted_field_types):
-            raise ValidationError({"field": "This field's type does not support min/max validation."})
+            raise ValidationError({"field": "This field's type does not support uniqueness validation."})
 
         if getattr(model_field, "unique", False):
             raise ValidationError({"field": "This field is already unique by default."})

@@ -83,7 +83,7 @@ In this example, a rule is enforcing that site objects must always have a descri
 
 ### Unique Rules
 
-![Unique List](../images/required-rules-list.png)
+![Unique List](../images/unique-rules-list.png)
 
 Each rule is defined with these fields:
 
@@ -94,8 +94,8 @@ Each rule is defined with these fields:
 * max instances - The total number of records that may have the same unique value for the given field. Default of 1.
 * error message - An optional error message to display to the user when validation fails. By default, a message indicating the value already exists on another record or set of records, as determined by max instances.
 
-![Unique Rules Edit](../images/required-rules-edit.png)
+![Unique Rules Edit](../images/unique-rules-edit.png)
 
 In this example, sites enforce that the assigned ASN is unique across all other sites.
 
-![Unique Rules Enforcement](../images/required-rules-enforcement.png)
+![Unique Rules Enforcement](../images/unique-rules-enforcement.png)
