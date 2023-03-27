@@ -21,6 +21,8 @@ class NautobotDataValidationEngineConfig(PluginConfig):
     description = "Plugin that provides a UI for managing custom data validation rules."
     base_url = "data-validation-engine"
     required_settings = []
+    min_version = "1.5.0"
+    max_version = "1.9999"
     default_settings = {}
     caching_config = {}
 
