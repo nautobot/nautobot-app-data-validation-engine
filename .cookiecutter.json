@@ -1,0 +1,24 @@
+{
+  "cookiecutter": {
+    "codeowner_github_usernames": "@smith-ntc",
+    "full_name": "Network to Code, LLC",
+    "email": "info@networktocode.com",
+    "github_org": "nautobot",
+    "nautobot_app_name": "nautobot_data_validation_engine",
+    "verbose_name": "Data Validation Engine",
+    "nautobot_app_slug": "nautobot-data-validation-engine",
+    "project_slug": "nautobot-plugin-data-validation-engine",
+    "repo_url": "https://github.com/nautobot/nautobot-plugin-data-validation-engine",
+    "base_url": "nautobot-data-validation-engine",
+    "min_nautobot_version": "1.5.7",
+    "nautobot_version": "latest",
+    "camel_name": "NautobotDataValidationEngine",
+    "project_short_description": "Data Validation Engine",
+    "version": "2.0.0",
+    "model_class_name": "None",
+    "open_source_license": "Apache-2.0",
+    "docs_base_url": "https://docs.nautobot.com",
+    "docs_nautobot_app_url": "https://docs.nautobot.com/projects/data-validation/en/latest",
+    "_template": "cookiecutter-nautobot-app/"
+  }
+}
