@@ -334,7 +334,7 @@ class UniqueValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
 
     class Meta:
         """Bulk edit form metadata for the UniqueValidationRule model."""
-        
+
         nullable_fields = ["error_message"]
 
 
