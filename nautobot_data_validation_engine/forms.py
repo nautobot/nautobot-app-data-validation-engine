@@ -4,7 +4,6 @@ Django forms.
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 
-from nautobot.extras.models.tags import Tag
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.forms import (
     BootstrapMixin,
