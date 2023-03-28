@@ -1,6 +1,5 @@
-"""
-Django views.
-"""
+"""Django views."""
+
 from nautobot.core.views.viewsets import NautobotUIViewSet
 
 from nautobot_data_validation_engine import filters, forms, tables

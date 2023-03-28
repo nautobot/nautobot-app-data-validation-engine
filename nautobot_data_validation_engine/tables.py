@@ -1,6 +1,5 @@
-"""
-Django tables.
-"""
+"""Django tables."""
+
 import django_tables2 as tables
 
 from nautobot.utilities.tables import BaseTable, ToggleColumn
@@ -19,9 +18,7 @@ from nautobot_data_validation_engine.models import (
 
 
 class RegularExpressionValidationRuleTable(BaseTable):
-    """
-    Base table for the RegularExpressionValidationRule model.
-    """
+    """Base table for the RegularExpressionValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
@@ -56,9 +53,7 @@ class RegularExpressionValidationRuleTable(BaseTable):
 
 
 class MinMaxValidationRuleTable(BaseTable):
-    """
-    Base table for the MinMaxValidationRule model.
-    """
+    """Base table for the MinMaxValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
@@ -93,9 +88,7 @@ class MinMaxValidationRuleTable(BaseTable):
 
 
 class RequiredValidationRuleTable(BaseTable):
-    """
-    Base table for the RequiredValidationRule model.
-    """
+    """Base table for the RequiredValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
@@ -126,9 +119,7 @@ class RequiredValidationRuleTable(BaseTable):
 
 
 class UniqueValidationRuleTable(BaseTable):
-    """
-    Base table for the UniqueValidationRule model.
-    """
+    """Base table for the UniqueValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))

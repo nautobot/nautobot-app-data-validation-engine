@@ -1,6 +1,5 @@
-"""
-API serializers
-"""
+"""API serializers."""
+
 from rest_framework import serializers
 
 from nautobot.core.api import WritableNestedSerializer

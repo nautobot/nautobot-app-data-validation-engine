@@ -29,16 +29,12 @@ LOGGER = logging.getLogger(__name__)
 
 
 class BaseValidator(PluginCustomValidator):
-    """
-    Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this plugin.
-    """
+    """Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this plugin."""
 
     model = None
 
     def clean(self):
-        """
-        The clean method executes the actual rule enforcement logic for each model.
-        """
+        """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
         # Regex rules
@@ -124,14 +120,10 @@ class BaseValidator(PluginCustomValidator):
 
 
 class CustomValidatorIterator:
-    """
-    Iterator that generates PluginCustomValidator classes for each model registered in the extras feature query registry 'custom_validators'.
-    """
+    """Iterator that generates PluginCustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
 
     def __iter__(self):
-        """
-        Return a generator of PluginCustomValidator classes for each registered model.
-        """
+        """Return a generator of PluginCustomValidator classes for each registered model."""
         for app_label, models in registry["model_features"]["custom_validators"].items():
             for model in models:
                 yield type(
