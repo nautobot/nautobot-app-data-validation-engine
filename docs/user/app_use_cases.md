@@ -1,5 +1,7 @@
 # Using the App
 
+This document describes common use-cases and scenarios for this App.
+
 ## General Usage
 
 The data validation engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.

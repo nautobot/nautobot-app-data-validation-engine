@@ -1,12 +1,19 @@
 ---
 name: 🐛 Bug Report
-about: Report a reproducible bug in the current release of nautobot-data-validation-engine 
+about: Report a reproducible bug in the current release of nautobot-data-validation-engine
 ---
 
 ### Environment
 * Python version:  <!-- Example: 3.7.7 -->
-* Nautobot version:  <!-- Example: 1.0.0 -->
-* nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
+* Nautobot version:  <!-- Example: 1.5.7 -->
+* nautobot-data-validation-engine version:  <!-- Example: 2.0.0 -->
+
+<!-- What did you expect to happen? -->
+### Expected Behavior
+
+
+<!-- What happened instead? -->
+### Observed Behavior
 
 <!--
     Describe in detail the exact steps that someone else can take to reproduce
@@ -16,10 +23,3 @@ about: Report a reproducible bug in the current release of nautobot-data-validat
 1.
 2.
 3.
-
-<!-- What did you expect to happen? -->
-### Expected Behavior
-
-
-<!-- What happened instead? -->
-### Observed Behavior
