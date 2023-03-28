@@ -12,6 +12,7 @@ class DataValidationEngineRootView(APIRootView):
     """Data Validation Engine API root view."""
 
     def get_view_name(self):
+        """Get the name of the view."""
         return "Data Validation Engine"
 
 

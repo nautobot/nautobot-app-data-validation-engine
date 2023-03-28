@@ -38,6 +38,8 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
     )
 
     class Meta:
+        """Form metadata for the RegularExpressionValidationRule model."""
+
         model = RegularExpressionValidationRule
         fields = [
             "name",
@@ -61,6 +63,8 @@ class RegularExpressionValidationRuleCSVForm(CSVModelForm):
     )
 
     class Meta:
+        """CSV form metadata for the RegularExpressionValidationRule model."""
+
         model = RegularExpressionValidationRule
         fields = RegularExpressionValidationRule.csv_headers
 
@@ -83,6 +87,8 @@ class RegularExpressionValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     )
 
     class Meta:
+        """Bulk edit form metadata for the RegularExpressionValidationRule model."""
+
         nullable_fields = ["error_message"]
 
 
@@ -127,6 +133,8 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
     )
 
     class Meta:
+        """Form metadata for the MinMaxValidationRule model."""
+
         model = MinMaxValidationRule
         fields = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
 
@@ -141,6 +149,8 @@ class MinMaxValidationRuleCSVForm(CSVModelForm):
     )
 
     class Meta:
+        """CSV form metadata for the MinMaxValidationRule model."""
+
         model = MinMaxValidationRule
         fields = MinMaxValidationRule.csv_headers
 
@@ -158,6 +168,8 @@ class MinMaxValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     error_message = forms.CharField(required=False)
 
     class Meta:
+        """Bulk edit form metadata for the MinMaxValidationRule model."""
+
         nullable_fields = ["error_message"]
 
 
@@ -195,6 +207,8 @@ class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
     )
 
     class Meta:
+        """Form metadata for the RequiredValidationRule model."""
+
         model = RequiredValidationRule
         fields = [
             "name",
@@ -216,6 +230,8 @@ class RequiredValidationRuleCSVForm(CSVModelForm):
     )
 
     class Meta:
+        """CSV form metadata for the RequiredValidationRule model."""
+
         model = RequiredValidationRule
         fields = RequiredValidationRule.csv_headers
 
@@ -231,6 +247,8 @@ class RequiredValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     error_message = forms.CharField(required=False)
 
     class Meta:
+        """Bulk edit form metadata for the RequiredValidationRule model."""
+
         nullable_fields = ["error_message"]
 
 
@@ -273,6 +291,8 @@ class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
     )
 
     class Meta:
+        """Form metadata for the UniqueValidationRule model."""
+
         model = UniqueValidationRule
         fields = [
             "name",
@@ -295,6 +315,8 @@ class UniqueValidationRuleCSVForm(CSVModelForm):
     )
 
     class Meta:
+        """CSV form metadata for the UniqueValidationRule model."""
+
         model = UniqueValidationRule
         fields = UniqueValidationRule.csv_headers
 
@@ -311,6 +333,8 @@ class UniqueValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     error_message = forms.CharField(required=False)
 
     class Meta:
+        """Bulk edit form metadata for the UniqueValidationRule model."""
+        
         nullable_fields = ["error_message"]
 
 

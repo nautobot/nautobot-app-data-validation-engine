@@ -31,6 +31,8 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     )
 
     class Meta:
+        """Filterset metadata for the RegularExpressionValidationRule model."""
+
         model = RegularExpressionValidationRule
         fields = [
             "id",
@@ -63,6 +65,8 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
     )
 
     class Meta:
+        """Filterset metadata for the MinMaxValidationRuleFilterSet model."""
+
         model = MinMaxValidationRule
         fields = [
             "id",
@@ -95,6 +99,8 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
     )
 
     class Meta:
+        """Filterset metadata for the RequiredValidationRuleFilterSet model."""
+
         model = RequiredValidationRule
         fields = [
             "id",
@@ -125,6 +131,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
     )
 
     class Meta:
+        """Filterset metadata for the UniqueValidationRuleFilterSet model."""
+
         model = UniqueValidationRule
         fields = [
             "id",

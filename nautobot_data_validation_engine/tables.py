@@ -24,6 +24,8 @@ class RegularExpressionValidationRuleTable(BaseTable):
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the RegularExpressionValidationRule model."""
+
         model = RegularExpressionValidationRule
         fields = (
             "pk",
@@ -59,6 +61,8 @@ class MinMaxValidationRuleTable(BaseTable):
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the MinMaxValidationRuleTable model."""
+
         model = MinMaxValidationRule
         fields = (
             "pk",
@@ -94,6 +98,8 @@ class RequiredValidationRuleTable(BaseTable):
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the RequiredValidationRuleTable model."""
+
         model = RequiredValidationRule
         fields = (
             "pk",
@@ -125,6 +131,8 @@ class UniqueValidationRuleTable(BaseTable):
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the UniqueValidationRuleTable model."""
+
         model = UniqueValidationRule
         fields = (
             "pk",

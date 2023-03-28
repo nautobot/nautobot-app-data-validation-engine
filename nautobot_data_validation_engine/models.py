@@ -50,6 +50,8 @@ class ValidationRule(PrimaryModel):
     objects = ValidationRuleManager.as_manager()
 
     class Meta:
+        """Model metadata for all validation engine rule models."""
+
         abstract = True
 
     def __str__(self):
@@ -82,6 +84,8 @@ class RegularExpressionValidationRule(ValidationRule):
     clone_fields = ["enabled", "content_type", "regular_expression", "error_message"]
 
     class Meta:
+        """Model metadata for the RegularExpressionValidationRule model."""
+
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
@@ -165,6 +169,8 @@ class MinMaxValidationRule(ValidationRule):
     clone_fields = ["enabled", "content_type", "min", "max", "error_message"]
 
     class Meta:
+        """Model metadata for the MinMaxValidationRule model."""
+
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
@@ -244,6 +250,8 @@ class RequiredValidationRule(ValidationRule):
     clone_fields = ["enabled", "content_type", "error_message"]
 
     class Meta:
+        """Model metadata for the RequiredValidationRule model."""
+
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
@@ -315,6 +323,8 @@ class UniqueValidationRule(ValidationRule):
     clone_fields = ["enabled", "content_type", "max_instances", "error_message"]
 
     class Meta:
+        """Model metadata for the UniqueValidationRule model."""
+
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 

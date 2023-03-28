@@ -35,6 +35,8 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
     )
 
     class Meta:
+        """Serializer metadata for RegularExpressionValidationRule objects."""
+
         model = RegularExpressionValidationRule
         fields = [
             "id",
@@ -63,6 +65,8 @@ class MinMaxValidationRuleSerializer(NautobotModelSerializer):
     )
 
     class Meta:
+        """Serializer metadata for MinMaxValidationRule objects."""
+
         model = MinMaxValidationRule
         fields = [
             "id",
@@ -91,6 +95,8 @@ class RequiredValidationRuleSerializer(NautobotModelSerializer):
     )
 
     class Meta:
+        """Serializer metadata for RequiredValidationRule objects."""
+
         model = RequiredValidationRule
         fields = [
             "id",
@@ -117,6 +123,8 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
     )
 
     class Meta:
+        """Serializer metadata for UniqueValidationRule objects."""
+
         model = UniqueValidationRule
         fields = [
             "id",
