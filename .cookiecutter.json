@@ -10,7 +10,7 @@
     "project_slug": "nautobot-plugin-data-validation-engine",
     "repo_url": "https://github.com/nautobot/nautobot-plugin-data-validation-engine",
     "base_url": "nautobot-data-validation-engine",
-    "min_nautobot_version": "1.4.0",
+    "min_nautobot_version": "1.5.0",
     "max_nautobot_version": "1.9999",
     "nautobot_version": "latest",
     "camel_name": "NautobotDataValidationEngine",

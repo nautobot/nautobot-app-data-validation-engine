@@ -312,7 +312,7 @@ def docs(context):
         print(">>> Serving Documentation at http://localhost:8001")
         run_command(context, command)
     else:
-        start(context, servics="docs")
+        start(context, service="docs")
 
 
 # ------------------------------------------------------------------------------
