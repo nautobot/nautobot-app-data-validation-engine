@@ -21,7 +21,7 @@ python = "^3.7"
 # Required for Python 3.7 for now. See: https://stackoverflow.com/a/73932581/194311
 importlib-metadata = "4.13.0"
 # Used for local development
-nautobot = { version = "^1.5.0", optional = true }
+nautobot = { version = "^1.5.2", optional = true }
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
