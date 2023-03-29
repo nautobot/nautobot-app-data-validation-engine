@@ -132,8 +132,8 @@ Each command can be executed with `invoke <command>`. All commands support the a
   flake8           Run flake8 to check that Python files adhere to its style standards.
   pydocstyle       Run pydocstyle to validate docstring formatting adheres to NTC defined standards.
   pylint           Run pylint code analysis.
-  tests            Run all tests for this Nautobot App.
-  unittest         Run Django unit tests for the Nautobot App.
+  tests            Run all tests for this plugin.
+  unittest         Run Django unit tests for the plugin.
 ```
 
 
@@ -360,9 +360,9 @@ Once the dependencies are resolved, stop the existing containers, rebuild the Do
 ➜ invoke start
 ```
 
-### Installing Additional Nautobot Apps
+### Installing Additional Nautobot Plugins
 
-Let's say for example you want the new plugin you're creating to integrate into Slack. To do this, you will want to integrate into the existing Nautobot ChatOps Nautobot App.
+Let's say for example you want the new plugin you're creating to integrate into Slack. To do this, you will want to integrate into the existing Nautobot ChatOps Plugin.
 
 ```bash
 ➜ poetry shell
@@ -371,7 +371,7 @@ Let's say for example you want the new plugin you're creating to integrate into 
 
 Once you activate the virtual environment via Poetry, you then tell Poetry to install the new plugin.
 
-Before you continue, you'll need to update the file `development/nautobot_config.py` accordingly with the name of the new plugin under `NAUTOBOT_APPS` and any relevant settings as necessary for the Nautobot App under `NAUTOBOT_APPS_CONFIG`. Since you're modifying the underlying OS (not just Django files), you need to rebuild the image. This is a similar process to updating environment variables, which was explained earlier.
+Before you continue, you'll need to update the file `development/nautobot_config.py` accordingly with the name of the new plugin under `PLUGINS` and any relevant settings as necessary for the plugin under `PLUGINS_CONFIG`. Since you're modifying the underlying OS (not just Django files), you need to rebuild the image. This is a similar process to updating environment variables, which was explained earlier.
 
 ```bash
 ➜ invoke stop
@@ -413,7 +413,7 @@ namespace.configure(
     {
         "nautobot_data_validation_engine": {
             ...
-            "nautobot_ver": "1.0.2",
+            "nautobot_ver": "1.4.10",
 	    ...
         }
     }
