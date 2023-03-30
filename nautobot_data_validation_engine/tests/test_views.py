@@ -1,6 +1,6 @@
 """Unit tests for nautobot_data_validation_engine views."""
 
-from unittest import skip, skipIf
+from unittest import skipIf
 from packaging import version
 
 from django.contrib.contenttypes.models import ContentType
@@ -30,7 +30,10 @@ class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTes
 
     model = RegularExpressionValidationRule
 
-    @skipIf(_NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS, f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948")
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
     def test_list_objects_with_permission(self):
         super().test_list_objects_with_permission()
 
@@ -88,7 +91,10 @@ class MinMaxValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
 
     model = MinMaxValidationRule
 
-    @skipIf(_NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS, f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948")
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
     def test_list_objects_with_permission(self):
         super().test_list_objects_with_permission()
 
@@ -148,7 +154,10 @@ class RequiredValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
 
     model = RequiredValidationRule
 
-    @skipIf(_NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS, f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948")
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
     def test_list_objects_with_permission(self):
         super().test_list_objects_with_permission()
 
@@ -201,7 +210,10 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
 
     model = UniqueValidationRule
 
-    @skipIf(_NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS, f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948")
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
     def test_list_objects_with_permission(self):
         super().test_list_objects_with_permission()
 
