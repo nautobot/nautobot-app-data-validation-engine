@@ -90,7 +90,18 @@ no-docstring-rgx="^(_|test_|Meta$)"
 # Line length is enforced by Black, so pylint doesn't need to check it.
 # Pylint and Black disagree about how to format multi-line arrays; Black wins.
 disable = """,
-    line-too-long
+    broad-except,
+    consider-using-f-string,
+    duplicate-code,
+    invalid-name,
+    line-too-long,
+    logging-fstring-interpolation,
+    protected-access,
+    raise-missing-from,
+    too-few-public-methods,
+    too-many-ancestors,
+    too-many-branches,
+    unused-import,
     """
 
 [tool.pylint.miscellaneous]
