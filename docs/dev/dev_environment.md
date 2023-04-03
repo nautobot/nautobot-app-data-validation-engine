@@ -1,11 +1,11 @@
 # Building Your Development Environment
 
-## Quickstart
+## Quickstart Guide
 
 The development environment can be used in two ways:
 
-1. `Recommended` All services are spun up using Docker and a local mount so you can develop locally, but Nautobot is spun up within the Docker container.
-2. With a local poetry environment if you wish to develop outside of Docker with the caveat of using external services provided by Docker for PostgresQL and Redis.
+1. **(Recommended)** All services, including Nautobot, are spun up using Docker containers and a volume mount so you can develop locally.
+2. With a local Poetry environment if you wish to develop outside of Docker, with the caveat of using external services provided by Docker for the database (PostgreSQL by default, MySQL optionally) and Redis services.
 
 This is a quick reference guide if you're already familiar with the development environment provided, which you can read more about later in this document.
 
@@ -144,7 +144,7 @@ This project provides the ability to develop and manage the Nautobot server loca
 The upside to having the Nautobot service handled by Docker rather than locally is that you do not have to manage the Nautobot server. The [Docker logs](#docker-logs) provide the majority of the information you will need to help troubleshoot, while getting started quickly and not requiring you to perform several manual steps and remembering to have the Nautobot server running in a separate terminal while you develop.
 
 !!! note
-	The local environment still uses Docker containers for the supporting services (Postgres, Redis, and RQ Worker), but the Nautobot server is handled locally by you, the developer.
+	The local environment still uses Docker containers for the supporting services (Postgres and Redis), but the Nautobot server is handled locally by you, the developer.
 
 Follow the directions below for the specific development environment that you choose.
 
@@ -401,7 +401,7 @@ namespace.configure(
 )
 ```
 
-Or set the `INVOKE_NAUTOBOT_GOLDEN_CONFIG_PYTHON_VER` variable.
+Or set the `INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_PYTHON_VER` variable.
 
 ### Updating Nautobot Version
 
@@ -413,7 +413,7 @@ namespace.configure(
     {
         "nautobot_data_validation_engine": {
             ...
-            "nautobot_ver": "1.0.2",
+            "nautobot_ver": "1.4.10",
 	    ...
         }
     }

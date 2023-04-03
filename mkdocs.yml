@@ -96,8 +96,8 @@ nav:
   - Overview: "index.md"
   - User Guide:
       - App Overview: "user/app_overview.md"
-      - Using the App: "user/app_use_cases.md"
       - Getting Started: "user/app_getting_started.md"
+      - Using the App: "user/app_use_cases.md"
       - Frequently Asked Questions: "user/faq.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
@@ -113,6 +113,6 @@ nav:
       - Development Environment: "dev/dev_environment.md"
       - Code Reference:
           - "dev/code_reference/index.md"
-          - Models: "dev/code_reference/models.md"
+          - Package: "dev/code_reference/package.md"
           - API: "dev/code_reference/api.md"
   - Nautobot Docs Home ↗︎: "https://docs.nautobot.com"

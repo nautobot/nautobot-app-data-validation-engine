@@ -1,0 +1,25 @@
+{
+  "cookiecutter": {
+    "codeowner_github_usernames": "@smith-ntc",
+    "full_name": "Network to Code, LLC",
+    "email": "info@networktocode.com",
+    "github_org": "nautobot",
+    "plugin_name": "nautobot_data_validation_engine",
+    "verbose_name": "Data Validation Engine",
+    "plugin_slug": "nautobot-data-validation-engine",
+    "project_slug": "nautobot-plugin-data-validation-engine",
+    "repo_url": "https://github.com/nautobot/nautobot-plugin-data-validation-engine",
+    "base_url": "nautobot-data-validation-engine",
+    "min_nautobot_version": "1.5.2",
+    "max_nautobot_version": "1.9999",
+    "nautobot_version": "latest",
+    "camel_name": "NautobotDataValidationEngine",
+    "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
+    "version": "2.0.0",
+    "model_class_name": "None",
+    "open_source_license": "Apache-2.0",
+    "docs_base_url": "https://docs.nautobot.com",
+    "docs_app_url": "https://docs.nautobot.com/projects/data-validation/en/latest",
+    "_template": "nautobot-plugin"
+  }
+}
