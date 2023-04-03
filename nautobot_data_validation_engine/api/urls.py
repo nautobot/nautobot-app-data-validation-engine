@@ -1,6 +1,5 @@
-"""
-API routes
-"""
+"""API routes."""
+
 from nautobot.core.api import OrderedDefaultRouter
 
 from nautobot_data_validation_engine.api import views

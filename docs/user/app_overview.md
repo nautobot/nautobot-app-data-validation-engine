@@ -1,6 +1,11 @@
 # App Overview
 
-## Description/Overview
+This document provides an overview of the App including critical information and import considerations when applying it to your Nautobot environment.
+
+!!! note
+    Throughout this documentation, the terms "app" and "plugin" will be used interchangeably.
+
+## Description
 
 The data validation engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
 

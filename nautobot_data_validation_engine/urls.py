@@ -1,7 +1,6 @@
-"""
-Django url patterns.
-"""
-from django.urls import path, include
+"""Django url patterns."""
+
+from django.urls import path
 
 from nautobot.core.views.routers import NautobotUIViewSetRouter
 from nautobot.extras.views import ObjectChangeLogView, ObjectNotesView

@@ -1,8 +1,9 @@
-"""
-View test cases
-"""
-from django.contrib.contenttypes.models import ContentType
+"""Unit tests for nautobot_data_validation_engine views."""
 
+from unittest import skipIf
+from packaging import version
+
+from django.contrib.contenttypes.models import ContentType
 from nautobot.dcim.models import Device, PowerFeed, Site
 from nautobot.utilities.testing import ViewTestCases
 
@@ -13,13 +14,28 @@ from nautobot_data_validation_engine.models import (
     UniqueValidationRule,
 )
 
+try:
+    from importlib import metadata
+except ImportError:
+    # Running on pre-3.8 Python; use importlib-metadata package
+    import importlib_metadata as metadata
+
+_NAUTOBOT_VERSION = version.parse(metadata.version("nautobot"))
+# Related to this issue: https://github.com/nautobot/nautobot/issues/2948
+_FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS = [version.parse("1.5.2"), version.parse("1.5.3"), version.parse("1.5.4")]
+
 
 class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the RegularExpressionValidationRule model
-    """
+    """View test cases for the RegularExpressionValidationRule model."""
 
     model = RegularExpressionValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):
@@ -71,11 +87,16 @@ class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTes
 
 
 class MinMaxValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the MinMaxValidationRule model
-    """
+    """View test cases for the MinMaxValidationRule model."""
 
     model = MinMaxValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):
@@ -129,11 +150,16 @@ class MinMaxValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
 
 
 class RequiredValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the RequiredValidationRule model
-    """
+    """View test cases for the RequiredValidationRule model."""
 
     model = RequiredValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):
@@ -180,11 +206,16 @@ class RequiredValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
 
 
 class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the UniqueValidationRule model
-    """
+    """View test cases for the UniqueValidationRule model."""
 
     model = UniqueValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):

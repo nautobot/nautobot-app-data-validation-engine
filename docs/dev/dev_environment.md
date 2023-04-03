@@ -1,11 +1,11 @@
 # Building Your Development Environment
 
-## Quickstart
+## Quickstart Guide
 
 The development environment can be used in two ways:
 
-1. `Recommended` All services are spun up using Docker and a local mount so you can develop locally, but Nautobot is spun up within the Docker container.
-2. With a local poetry environment if you wish to develop outside of Docker with the caveat of using external services provided by Docker for PostgresQL and Redis.
+1. **(Recommended)** All services, including Nautobot, are spun up using Docker containers and a volume mount so you can develop locally.
+2. With a local Poetry environment if you wish to develop outside of Docker, with the caveat of using external services provided by Docker for the database (PostgreSQL by default, MySQL optionally) and Redis services.
 
 This is a quick reference guide if you're already familiar with the development environment provided, which you can read more about later in this document.
 
@@ -216,6 +216,7 @@ This will start all of the Docker containers used for hosting Nautobot. You shou
 ```bash
 ➜ docker ps
 ****CONTAINER ID   IMAGE                            COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+ee90fbfabd77   nautobot-data-validation-engine/nautobot:latest-py3.7   "nautobot-server rqw…"   16 seconds ago   Up 13 seconds                                               nautobot_data_validation_engine_worker_1
 b8adb781d013   nautobot-data-validation-engine/nautobot:latest-py3.7   "/docker-entrypoint.…"   20 seconds ago   Up 15 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   nautobot_data_validation_engine_nautobot_1
 d64ebd60675d   nautobot-data-validation-engine/nautobot:latest-py3.7   "mkdocs serve -v -a …"   25 seconds ago   Up 18 seconds   0.0.0.0:8001->8080/tcp, :::8001->8080/tcp   nautobot_data_validation_engine_docs_1
 e72d63129b36   postgres:13-alpine               "docker-entrypoint.s…"   25 seconds ago   Up 19 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   nautobot_data_validation_engine_postgres_1
@@ -412,7 +413,7 @@ namespace.configure(
     {
         "nautobot_data_validation_engine": {
             ...
-            "nautobot_ver": "1.0.2",
+            "nautobot_ver": "1.4.10",
 	    ...
         }
     }

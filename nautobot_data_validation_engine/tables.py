@@ -1,6 +1,5 @@
-"""
-Django tables.
-"""
+"""Django tables."""
+
 import django_tables2 as tables
 
 from nautobot.utilities.tables import BaseTable, ToggleColumn
@@ -19,14 +18,14 @@ from nautobot_data_validation_engine.models import (
 
 
 class RegularExpressionValidationRuleTable(BaseTable):
-    """
-    Base table for the RegularExpressionValidationRule model.
-    """
+    """Base table for the RegularExpressionValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the RegularExpressionValidationRule model."""
+
         model = RegularExpressionValidationRule
         fields = (
             "pk",
@@ -56,14 +55,14 @@ class RegularExpressionValidationRuleTable(BaseTable):
 
 
 class MinMaxValidationRuleTable(BaseTable):
-    """
-    Base table for the MinMaxValidationRule model.
-    """
+    """Base table for the MinMaxValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the MinMaxValidationRuleTable model."""
+
         model = MinMaxValidationRule
         fields = (
             "pk",
@@ -93,14 +92,14 @@ class MinMaxValidationRuleTable(BaseTable):
 
 
 class RequiredValidationRuleTable(BaseTable):
-    """
-    Base table for the RequiredValidationRule model.
-    """
+    """Base table for the RequiredValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the RequiredValidationRuleTable model."""
+
         model = RequiredValidationRule
         fields = (
             "pk",
@@ -126,14 +125,14 @@ class RequiredValidationRuleTable(BaseTable):
 
 
 class UniqueValidationRuleTable(BaseTable):
-    """
-    Base table for the UniqueValidationRule model.
-    """
+    """Base table for the UniqueValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
 
     class Meta(BaseTable.Meta):
+        """Table metadata for the UniqueValidationRuleTable model."""
+
         model = UniqueValidationRule
         fields = (
             "pk",

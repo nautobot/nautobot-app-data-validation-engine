@@ -1,6 +1,5 @@
-"""
-API serializers
-"""
+"""API serializers."""
+
 from rest_framework import serializers
 
 from nautobot.core.api import WritableNestedSerializer
@@ -29,6 +28,8 @@ class NestedRegularExpressionValidationRuleSerializer(WritableNestedSerializer):
     )
 
     class Meta:
+        """Serializer metadata for RegularExpressionValidationRule objects."""
+
         model = RegularExpressionValidationRule
         fields = [
             "id",
@@ -46,6 +47,8 @@ class NestedMinMaxValidationRuleSerializer(WritableNestedSerializer):
     )
 
     class Meta:
+        """Serializer metadata for MinMaxValidationRule objects."""
+
         model = MinMaxValidationRule
         fields = [
             "id",
@@ -63,6 +66,8 @@ class NestedRequiredValidationRuleSerializer(WritableNestedSerializer):
     )
 
     class Meta:
+        """Serializer metadata for RequiredValidationRule objects."""
+
         model = RequiredValidationRule
         fields = [
             "id",
@@ -80,6 +85,8 @@ class NestedUniqueValidationRuleSerializer(WritableNestedSerializer):
     )
 
     class Meta:
+        """Serializer metadata for UniqueValidationRule objects."""
+
         model = UniqueValidationRule
         fields = [
             "id",
