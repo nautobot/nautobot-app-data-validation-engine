@@ -1,0 +1,44 @@
+{% extends 'generic/object_detail.html' %}
+{% load helpers %}
+
+{% block content_left_page %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Regular Expression Rule</strong>
+    </div>
+    <table class="table table-hover panel-body attr-table">
+        <tr>
+            <td>Name</td>
+            <td>{{ object.name }}</td>
+        </tr>
+        <tr>
+            <td>Enabled</td>
+            <td>
+                {{ object.enabled | render_boolean }}
+            </td>
+        </tr>
+        <tr>
+            <td>Content type</td>
+            <td>{{ object.content_type.app_label }}.{{ object.content_type.model }}</td>
+        </tr>
+        <tr>
+            <td>Field</td>
+            <td>{{ object.field }}</td>
+        </tr>
+        <tr>
+            <td>Regular expression</td>
+            <td>{{ object.regular_expression }}</td>
+        </tr>
+        <tr>
+            <td>Context processing</td>
+            <td>
+                {{ object.context_processing | render_boolean }}
+            </td>
+        </tr>
+        <tr>
+            <td>Error message</td>
+            <td>{{ object.error_message|placeholder }}</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

@@ -1,386 +1,451 @@
-"""Tasks for use with Invoke."""
+"""Tasks for use with Invoke.
 
+(c) 2020-2021 Network To Code
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
+from distutils.util import strtobool
+from invoke import Collection, task as invoke_task
 import os
-import sys
-import requests
-from invoke import task
 
-try:
-    import toml
-except ImportError:
-    sys.exit("Please make sure to `pip install toml` or enable the Poetry shell and run `poetry install`.")
 
-PYTHON_VER = os.getenv("PYTHON_VER", "3.7")
-NAUTOBOT_VER = os.getenv("NAUTOBOT_VER", "1.0.2")
-NAUTOBOT_SRC_URL = os.getenv("NAUTOBOT_SRC_URL", f"https://github.com/nautobot/nautobot/archive/{NAUTOBOT_VER}.tar.gz")
+def is_truthy(arg):
+    """Convert "truthy" strings into Booleans.
 
-# Name of the docker image/container
-NAME = os.getenv("IMAGE_NAME", "nautobot-data-validation-engine")
-PWD = os.getcwd()
+    Examples:
+        >>> is_truthy('yes')
+        True
+    Args:
+        arg (str): Truthy string (True values are y, yes, t, true, on and 1; false values are n, no,
+        f, false, off and 0. Raises ValueError if val is anything else.
+    """
+    if isinstance(arg, bool):
+        return arg
+    return bool(strtobool(arg))
 
-COMPOSE_FILE = "development/docker-compose.yml"
-COMPOSE_OVERRIDE = "docker-compose.override.yml"
-BUILD_NAME = "nautobot_data_validation_engine"
 
-DEFAULT_ENV = {
-    "NAUTOBOT_VER": NAUTOBOT_VER,
-    "PYTHON_VER": PYTHON_VER,
-    "NAUTOBOT_SRC_URL": NAUTOBOT_SRC_URL,
-}
+# Use pyinvoke configuration for default values, see http://docs.pyinvoke.org/en/stable/concepts/configuration.html
+# Variables may be overwritten in invoke.yml or by the environment variables INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_xxx
+namespace = Collection("nautobot_data_validation_engine")
+namespace.configure(
+    {
+        "nautobot_data_validation_engine": {
+            "nautobot_ver": "latest",
+            "project_name": "nautobot_data_validation_engine",
+            "python_ver": "3.8",
+            "local": False,
+            "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
+            "compose_files": [
+                "docker-compose.base.yml",
+                "docker-compose.redis.yml",
+                "docker-compose.postgres.yml",
+                "docker-compose.dev.yml",
+            ],
+            "compose_http_timeout": "86400",
+        }
+    }
+)
 
-COMPOSE_APPEND = ""
-if os.path.isfile(COMPOSE_OVERRIDE):
-    COMPOSE_APPEND = f"-f {COMPOSE_OVERRIDE}"
-COMPOSE_COMMAND = f"docker-compose -f {COMPOSE_FILE} {COMPOSE_APPEND} -p {BUILD_NAME}"
 
-PYPROJECT_CONFIG = toml.load("pyproject.toml")
-# Get project name from the toml file
-PROJECT_NAME = PYPROJECT_CONFIG["tool"]["poetry"]["name"]
-# Get current project version from the toml file
-PROJECT_VERSION = PYPROJECT_CONFIG["tool"]["poetry"]["version"]
+def task(function=None, *args, **kwargs):
+    """Task decorator to override the default Invoke task decorator and add each task to the invoke namespace."""
 
-environment = DEFAULT_ENV
+    def task_wrapper(function=None):
+        """Wrapper around invoke.task to add the task to the namespace as well."""
+        if args or kwargs:
+            task_func = invoke_task(*args, **kwargs)(function)
+        else:
+            task_func = invoke_task(function)
+        namespace.add_task(task_func)
+        return task_func
+
+    if function:
+        # The decorator was called with no arguments
+        return task_wrapper(function)
+    # The decorator was called with arguments
+    return task_wrapper
+
+
+def docker_compose(context, command, **kwargs):
+    """Helper function for running a specific docker-compose command with all appropriate parameters and environment.
+
+    Args:
+        context (obj): Used to run specific commands
+        command (str): Command string to append to the "docker-compose ..." command, such as "build", "up", etc.
+        **kwargs: Passed through to the context.run() call.
+    """
+    build_env = {
+        # Note: 'docker-compose logs' will stop following after 60 seconds by default,
+        # so we are overriding that by setting this environment variable.
+        "COMPOSE_HTTP_TIMEOUT": context.nautobot_data_validation_engine.compose_http_timeout,
+        "NAUTOBOT_VER": context.nautobot_data_validation_engine.nautobot_ver,
+        "PYTHON_VER": context.nautobot_data_validation_engine.python_ver,
+    }
+    compose_command_tokens = [
+        "docker-compose",
+        f"--project-name {context.nautobot_data_validation_engine.project_name}",
+        f'--project-directory "{context.nautobot_data_validation_engine.compose_dir}"',
+    ]
+
+    for compose_file in context.nautobot_data_validation_engine.compose_files:
+        compose_file_path = os.path.join(context.nautobot_data_validation_engine.compose_dir, compose_file)
+        compose_command_tokens.append(f' -f "{compose_file_path}"')
+
+    compose_command_tokens.append(command)
+
+    # If `service` was passed as a kwarg, add it to the end.
+    service = kwargs.pop("service", None)
+    if service is not None:
+        compose_command_tokens.append(service)
+
+    print(f'Running docker-compose command "{command}"')
+    compose_command = " ".join(compose_command_tokens)
+
+    return context.run(compose_command, env=build_env, **kwargs)
+
+
+def run_command(context, command, **kwargs):
+    """Wrapper to run a command locally or inside the nautobot container."""
+    if is_truthy(context.nautobot_data_validation_engine.local):
+        context.run(command, **kwargs)
+    else:
+        # Check if nautobot is running, no need to start another nautobot container to run a command
+        docker_compose_status = "ps --services --filter status=running"
+        results = docker_compose(context, docker_compose_status, hide="out")
+        if "nautobot" in results.stdout:
+            compose_command = f"exec nautobot {command}"
+        else:
+            compose_command = f"run --entrypoint '{command}' nautobot"
+
+        docker_compose(context, compose_command, pty=True)
+
+
 # ------------------------------------------------------------------------------
 # BUILD
 # ------------------------------------------------------------------------------
-@task
-def build(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Build all docker images.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+@task(
+    help={
+        "force_rm": "Always remove intermediate containers",
+        "cache": "Whether to use Docker's cache when building the image (defaults to enabled)",
+    }
+)
+def build(context, force_rm=False, cache=True):
+    """Build Nautobot docker image."""
+    command = "build"
 
-    context.run(
-        f"{COMPOSE_COMMAND} build",
-        env=DEFAULT_ENV,
-    )
+    if not cache:
+        command += " --no-cache"
+    if force_rm:
+        command += " --force-rm"
+
+    print(f"Building Nautobot with Python {context.nautobot_data_validation_engine.python_ver}...")
+    docker_compose(context, command)
+
+
+@task
+def generate_packages(context):
+    """Generate all Python packages inside docker and copy the file locally under dist/."""
+    command = "poetry build"
+    run_command(context, command)
 
 
 # ------------------------------------------------------------------------------
 # START / STOP / DEBUG
 # ------------------------------------------------------------------------------
 @task
-def debug(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Start Nautobot and its dependencies in debug mode.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+def debug(context):
+    """Start Nautobot and its dependencies in debug mode."""
+    print("Starting Nautobot in debug mode...")
+    docker_compose(context, "up")
 
-    print("Starting Nautobot .. ")
-    context.run(
-        f"{COMPOSE_COMMAND} up",
-        env=DEFAULT_ENV,
-    )
+
+@task(help={"service": "If specified, only affect this service."})
+def start(context, service=None):
+    """Start Nautobot and its dependencies in detached mode."""
+    print("Starting Nautobot in detached mode...")
+    docker_compose(context, "up --detach", service=service)
 
 
 @task
-def start(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Start Nautobot and its dependencies in detached mode.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    print("Starting Nautobot in detached mode.. ")
-    context.run(
-        f"{COMPOSE_COMMAND} up -d",
-        env=DEFAULT_ENV,
-    )
+def restart(context):
+    """Gracefully restart all containers."""
+    print("Restarting Nautobot...")
+    docker_compose(context, "restart")
 
 
 @task
-def stop(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Stop Nautobot and its dependencies.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    print("Stopping Nautobot .. ")
-    context.run(
-        f"{COMPOSE_COMMAND} down",
-        env=DEFAULT_ENV,
-    )
+def stop(context):
+    """Stop Nautobot and its dependencies."""
+    print("Stopping Nautobot...")
+    docker_compose(context, "down")
 
 
 @task
-def destroy(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Destroy all containers and volumes.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+def destroy(context):
+    """Destroy all containers and volumes."""
+    print("Destroying Nautobot...")
+    docker_compose(context, "down --volumes")
 
-    context.run(
-        f"{COMPOSE_COMMAND} down",
-        env=DEFAULT_ENV,
-    )
-    context.run(
-        f"docker volume rm -f {BUILD_NAME}_pgdata_nautobot_data_validation_engine",
-        env=DEFAULT_ENV,
-    )
+
+@task
+def vscode(context):
+    """Launch Visual Studio Code with the appropriate Environment variables to run in a container."""
+    command = "code nautobot.code-workspace"
+
+    context.run(command)
+
+
+@task(
+    help={
+        "service": "Docker-compose service name to view (default: nautobot)",
+        "follow": "Follow logs",
+        "tail": "Tail N number of lines or 'all'",
+    }
+)
+def logs(context, service="nautobot", follow=False, tail=None):
+    """View the logs of a docker-compose service."""
+    command = "logs "
+
+    if follow:
+        command += "--follow "
+    if tail:
+        command += f"--tail={tail} "
+
+    command += service
+    docker_compose(context, command)
 
 
 # ------------------------------------------------------------------------------
 # ACTIONS
 # ------------------------------------------------------------------------------
 @task
-def nbshell(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Launch a nbshell session.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    context.run(
-        f"{COMPOSE_COMMAND} run nautobot nautobot-server nbshell",
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+def nbshell(context):
+    """Launch an interactive nbshell session."""
+    command = "nautobot-server nbshell"
+    run_command(context, command)
 
 
 @task
-def cli(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Launch a bash shell inside the running Nautobot container.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    context.run(
-        f"{COMPOSE_COMMAND} run nautobot bash",
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+def shell_plus(context):
+    """Launch an interactive shell_plus session."""
+    command = "nautobot-server shell_plus"
+    run_command(context, command)
 
 
 @task
-def create_user(context, user="admin", nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Create a new user in django (default: admin), will prompt for password.
-    Args:
-        context (obj): Used to run specific commands
-        user (str): name of the superuser to create
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    context.run(
-        f"{COMPOSE_COMMAND} run nautobot nautobot-server createsuperuser --username {user}",
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+def cli(context):
+    """Launch a bash shell inside the running Nautobot container."""
+    run_command(context, "bash")
 
 
-@task
-def makemigrations(context, name="", nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run Make Migration in Django.
-    Args:
-        context (obj): Used to run specific commands
-        name (str): Name of the migration to be created
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+@task(
+    help={
+        "user": "name of the superuser to create (default: admin)",
+    }
+)
+def createsuperuser(context, user="admin"):
+    """Create a new Nautobot superuser account (default: "admin"), will prompt for password."""
+    command = f"nautobot-server createsuperuser --username {user}"
 
-    context.run(
-        f"{COMPOSE_COMMAND} up -d postgres",
-        env=DEFAULT_ENV,
-    )
+    run_command(context, command)
+
+
+@task(
+    help={
+        "name": "name of the migration to be created; if unspecified, will autogenerate a name",
+    }
+)
+def makemigrations(context, name=""):
+    """Perform makemigrations operation in Django."""
+    command = "nautobot-server makemigrations nautobot_data_validation_engine"
 
     if name:
-        context.run(
-            f"{COMPOSE_COMMAND} run nautobot nautobot-server makemigrations nautobot_data_validation_engine --name {name}",
-            env=DEFAULT_ENV,
-        )
+        command += f" --name {name}"
+
+    run_command(context, command)
+
+
+@task
+def migrate(context):
+    """Perform migrate operation in Django."""
+    command = "nautobot-server migrate"
+
+    run_command(context, command)
+
+
+@task(help={})
+def post_upgrade(context):
+    """
+    Performs Nautobot common post-upgrade operations using a single entrypoint.
+
+    This will run the following management commands with default settings, in order:
+
+    - migrate
+    - trace_paths
+    - collectstatic
+    - remove_stale_contenttypes
+    - clearsessions
+    - invalidate all
+    """
+    command = "nautobot-server post_upgrade"
+
+    run_command(context, command)
+
+
+# ------------------------------------------------------------------------------
+# DOCS
+# ------------------------------------------------------------------------------
+@task
+def docs(context):
+    """Build and serve docs locally for development."""
+    command = "mkdocs serve -v"
+
+    if is_truthy(context.nautobot_data_validation_engine.local):
+        print(">>> Serving Documentation at http://localhost:8001")
+        run_command(context, command)
     else:
-        context.run(
-            f"{COMPOSE_COMMAND} run nautobot nautobot-server makemigrations nautobot_data_validation_engine",
-            env=DEFAULT_ENV,
-        )
-
-    context.run(
-        f"{COMPOSE_COMMAND} down",
-        env=DEFAULT_ENV,
-    )
+        start(context, service="docs")
 
 
 # ------------------------------------------------------------------------------
-# TESTS / LINTING
+# TESTS
 # ------------------------------------------------------------------------------
-@task
-def unittest(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run Django unit tests for the plugin.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+@task(
+    help={
+        "autoformat": "Apply formatting recommendations automatically, rather than failing if formatting is incorrect.",
+    }
+)
+def black(context, autoformat=False):
+    """Check Python code style with Black."""
+    if autoformat:
+        black_command = "black"
+    else:
+        black_command = "black --check --diff"
 
-    docker = f"{COMPOSE_COMMAND} run --entrypoint='' nautobot "
-    context.run(
-        f'{docker} sh -c "nautobot-server test nautobot_data_validation_engine"',
-        env=DEFAULT_ENV,
-        pty=True,
+    command = f"{black_command} ."
+
+    run_command(context, command)
+
+
+@task
+def flake8(context):
+    """Check for PEP8 compliance and other style issues."""
+    command = "flake8 . --config .flake8"
+    run_command(context, command)
+
+
+@task
+def hadolint(context):
+    """Check Dockerfile for hadolint compliance and other style issues."""
+    command = "hadolint development/Dockerfile"
+    run_command(context, command)
+
+
+@task
+def pylint(context):
+    """Run pylint code analysis."""
+    command = (
+        'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml nautobot_data_validation_engine'
     )
+    run_command(context, command)
 
 
 @task
-def pylint(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run pylint code analysis.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    docker = f"{COMPOSE_COMMAND} run --entrypoint='' nautobot "
+def pydocstyle(context):
+    """Run pydocstyle to validate docstring formatting adheres to NTC defined standards."""
     # We exclude the /migrations/ directory since it is autogenerated code
-    context.run(
-        f"{docker} sh -c \"cd /source && find . -name '*.py' -not -path '*/migrations/*' | "
-        'PYTHONPATH=/source/development DJANGO_SETTINGS_MODULE=nautobot_config xargs pylint"',
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+    command = "pydocstyle ."
+    run_command(context, command)
 
 
 @task
-def black(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run black to check that Python files adhere to its style standards.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    docker = f"{COMPOSE_COMMAND} run --entrypoint='' nautobot "
-    context.run(
-        f'{docker} sh -c "cd /source && black --check --diff ."',
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+def bandit(context):
+    """Run bandit to validate basic static code security analysis."""
+    command = "bandit --recursive . --configfile .bandit.yml"
+    run_command(context, command)
 
 
 @task
-def pydocstyle(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run pydocstyle to validate docstring formatting adheres to NTC defined standards.
+def yamllint(context):
+    """Run yamllint to validate formating adheres to NTC defined YAML standards.
+
     Args:
         context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
     """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
-
-    docker = f"{COMPOSE_COMMAND} run --entrypoint='' nautobot "
-    # We exclude the /migrations/ directory since it is autogenerated code
-    context.run(
-        f"{docker} sh -c \"cd /source && find . -name '*.py' -not -path '*/migrations/*' | xargs pydocstyle\"",
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+    command = "yamllint . --format standard"
+    run_command(context, command)
 
 
 @task
-def bandit(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run bandit to validate basic static code security analysis.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+def check_migrations(context):
+    """Check for missing migrations."""
+    command = "nautobot-server --config=nautobot/core/tests/nautobot_config.py makemigrations --dry-run --check"
 
-    docker = f"{COMPOSE_COMMAND} run --entrypoint='' nautobot "
-    context.run(
-        f'{docker} sh -c "cd /source && bandit --recursive ./ --configfile .bandit.yml"',
-        env=DEFAULT_ENV,
-        pty=True,
-    )
+    run_command(context, command)
+
+
+@task(
+    help={
+        "keepdb": "save and re-use test database between test runs for faster re-testing.",
+        "label": "specify a directory or module to test instead of running all Nautobot tests",
+        "failfast": "fail as soon as a single test fails don't run the entire test suite",
+        "buffer": "Discard output from passing tests",
+    }
+)
+def unittest(context, keepdb=False, label="nautobot_data_validation_engine", failfast=False, buffer=True):
+    """Run Nautobot unit tests."""
+    command = f"coverage run --module nautobot.core.cli test {label}"
+
+    if keepdb:
+        command += " --keepdb"
+    if failfast:
+        command += " --failfast"
+    if buffer:
+        command += " --buffer"
+    run_command(context, command)
 
 
 @task
-def tests(context, nautobot_ver=NAUTOBOT_VER, python_ver=PYTHON_VER):
-    """Run all tests for this plugin.
-    Args:
-        context (obj): Used to run specific commands
-        nautobot_ver (str): Nautobot version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    DEFAULT_ENV[NAUTOBOT_VER] = nautobot_ver
-    DEFAULT_ENV[PYTHON_VER] = python_ver
+def unittest_coverage(context):
+    """Report on code test coverage as measured by 'invoke unittest'."""
+    command = "coverage report --skip-covered --include 'nautobot_data_validation_engine/*' --omit *migrations*"
 
+    run_command(context, command)
+
+
+@task(
+    help={
+        "failfast": "fail as soon as a single test fails don't run the entire test suite",
+    }
+)
+def tests(context, failfast=False):
+    """Run all tests for this plugin."""
+    # If we are not running locally, start the docker containers so we don't have to for each test
+    if not is_truthy(context.nautobot_data_validation_engine.local):
+        print("Starting Docker Containers...")
+        start(context)
     # Sorted loosely from fastest to slowest
     print("Running black...")
-    black(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
+    black(context)
+    print("Running flake8...")
+    flake8(context)
     print("Running bandit...")
-    bandit(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
+    bandit(context)
     print("Running pydocstyle...")
-    pydocstyle(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
+    pydocstyle(context)
+    print("Running yamllint...")
+    yamllint(context)
     print("Running pylint...")
-    pylint(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
+    pylint(context)
     print("Running unit tests...")
-    unittest(context, nautobot_ver=nautobot_ver, python_ver=python_ver)
-
+    unittest(context, failfast=failfast)
     print("All tests have passed!")
-
-
-@task
-def check_pypi_version(context, name=PROJECT_NAME, version=PROJECT_VERSION):
-    """Verify if the version specified already exists on PyPI.
-
-    Used mostly in CI/CD to make sure that the new version is merged to main.
-    If version already exists, then function exits with non-zero return code,
-    else the function exits with zero return code.
-
-    Args:
-        context (obj): Used to run specific commands
-        name (str): The name of the project
-        version (str): The version of the project
-    """
-    # Running the following from context to pass pylint:
-    # context must be the first argument in invoke
-    context.run(f"echo Verifying the version {version} on PyPI.")
-
-    url = f"https://pypi.org/pypi/{name}/json"
-    response = requests.get(url)
-    data = response.json()
-    if version in data.get("releases", {}).keys():
-        print(f"The version {version} already exists.")
-        print("Bump the version. Run the command: poetry version.")
-        sys.exit(1)
-    print(f"The version {version} does not exist on PyPI.")
-    print("The version can be released.")
-    sys.exit(0)
+    unittest_coverage(context)

@@ -1,50 +1,77 @@
-"""
-Plugin navigation menu items.
-"""
-from nautobot.extras.plugins import PluginMenuButton, PluginMenuItem
-from nautobot.utilities.choices import ButtonColorChoices
+"""Plugin navigation menu items."""
+
+from nautobot.core.apps import NavMenuAddButton, NavMenuGroup, NavMenuItem, NavMenuImportButton, NavMenuTab
 
 
 menu_items = (
-    PluginMenuItem(
-        link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_list",
-        link_text="Min/Max Rules",
-        permissions=["nautobot_data_validation_engine.view_minmaxvalidationrule"],
-        buttons=(
-            PluginMenuButton(
-                link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_add",
-                title="Add",
-                icon_class="mdi mdi-plus-thick",
-                color=ButtonColorChoices.GREEN,
-                permissions=["nautobot_data_validation_engine.add_minmaxvalidationrule"],
-            ),
-            PluginMenuButton(
-                link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_import",
-                title="Import",
-                icon_class="mdi mdi-database-import-outline",
-                color=ButtonColorChoices.BLUE,
-                permissions=["nautobot_data_validation_engine.add_minmaxvalidationrule"],
-            ),
-        ),
-    ),
-    PluginMenuItem(
-        link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_list",
-        link_text="Regex Rules",
-        permissions=["nautobot_data_validation_engine.view_regularexpressionvalidationrule"],
-        buttons=(
-            PluginMenuButton(
-                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_add",
-                title="Add",
-                icon_class="mdi mdi-plus-thick",
-                color=ButtonColorChoices.GREEN,
-                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
-            ),
-            PluginMenuButton(
-                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_import",
-                title="Import",
-                icon_class="mdi mdi-database-import-outline",
-                color=ButtonColorChoices.BLUE,
-                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
+    NavMenuTab(
+        name="Extensibility",
+        groups=(
+            NavMenuGroup(
+                name="Data Validation Engine",
+                weight=200,
+                items=(
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_list",
+                        name="Min/Max Rules",
+                        permissions=["nautobot_data_validation_engine.view_minmaxvalidationrule"],
+                        buttons=(
+                            NavMenuAddButton(
+                                link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_add",
+                                permissions=["nautobot_data_validation_engine.add_minmaxvalidationrule"],
+                            ),
+                            NavMenuImportButton(
+                                link="plugins:nautobot_data_validation_engine:minmaxvalidationrule_import",
+                                permissions=["nautobot_data_validation_engine.add_minmaxvalidationrule"],
+                            ),
+                        ),
+                    ),
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_list",
+                        name="Regex Rules",
+                        permissions=["nautobot_data_validation_engine.view_regularexpressionvalidationrule"],
+                        buttons=(
+                            NavMenuAddButton(
+                                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_add",
+                                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
+                            ),
+                            NavMenuImportButton(
+                                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_import",
+                                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
+                            ),
+                        ),
+                    ),
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:requiredvalidationrule_list",
+                        name="Required Rules",
+                        permissions=["nautobot_data_validation_engine.view_requiredvalidationrule"],
+                        buttons=(
+                            NavMenuAddButton(
+                                link="plugins:nautobot_data_validation_engine:requiredvalidationrule_add",
+                                permissions=["nautobot_data_validation_engine.add_requiredvalidationrule"],
+                            ),
+                            NavMenuImportButton(
+                                link="plugins:nautobot_data_validation_engine:requiredvalidationrule_import",
+                                permissions=["nautobot_data_validation_engine.add_requiredvalidationrule"],
+                            ),
+                        ),
+                    ),
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:uniquevalidationrule_list",
+                        name="Unique Rules",
+                        permissions=["nautobot_data_validation_engine.view_uniquevalidationrule"],
+                        buttons=(
+                            NavMenuAddButton(
+                                link="plugins:nautobot_data_validation_engine:uniquevalidationrule_add",
+                                permissions=["nautobot_data_validation_engine.add_uniquevalidationrule"],
+                            ),
+                            NavMenuImportButton(
+                                link="plugins:nautobot_data_validation_engine:uniquevalidationrule_import",
+                                permissions=["nautobot_data_validation_engine.add_uniquevalidationrule"],
+                            ),
+                        ),
+                    ),
+                ),
             ),
         ),
     ),

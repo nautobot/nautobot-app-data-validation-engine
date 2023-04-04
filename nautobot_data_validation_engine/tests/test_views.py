@@ -1,20 +1,41 @@
-"""
-View test cases
-"""
-from django.contrib.contenttypes.models import ContentType
+"""Unit tests for nautobot_data_validation_engine views."""
 
+from unittest import skipIf
+from packaging import version
+
+from django.contrib.contenttypes.models import ContentType
 from nautobot.dcim.models import Device, PowerFeed, Site
 from nautobot.utilities.testing import ViewTestCases
 
-from nautobot_data_validation_engine.models import MinMaxValidationRule, RegularExpressionValidationRule
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
+
+try:
+    from importlib import metadata
+except ImportError:
+    # Running on pre-3.8 Python; use importlib-metadata package
+    import importlib_metadata as metadata
+
+_NAUTOBOT_VERSION = version.parse(metadata.version("nautobot"))
+# Related to this issue: https://github.com/nautobot/nautobot/issues/2948
+_FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS = [version.parse("1.5.2"), version.parse("1.5.3"), version.parse("1.5.4")]
 
 
 class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the RegularExpressionValidationRule model
-    """
+    """View test cases for the RegularExpressionValidationRule model."""
 
     model = RegularExpressionValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):
@@ -66,11 +87,16 @@ class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTes
 
 
 class MinMaxValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
-    """
-    View test cases for the MinMaxValidationRule model
-    """
+    """View test cases for the MinMaxValidationRule model."""
 
     model = MinMaxValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
 
     @classmethod
     def setUpTestData(cls):
@@ -118,6 +144,123 @@ class MinMaxValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
         cls.bulk_edit_data = {
             "min": 5.0,
             "max": 6.0,
+            "enabled": False,
+            "error_message": "no soup",
+        }
+
+
+class RequiredValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
+    """View test cases for the RequiredValidationRule model."""
+
+    model = RequiredValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        RequiredValidationRule.objects.create(
+            name="Required rule 1",
+            slug="required-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="asn",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 2",
+            slug="required-rule-2",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="description",
+        )
+        RequiredValidationRule.objects.create(
+            name="Required rule 3",
+            slug="required-rule-3",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="comments",
+        )
+
+        cls.form_data = {
+            "name": "Required rule x",
+            "slug": "required-rule-x",
+            "content_type": ContentType.objects.get_for_model(Site).pk,
+            "field": "contact_name",
+        }
+
+        cls.csv_data = (
+            "name,slug,content_type,field",
+            "Required rule 4,required-rule-4,dcim.site,contact_phone",
+            "Required rule 5,required-rule-5,dcim.site,physical_address",
+            "Required rule 6,required-rule-6,dcim.site,shipping_address",
+        )
+
+        cls.bulk_edit_data = {
+            "enabled": False,
+            "error_message": "no soup",
+        }
+
+
+class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
+    """View test cases for the UniqueValidationRule model."""
+
+    model = UniqueValidationRule
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        UniqueValidationRule.objects.create(
+            name="Unique rule 1",
+            slug="unique-rule-1",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="asn",
+            max_instances=1,
+        )
+        UniqueValidationRule.objects.create(
+            name="Unique rule 2",
+            slug="unique-rule-2",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="description",
+            max_instances=2,
+        )
+        UniqueValidationRule.objects.create(
+            name="Unique rule 3",
+            slug="unique-rule-3",
+            content_type=ContentType.objects.get_for_model(Site),
+            field="comments",
+            max_instances=3,
+        )
+
+        cls.form_data = {
+            "name": "Unique rule x",
+            "slug": "unique-rule-x",
+            "content_type": ContentType.objects.get_for_model(Site).pk,
+            "field": "contact_name",
+            "max_instances": 4,
+        }
+
+        cls.csv_data = (
+            "name,slug,content_type,field,max_instances",
+            "Unique rule 4,unique-rule-4,dcim.site,contact_phone,1",
+            "Unique rule 5,unique-rule-5,dcim.site,physical_address,2",
+            "Unique rule 6,unique-rule-6,dcim.site,shipping_address,3",
+        )
+
+        cls.bulk_edit_data = {
+            "max_instances": 4,
             "enabled": False,
             "error_message": "no soup",
         }

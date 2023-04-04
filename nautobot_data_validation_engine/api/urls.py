@@ -1,6 +1,5 @@
-"""
-API routes
-"""
+"""API routes."""
+
 from nautobot.core.api import OrderedDefaultRouter
 
 from nautobot_data_validation_engine.api import views
@@ -10,10 +9,16 @@ router = OrderedDefaultRouter()
 router.APIRootView = views.DataValidationEngineRootView
 
 # Regular expression rules
-router.register("rules/regex", views.RegularExpressionValidationRuleViewSet)
+router.register("regex-rules", views.RegularExpressionValidationRuleViewSet)
 
 # Min/max rules
-router.register("rules/min-max", views.MinMaxValidationRuleViewSet)
+router.register("min-max-rules", views.MinMaxValidationRuleViewSet)
+
+# Required rules
+router.register("required-rules", views.RequiredValidationRuleViewSet)
+
+# Unique rules
+router.register("unique-rules", views.UniqueValidationRuleViewSet)
 
 
 urlpatterns = router.urls
