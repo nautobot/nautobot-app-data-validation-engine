@@ -6,7 +6,7 @@ This document describes all new features and changes in the release `2.0`. The f
 
 This release contains major new rule types and changes to UI & API behaviour
 
-## [v2.0.0] - 2023-04-03
+## [v2.0.0] - 2023-04-04
 
 ### Added
 
