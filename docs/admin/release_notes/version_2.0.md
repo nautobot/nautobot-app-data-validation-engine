@@ -6,7 +6,7 @@ This document describes all new features and changes in the release `2.0`. The f
 
 This release contains major new rule types and changes to UI & API behaviour
 
-## [v2.0.0] - TBD
+## [v2.0.0] - 2023-04-04
 
 ### Added
 
@@ -23,3 +23,4 @@ This release contains major new rule types and changes to UI & API behaviour
 - The REST API routes for regular expression and min/max rules have been changed:
     - Regular expression rules are now located at `/api/plugins/data-validation-engine/regex-rules/`
     - Min/max rules are now located at `/api/plugins/data-validation-engine/min-max-rules/`
+- The plugin's code has been refactored to align with the `cookiecutter-ntc` template
