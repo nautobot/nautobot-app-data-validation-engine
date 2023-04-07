@@ -3,6 +3,7 @@
 import re
 
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
@@ -366,3 +367,58 @@ class UniqueValidationRule(ValidationRule):
 
         if getattr(model_field, "unique", False):
             raise ValidationError({"field": "This field is already unique by default."})
+
+
+class ValidationResult(PrimaryModel):
+    class_name = models.CharField(max_length=100, blank=False, null=False)
+    method_name = models.CharField(max_length=100, blank=False, null=False)
+    last_validation_date = models.DateField(blank=False, null=False)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=False, null=False)
+    object_id = models.CharField(max_length=200, blank=False, null=False)
+    validated_object = GenericForeignKey("content_type", "object_id")
+    validated_attribute = models.CharField(max_length=100, blank=True, null=True)
+    validated_attribute_value = models.CharField(max_length=100, blank=True, null=True)
+    expected_attribute_value = models.CharField(max_length=100, blank=True, null=True)
+    valid = models.BooleanField(blank=False, null=False)
+    message = models.CharField(max_length=100, blank=True, null=True)
+
+    csv_headers = [
+        "Class Name",
+        "Method Name",
+        "Last Validation Date",
+        "Validated Object",
+        "Validated Attribute",
+        "Validated Attribute Value",
+        "Expected Attribute Value",
+        "Valid",
+        "Message",
+    ]
+
+    class Meta:
+        unique_together = (
+            "class_name",
+            "method_name",
+            "content_type",
+            "object_id",
+            "validated_attribute",
+        )
+        ordering = ("class_name", "method_name")
+
+    def to_csv(self):
+        return (
+            self.class_name,
+            self.method_name,
+            self.last_validation_date,
+            self.validated_object,
+            self.validated_attribute,
+            self.validated_attribute_value,
+            self.expected_attribute_value,
+            self.valid,
+            self.message,
+        )
+
+    def __str__(self):
+        return f"{self.class_name}.{self.method_name} on {self.validated_object}"
+
+    def get_absolute_url(self):
+        return reverse("plugins:validation_engine:validationresult", args=[self.pk])

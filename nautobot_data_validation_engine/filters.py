@@ -1,5 +1,6 @@
 """Django filters."""
 
+import django_filters as filters
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
@@ -9,6 +10,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    ValidationResult,
 )
 
 
@@ -144,3 +146,12 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
             "field",
             "error_message",
         ]
+
+
+class ValidationResultFilterSet(NautobotFilterSet):
+    class_name = filters.CharFilter(field_name="class_name", lookup_expr="icontains")
+    method_name = filters.CharFilter(field_name="method_name", lookup_expr="icontains")
+
+    class Meta:
+        model = ValidationResult
+        fields = ["class_name", "method_name"]

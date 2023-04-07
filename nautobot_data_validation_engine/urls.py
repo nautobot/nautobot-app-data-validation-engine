@@ -13,6 +13,7 @@ router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
 router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
 router.register("required-rules", views.RequiredValidationRuleUIViewSet)
 router.register("unique-rules", views.UniqueValidationRuleUIViewSet)
+router.register("validation-result", views.AllValidationListView)
 
 
 urlpatterns = [

@@ -20,5 +20,7 @@ router.register("required-rules", views.RequiredValidationRuleViewSet)
 # Unique rules
 router.register("unique-rules", views.UniqueValidationRuleViewSet)
 
+router.register("validation-results", views.ValidationResultAPIView)
+
 
 urlpatterns = router.urls

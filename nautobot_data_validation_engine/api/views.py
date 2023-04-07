@@ -46,3 +46,10 @@ class UniqueValidationRuleViewSet(NautobotModelViewSet):
     queryset = models.UniqueValidationRule.objects.all()
     serializer_class = serializers.UniqueValidationRuleSerializer
     filterset_class = filters.UniqueValidationRuleFilterSet
+
+
+class ValidationResultAPIView(NautobotModelViewSet):
+    """API Views for ValidationResult."""
+
+    queryset = models.ValidationResult.objects.all()
+    serializer_class = serializers.ValidationResultSerializer

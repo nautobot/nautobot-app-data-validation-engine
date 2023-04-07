@@ -1,6 +1,7 @@
 """Django tables."""
 
 import django_tables2 as tables
+from django.utils.safestring import mark_safe
 
 from nautobot.utilities.tables import BaseTable, ToggleColumn
 
@@ -9,6 +10,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    ValidationResult,
 )
 
 
@@ -152,3 +154,85 @@ class UniqueValidationRuleTable(BaseTable):
             "max_instances",
             "error_message",
         )
+
+
+class ValidatedAttributeColumn(tables.Column):
+    def render(self, value, record):
+        if hasattr(record.validated_object, value) and hasattr(
+            getattr(record.validated_object, value), "get_absolute_url"
+        ):
+            return mark_safe(f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>')
+        else:
+            return value
+
+
+class ViewButtonColumn(tables.TemplateColumn):
+    attrs = {"td": {"class": "text-right text-nowrap noprint"}}
+    template_code = """
+        <a href="{{ record.get_absolute_url }}" class="btn btn-default btn-xs" title="View">
+            <i class="mdi mdi-eye"></i>
+        </a>
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(template_code=self.template_code, *args, **kwargs)
+
+    def header(self):
+        return ""
+
+
+class AllValidationResultTable(BaseTable):
+    pk = ViewButtonColumn()
+    validated_object = tables.RelatedLinkColumn()
+    validated_attribute = ValidatedAttributeColumn()
+
+    class Meta(BaseTable.Meta):
+        model = ValidationResult
+        fields = [
+            "pk",
+            "class_name",
+            "method_name",
+            "last_validation_date",
+            "validated_object",
+            "validated_attribute",
+            "validated_attribute_value",
+            "expected_attribute_value",
+            "valid",
+            "message",
+        ]
+        default_columns = [
+            "class_name",
+            "method_name",
+            "last_validation_date",
+            "validated_object",
+            "validated_attribute",
+            "valid",
+            "message",
+        ]
+
+
+class ValidationResultTable(BaseTable):
+    validated_attribute = ValidatedAttributeColumn()
+
+    class Meta(BaseTable.Meta):
+        model = ValidationResult
+        fields = [
+            "class_name",
+            "method_name",
+            "last_validation_date",
+            "validated_attribute",
+            "validated_attribute_value",
+            "expected_attribute_value",
+            "valid",
+            "message",
+        ]
+        default_columns = [
+            "class_name",
+            "method_name",
+            "last_validation_date",
+            "validated_attribute",
+            "validated_attribute_value",
+            "expected_attribute_value",
+            "valid",
+            "message",
+        ]

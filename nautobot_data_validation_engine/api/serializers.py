@@ -12,6 +12,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    ValidationResult,
 )
 
 # Not all of these variable(s) are not actually used anywhere in this file, but required for the
@@ -139,3 +140,13 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
             "created",
             "last_updated",
         ]
+
+
+class ValidationResultSerializer(NautobotModelSerializer):
+    """Serializer for Validation Result."""
+
+    class Meta:
+        """Meta class for serializer."""
+
+        model = ValidationResult
+        fields = "__all__"
