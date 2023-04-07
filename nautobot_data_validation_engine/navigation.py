@@ -71,6 +71,12 @@ menu_items = (
                             ),
                         ),
                     ),
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:validationresult_list",
+                        name="Pythonic Validations",
+                        permissions=[], # TODO: probably should be something like "nautobot_data_validation.engine.view_pythonicvalidationrule"
+                        buttons=()
+                    ),
                 ),
             ),
         ),
