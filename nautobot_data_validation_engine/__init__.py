@@ -9,6 +9,7 @@ except ImportError:
 __version__ = metadata.version(__name__)
 
 from nautobot.extras.plugins import PluginConfig
+from nautobot.extras.plugins.utils import import_object
 import inspect
 import collections
 
@@ -27,6 +28,7 @@ class NautobotDataValidationEngineConfig(PluginConfig):
     max_version = "1.9999"
     default_settings = {}
     caching_config = {}
+    validations = "validations.validations"
 
     def ready(self):
         super().ready()
