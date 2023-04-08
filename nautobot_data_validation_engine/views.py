@@ -90,7 +90,7 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class AllValidationListView(ObjectListViewMixin, ObjectDetailViewMixin):
+class ValidationResultListView(ObjectListViewMixin, ObjectDetailViewMixin):
     lookup_field = "pk"
     queryset = ValidationResult.objects.all()
     table_class = tables.AllValidationResultTable
@@ -99,7 +99,7 @@ class AllValidationListView(ObjectListViewMixin, ObjectDetailViewMixin):
     action_buttons = ("export",)
 
 
-class ObjectValidationResultView(ObjectView):
+class ValidationResultObjectView(ObjectView):
     template_name = "nautobot_data_validation_engine/validationresult_retrieve.html"
 
     def get_extra_context(self, request, instance):

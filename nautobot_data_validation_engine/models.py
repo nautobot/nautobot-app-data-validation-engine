@@ -372,15 +372,15 @@ class UniqueValidationRule(ValidationRule):
 class ValidationResult(PrimaryModel):
     class_name = models.CharField(max_length=100, blank=False, null=False)
     method_name = models.CharField(max_length=100, blank=False, null=False)
-    last_validation_date = models.DateField(blank=False, null=False)
+    last_validation_date = models.DateTimeField(blank=False, null=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
     validated_attribute = models.CharField(max_length=100, blank=True, null=True)
-    validated_attribute_value = models.CharField(max_length=100, blank=True, null=True)
-    expected_attribute_value = models.CharField(max_length=100, blank=True, null=True)
+    validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
+    expected_attribute_value = models.CharField(max_length=200, blank=True, null=True)
     valid = models.BooleanField(blank=False, null=False)
-    message = models.CharField(max_length=100, blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
 
     csv_headers = [
         "Class Name",
@@ -421,4 +421,4 @@ class ValidationResult(PrimaryModel):
         return f"{self.class_name}.{self.method_name} on {self.validated_object}"
 
     def get_absolute_url(self):
-        return reverse("plugins:validation_engine:validationresult", args=[self.pk])
+        return reverse("plugins:nautobot_data_validation_engine:validationresult", args=[self.pk])
