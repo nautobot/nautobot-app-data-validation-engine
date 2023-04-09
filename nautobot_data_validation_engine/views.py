@@ -4,7 +4,12 @@ from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
 from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.core.views.generic import ObjectView
-from nautobot.apps.views import ObjectListViewMixin, ObjectDetailViewMixin
+from nautobot.apps.views import (
+    ObjectListViewMixin,
+    ObjectDetailViewMixin,
+    ObjectDestroyViewMixin,
+    ObjectBulkDestroyViewMixin,
+)
 from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
 
 from nautobot_data_validation_engine import filters, forms, tables
@@ -90,11 +95,14 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class ValidationResultListView(ObjectListViewMixin, ObjectDetailViewMixin):
+class ValidationResultListView(
+    ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
+):
     lookup_field = "pk"
     queryset = ValidationResult.objects.all()
-    table_class = tables.AllValidationResultTable
+    table_class = tables.ValidationResultTable
     filterset_class = filters.ValidationResultFilterSet
+    filterset_form_class = forms.ValidationResultFilterForm
     serializer_class = serializers.ValidationResultSerializer
     action_buttons = ("export",)
 
@@ -106,7 +114,7 @@ class ValidationResultObjectView(ObjectView):
         validations = ValidationResult.objects.filter(
             content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
         )
-        validation_table = tables.ValidationResultTable(validations)
+        validation_table = tables.ValidationResultTableTC(validations)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
         RequestConfig(request, paginate).configure(validation_table)

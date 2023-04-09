@@ -19,6 +19,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    ValidationResult,
 )
 
 
@@ -361,3 +362,14 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
         required=False,
     )
     max_instances = forms.IntegerField(required=False)
+
+
+class ValidationResultFilterForm(BootstrapMixin, forms.Form):
+    """Form for ValidationResult instances."""
+
+    model = ValidationResult
+    class_name = forms.CharField(max_length=20, required=False)
+    method_name = forms.CharField(max_length=20, required=False)
+    validated_attribute = forms.CharField(max_length=20, required=False)
+    valid = forms.BooleanField(required=False)
+    # TODO: add content_type and q

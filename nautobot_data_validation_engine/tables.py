@@ -166,23 +166,9 @@ class ValidatedAttributeColumn(tables.Column):
             return value
 
 
-class ViewButtonColumn(tables.TemplateColumn):
-    attrs = {"td": {"class": "text-right text-nowrap noprint"}}
-    template_code = """
-        <a href="{{ record.get_absolute_url }}" class="btn btn-default btn-xs" title="View">
-            <i class="mdi mdi-eye"></i>
-        </a>
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(template_code=self.template_code, *args, **kwargs)
-
-    def header(self):
-        return ""
-
-
-class AllValidationResultTable(BaseTable):
-    pk = ViewButtonColumn()
+class ValidationResultTable(BaseTable):
+    pk = ToggleColumn()
+    id = tables.Column(linkify=True, verbose_name="ID")
     validated_object = tables.RelatedLinkColumn()
     validated_attribute = ValidatedAttributeColumn()
 
@@ -190,6 +176,8 @@ class AllValidationResultTable(BaseTable):
         model = ValidationResult
         fields = [
             "pk",
+            "id",
+            "content_type",
             "class_name",
             "method_name",
             "last_validation_date",
@@ -201,22 +189,28 @@ class AllValidationResultTable(BaseTable):
             "message",
         ]
         default_columns = [
+            "pk",
+            "id",
+            "content_type",
             "class_name",
             "method_name",
             "last_validation_date",
             "validated_object",
             "validated_attribute",
+            "validated_attribute_value",
+            "expected_attribute_value",
             "valid",
             "message",
         ]
 
 
-class ValidationResultTable(BaseTable):
+class ValidationResultTableTC(BaseTable):
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
         model = ValidationResult
         fields = [
+            "content_type",
             "class_name",
             "method_name",
             "last_validation_date",
@@ -227,7 +221,7 @@ class ValidationResultTable(BaseTable):
             "message",
         ]
         default_columns = [
-            "class_name",
+            "content_type" "class_name",
             "method_name",
             "last_validation_date",
             "validated_attribute",
