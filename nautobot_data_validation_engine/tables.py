@@ -221,7 +221,8 @@ class ValidationResultTableTC(BaseTable):
             "message",
         ]
         default_columns = [
-            "content_type" "class_name",
+            "content_type",
+            "class_name",
             "method_name",
             "last_validation_date",
             "validated_attribute",
