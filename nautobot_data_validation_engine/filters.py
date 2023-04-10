@@ -149,6 +149,17 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
 
 
 class ValidationResultFilterSet(NautobotFilterSet):
+    q = SearchFilter(
+        filter_predicates={
+            "class_name": "icontains",
+            "method_name": "icontains",
+            "message": "icontains",
+            "content_type": "icontains",
+            "object_id": "icontains",
+            "field": "equals",
+        }
+    )
+
     class Meta:
         model = ValidationResult
         fields = ["class_name", "method_name", "valid"]

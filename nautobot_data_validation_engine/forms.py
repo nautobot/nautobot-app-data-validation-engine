@@ -12,7 +12,9 @@ from nautobot.utilities.forms import (
     CSVMultipleContentTypeField,
     CSVModelForm,
     SlugField,
+    StaticSelect2,
 )
+from nautobot.utilities.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
@@ -371,5 +373,6 @@ class ValidationResultFilterForm(BootstrapMixin, forms.Form):
     class_name = forms.CharField(max_length=20, required=False)
     method_name = forms.CharField(max_length=20, required=False)
     validated_attribute = forms.CharField(max_length=20, required=False)
-    valid = forms.BooleanField(required=False)
-    # TODO: add content_type and q
+    valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
+    content_type = CSVContentTypeField(queryset=ContentType.objects.all().order_by("app_label", "model"), required=False)
+    q = forms.CharField(required=False, label="Search")
