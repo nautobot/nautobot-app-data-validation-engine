@@ -42,14 +42,14 @@ class ValidationSet:
             validated_attribute=attribute,
         ).first()
         if result:
-            result.last_validation_date = timezone.now()
+            result.last_validation_date = self.result_date
             result.valid = valid
             result.message = message
         else:
             result = ValidationResult(
                 class_name=class_name,
                 method_name=method_name,
-                last_validation_date=timezone.now(),
+                last_validation_date=self.result_date,
                 validated_object=validated_object,
                 validated_attribute=attribute if attribute else None,
                 validated_attribute_value=str(validated_attribute_value) if validated_attribute_value else None,
