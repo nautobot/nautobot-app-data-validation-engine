@@ -13,6 +13,8 @@ from nautobot.extras.plugins.utils import import_object
 import inspect
 import collections
 
+CHOICES = []
+
 
 class NautobotDataValidationEngineConfig(PluginConfig):
     """Plugin configuration for the nautobot_data_validation_engine plugin."""
@@ -55,6 +57,8 @@ def register_validations(class_list):
         if validation.model is None:
             raise TypeError(f"ValidationSet class {validation} does not declare a valid model!")
         registry["plugin_validations"][validation.model].append(validation)
+        CHOICES.append((validation.__name__, validation.__name__))
+    CHOICES.sort()
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name

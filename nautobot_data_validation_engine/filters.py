@@ -149,9 +149,6 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
 
 
 class ValidationResultFilterSet(NautobotFilterSet):
-    class_name = filters.CharFilter(field_name="class_name", lookup_expr="icontains")
-    method_name = filters.CharFilter(field_name="method_name", lookup_expr="icontains")
-
     class Meta:
         model = ValidationResult
-        fields = ["class_name", "method_name"]
+        fields = ["class_name", "method_name", "valid"]

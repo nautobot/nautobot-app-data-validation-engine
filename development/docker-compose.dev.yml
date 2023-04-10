@@ -7,6 +7,8 @@ version: "3.8"
 services:
   nautobot:
     command: "nautobot-server runserver 0.0.0.0:8080"
+    healthcheck:
+      disable: true
     ports:
       - "8080:8080"
     volumes:
@@ -30,6 +32,8 @@ services:
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../:/source"
+    healthcheck:
+      disable: true
 # To expose postgres or redis to the host uncomment the following
 # postgres:
 #   ports:
