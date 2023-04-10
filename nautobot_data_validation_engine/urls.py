@@ -64,4 +64,9 @@ urlpatterns = [
         name="uniquevalidationrule_notes",
         kwargs={"model": models.UniqueValidationRule},
     ),
+    path(
+        "validation-results/<model>/<id>/",
+        views.ValidationResultObjectView.as_view(),
+        name="validationresults",
+    ),
 ] + router.urls

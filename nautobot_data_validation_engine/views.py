@@ -2,6 +2,7 @@
 
 from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
+from django.apps import apps as global_apps
 from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.core.views.generic import ObjectView
 from nautobot.apps.views import (
@@ -22,6 +23,7 @@ from nautobot_data_validation_engine.models import (
     ValidationResult,
 )
 
+from nautobot.dcim.models import Site
 
 #
 # RegularExpressionValidationRules
@@ -108,7 +110,14 @@ class ValidationResultListView(
 
 
 class ValidationResultObjectView(ObjectView):
-    template_name = "nautobot_data_validation_engine/validationresult_retrieve.html"
+    template_name = "nautobot_data_validation_engine/validationresult_tab.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        model = kwargs.pop("model")
+        if not self.queryset:
+            self.queryset = global_apps.get_model(model).objects.all()
+        print(self.queryset)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):
         validations = ValidationResult.objects.filter(
