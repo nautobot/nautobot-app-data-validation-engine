@@ -8,10 +8,10 @@ except ImportError:
 
 __version__ = metadata.version(__name__)
 
-from nautobot.extras.plugins import PluginConfig
-from nautobot.extras.plugins.utils import import_object
 import inspect
 import collections
+from nautobot.extras.plugins import PluginConfig
+from nautobot.extras.plugins.utils import import_object
 
 CHOICES = []
 
@@ -33,8 +33,9 @@ class NautobotDataValidationEngineConfig(PluginConfig):
     validations = "validations.validations"
 
     def ready(self):
+        """Call the ready function and add validations to the registry"""
         super().ready()
-        from nautobot.extras.utils import registry
+        from nautobot.extras.utils import registry  # pylint: disable=C0415
 
         registry["plugin_validations"] = collections.defaultdict(list)
         validations = import_object(f"{self.__module__}.{self.validations}")
@@ -44,8 +45,9 @@ class NautobotDataValidationEngineConfig(PluginConfig):
 
 
 def register_validations(class_list):
-    from nautobot.extras.utils import registry
-    from nautobot_data_validation_engine.validations import ValidationSet
+    """Register ValidationSet classes to the registry."""
+    from nautobot.extras.utils import registry  # pylint: disable=C0415
+    from nautobot_data_validation_engine.validations import ValidationSet  # pylint: disable=C0415
 
     for validation in class_list:
         if not inspect.isclass(validation):

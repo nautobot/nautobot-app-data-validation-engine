@@ -1,8 +1,8 @@
 """Django views."""
 
+from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
-from django.apps import apps as global_apps
 from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.core.views.generic import ObjectView
 from nautobot.apps.views import (
@@ -96,7 +96,7 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class ValidationResultListView(
+class ValidationResultListView(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
     """Views for the ValidationResultListView model."""

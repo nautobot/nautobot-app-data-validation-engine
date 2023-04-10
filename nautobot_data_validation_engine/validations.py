@@ -1,11 +1,12 @@
 """Validation class."""
-from nautobot_data_validation_engine.models import ValidationResult
+
+import inspect
 from django.apps import apps as global_apps
 from django.utils import timezone
-import inspect
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from nautobot_data_validation_engine.models import ValidationResult
 
 
 class ValidationSet:
@@ -19,7 +20,7 @@ class ValidationSet:
         self.result_date = timezone.now()
         self.job_result = None
 
-    def __find_calling_method_name(self):
+    def __find_calling_method_name(self):  # pylint: disable=R0201
         """Return the calling function that starts with 'validate_' by looking through the current stack."""
         stack = inspect.stack()
         for frame in stack:
@@ -27,7 +28,7 @@ class ValidationSet:
                 return frame.function
         raise Exception("Unable to find calling method that starts with 'validate_'.")
 
-    def __generate_result(
+    def __generate_result(  # pylint: disable=R0913
         self,
         valid,
         validated_object,

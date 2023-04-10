@@ -159,7 +159,7 @@ class UniqueValidationRuleTable(BaseTable):
 class ValidatedAttributeColumn(tables.Column):
     """Column that links to the object's attribute if it is linkable."""
 
-    def render(self, value, record):
+    def render(self, value, record):  # pylint: disable=W0221
         """Generate a link to a validated attribute if it is linkable, otherwise return the attribute."""
         if hasattr(record.validated_object, value) and hasattr(
             getattr(record.validated_object, value), "get_absolute_url"
@@ -167,8 +167,7 @@ class ValidatedAttributeColumn(tables.Column):
             return mark_safe(
                 f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>'
             )  # nosec B703, B308
-        else:
-            return value
+        return value
 
 
 class ValidationResultTable(BaseTable):
