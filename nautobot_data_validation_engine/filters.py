@@ -1,6 +1,5 @@
 """Django filters."""
 
-import django_filters as filters
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
@@ -149,6 +148,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
 
 
 class ValidationResultFilterSet(NautobotFilterSet):
+    """Base filterset for ValidationResult model."""
+
     q = SearchFilter(
         filter_predicates={
             "class_name": "icontains",
@@ -161,5 +162,7 @@ class ValidationResultFilterSet(NautobotFilterSet):
     )
 
     class Meta:
+        """Meta class for ValidationResultFilterSet."""
+
         model = ValidationResult
         fields = ["class_name", "method_name", "valid"]

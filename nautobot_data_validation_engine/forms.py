@@ -374,5 +374,7 @@ class ValidationResultFilterForm(BootstrapMixin, forms.Form):
     method_name = forms.CharField(max_length=20, required=False)
     validated_attribute = forms.CharField(max_length=20, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
-    content_type = CSVContentTypeField(queryset=ContentType.objects.all().order_by("app_label", "model"), required=False)
+    content_type = CSVContentTypeField(
+        queryset=ContentType.objects.all().order_by("app_label", "model"), required=False
+    )
     q = forms.CharField(required=False, label="Search")

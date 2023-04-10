@@ -157,22 +157,31 @@ class UniqueValidationRuleTable(BaseTable):
 
 
 class ValidatedAttributeColumn(tables.Column):
+    """Column that links to the object's attribute if it is linkable."""
+
     def render(self, value, record):
+        """Generate a link to a validated attribute if it is linkable, otherwise return the attribute."""
         if hasattr(record.validated_object, value) and hasattr(
             getattr(record.validated_object, value), "get_absolute_url"
         ):
-            return mark_safe(f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>')
+            return mark_safe(
+                f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>'
+            )  # nosec B703, B308
         else:
             return value
 
 
 class ValidationResultTable(BaseTable):
+    """Base table for viewing all Validation Results."""
+
     pk = ToggleColumn()
     id = tables.Column(linkify=True, verbose_name="ID")
     validated_object = tables.RelatedLinkColumn()
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
+        """Meta class for ValidationResultTable."""
+
         model = ValidationResult
         fields = [
             "pk",
@@ -205,9 +214,13 @@ class ValidationResultTable(BaseTable):
 
 
 class ValidationResultTableTC(BaseTable):
+    """Base table for viewing the Validation Results related to a single object."""
+
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
+        """Meta class for ValidationResultTableTC."""
+
         model = ValidationResult
         fields = [
             "content_type",

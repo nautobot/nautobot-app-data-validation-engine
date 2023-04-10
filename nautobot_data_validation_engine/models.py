@@ -370,6 +370,8 @@ class UniqueValidationRule(ValidationRule):
 
 
 class ValidationResult(PrimaryModel):
+    """Model to represent the results of a validation method."""
+
     class_name = models.CharField(max_length=100, blank=False, null=False)
     method_name = models.CharField(max_length=100, blank=False, null=False)
     last_validation_date = models.DateTimeField(blank=False, null=False)
@@ -395,6 +397,8 @@ class ValidationResult(PrimaryModel):
     ]
 
     class Meta:
+        """Meta class for ValidationResult model."""
+
         unique_together = (
             "class_name",
             "method_name",
@@ -405,6 +409,7 @@ class ValidationResult(PrimaryModel):
         ordering = ("class_name", "method_name")
 
     def to_csv(self):
+        """Return a tuple of data that should be exported to CSV."""
         return (
             self.class_name,
             self.method_name,
@@ -418,7 +423,9 @@ class ValidationResult(PrimaryModel):
         )
 
     def __str__(self):
+        """Return a string representation of this ValidationResult object."""
         return f"{self.class_name}.{self.method_name} on {self.validated_object}"
 
     def get_absolute_url(self):
+        """Return the absolute URL to this ValidationResult object."""
         return reverse("plugins:nautobot_data_validation_engine:validationresult", args=[self.pk])
