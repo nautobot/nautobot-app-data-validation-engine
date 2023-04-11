@@ -10,13 +10,13 @@ __version__ = metadata.version(__name__)
 
 import inspect
 import collections
-from nautobot.extras.plugins import PluginConfig, register_template_extensions
+from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
 from nautobot.extras.plugins.utils import import_object
 
 CHOICES = []
 
 
-class NautobotDataValidationEngineConfig(PluginConfig):
+class NautobotDataValidationEngineConfig(NautobotAppConfig):
     """Plugin configuration for the nautobot_data_validation_engine plugin."""
 
     name = "nautobot_data_validation_engine"
@@ -37,6 +37,7 @@ class NautobotDataValidationEngineConfig(PluginConfig):
         super().ready()
         from nautobot.extras.utils import registry  # pylint: disable=C0415
         from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
+        from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
 
         registry["plugin_validations"] = collections.defaultdict(list)
         validations = import_object(f"{self.__module__}.{self.validations}")
@@ -44,9 +45,15 @@ class NautobotDataValidationEngineConfig(PluginConfig):
             register_validations(validations)
             self.features["validations"] = sorted(set(validation.model for validation in validations))
             tc = []
-            for model in list(set(validation.model for validation in validations)):
-                tc.append(tab_factory(model))
+            # for model in list(set(validation.model for validation in validations)):
+            #     tc.append(tab_factory(model))
+            labels = []
+            for content_type in ContentType.objects.all():
+                label = f"{content_type.app_label}.{content_type.model}"
+                labels.append(label)
+                tc.append(tab_factory(label))
             register_template_extensions(tc)
+            self.features["template_extensions"] = sorted(set(labels))
 
 
 def register_validations(class_list):
