@@ -37,7 +37,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
         super().ready()
         from nautobot.extras.utils import registry  # pylint: disable=C0415
         from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
-        from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
+        from django.contrib.contenttypes.models import ContentType # pylint: disable=C0415
 
         registry["plugin_validations"] = collections.defaultdict(list)
         validations = import_object(f"{self.__module__}.{self.validations}")
