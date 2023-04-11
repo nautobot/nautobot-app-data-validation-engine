@@ -13,7 +13,7 @@ class RunRegisteredValidations(Job):
         """Run the validate function on all given ValidationSet classes."""
         validators = data.get("validators")
 
-        for _, classes in registry["plugin_validations"].items():
+        for classes in registry["plugin_validations"].values():
             for validation_class in classes:
                 if validators and validation_class.__name__ not in validators:
                     continue
