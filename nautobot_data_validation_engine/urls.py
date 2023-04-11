@@ -69,4 +69,16 @@ urlpatterns = [
         views.ValidationResultObjectView.as_view(),
         name="validationresults",
     ),
+    path(
+        "validation-result/<uuid:pk>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="validationresult_changelog",
+        kwargs={"model": models.ValidationResult},
+    ),
+    path(
+        "validation-result/<uuid:pk>/notes/",
+        ObjectNotesView.as_view(),
+        name="validationresult_notes",
+        kwargs={"model": models.ValidationResult},
+    ),
 ] + router.urls

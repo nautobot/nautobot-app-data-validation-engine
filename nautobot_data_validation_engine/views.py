@@ -120,7 +120,6 @@ class ValidationResultObjectView(ObjectView):
         model = kwargs.pop("model")
         if not self.queryset:
             self.queryset = global_apps.get_model(model).objects.all()
-        print(self.queryset)
         return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):

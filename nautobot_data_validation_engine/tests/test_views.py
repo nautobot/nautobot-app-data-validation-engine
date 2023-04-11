@@ -1,18 +1,24 @@
 """Unit tests for nautobot_data_validation_engine views."""
 
 from unittest import skipIf
+from unittest.mock import MagicMock, patch
 from packaging import version
 
 from django.contrib.contenttypes.models import ContentType
+from django.http.request import QueryDict
 from nautobot.dcim.models import Device, PowerFeed, Site
-from nautobot.utilities.testing import ViewTestCases
+from nautobot.utilities.testing import ViewTestCases, TestCase
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    ValidationResult,
 )
+from nautobot_data_validation_engine.tests.test_validations import TestValidationSet
+from nautobot_data_validation_engine.views import ValidationResultObjectView
+from nautobot_data_validation_engine.tables import ValidationResultTableTC
 
 try:
     from importlib import metadata
@@ -264,3 +270,45 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
             "enabled": False,
             "error_message": "no soup",
         }
+
+
+class ValidationResultTestCase(
+    ViewTestCases.GetObjectViewTestCase,
+    ViewTestCases.DeleteObjectViewTestCase,
+    ViewTestCases.ListObjectsViewTestCase,
+    ViewTestCases.BulkDeleteObjectsViewTestCase,
+):
+    model = ValidationResult
+
+    @classmethod
+    def setUpTestData(cls):
+        s = Site(name="Test Site 1")
+        s.save()
+        t = TestValidationSet()
+        t.validate(job_result=MagicMock())
+
+
+class ValidationResultObjectTestCase(TestCase):
+    def setUp(self):
+        s = Site(name="Test Site 1")
+        s.save()
+        t = TestValidationSet()
+        t.validate(job_result=MagicMock())
+
+    def test_get_extra_context(self):
+        view = ValidationResultObjectView()
+        site = Site.objects.first()
+        mock_request = MagicMock()
+        mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
+        result = view.get_extra_context(mock_request, site)
+        self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
+        self.assertIsInstance(result["table"], ValidationResultTableTC)
+
+    @patch("nautobot.core.views.generic.ObjectView.dispatch")
+    def test_dispatch(self, mocked_dispatch):
+        view = ValidationResultObjectView()
+        mock_request = MagicMock()
+        kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
+        view.dispatch(mock_request, **kwargs)
+        mocked_dispatch.assert_called()
+        mocked_dispatch.assert_called_with(mock_request, other_arg="other_arg", another_arg="another_arg")
