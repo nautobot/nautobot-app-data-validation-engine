@@ -35,6 +35,7 @@ def tab_factory(content_type_label):
 
 
 template_extensions = []
-for content_type in ContentType.objects.all():
-    class_instance = tab_factory(f"{content_type.app_label}.{content_type.model}")
+# for content_type in ContentType.objects.all():
+#     class_instance = tab_factory(f"{content_type.app_label}.{content_type.model}")
+for class_instance in ["dcim.site", "dcim.device"]:
     template_extensions.append(class_instance)

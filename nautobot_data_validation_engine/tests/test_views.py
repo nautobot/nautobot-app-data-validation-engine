@@ -278,6 +278,8 @@ class ValidationResultTestCase(
     ViewTestCases.ListObjectsViewTestCase,
     ViewTestCases.BulkDeleteObjectsViewTestCase,
 ):
+    """Test cases for ValidationResult Viewset."""
+
     model = ValidationResult
 
     @classmethod
@@ -289,6 +291,8 @@ class ValidationResultTestCase(
 
 
 class ValidationResultObjectTestCase(TestCase):
+    """Test cases for ValidationResultObjectView."""
+
     def setUp(self):
         s = Site(name="Test Site 1")
         s.save()
@@ -305,7 +309,7 @@ class ValidationResultObjectTestCase(TestCase):
         self.assertIsInstance(result["table"], ValidationResultTableTC)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
-    def test_dispatch(self, mocked_dispatch):
+    def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
         view = ValidationResultObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
