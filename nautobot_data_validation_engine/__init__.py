@@ -10,10 +10,14 @@ __version__ = metadata.version(__name__)
 
 import inspect
 import collections
+import logging
+from django.db.utils import ProgrammingError
 from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
 from nautobot.extras.plugins.utils import import_object
 
 CHOICES = []
+
+logger = logging.getLogger(__name__)
 
 
 class NautobotDataValidationEngineConfig(NautobotAppConfig):
@@ -37,23 +41,28 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
         super().ready()
         from nautobot.extras.utils import registry  # pylint: disable=C0415
         from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
-        from django.contrib.contenttypes.models import ContentType # pylint: disable=C0415
+        from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
 
         registry["plugin_validations"] = collections.defaultdict(list)
         validations = import_object(f"{self.__module__}.{self.validations}")
         if validations is not None:
             register_validations(validations)
             self.features["validations"] = sorted(set(validation.model for validation in validations))
-            tc = []
-            # for model in list(set(validation.model for validation in validations)):
-            #     tc.append(tab_factory(model))
+            template_content = []
             labels = []
-            for content_type in ContentType.objects.all():
-                label = f"{content_type.app_label}.{content_type.model}"
-                labels.append(label)
-                tc.append(tab_factory(label))
-            register_template_extensions(tc)
-            self.features["template_extensions"] = sorted(set(labels))
+            try:
+                for content_type in ContentType.objects.all():
+                    label = f"{content_type.app_label}.{content_type.model}"
+                    labels.append(label)
+                    template_content.append(tab_factory(label))
+                register_template_extensions(template_content)
+                self.features["template_extensions"] = sorted(set(labels))
+            except ProgrammingError:
+                logger.warning(
+                    "Creating template content for validation engine failed because "
+                    "the ContentType table was not available or populated. This is normal "
+                    "during the execution of the migration command for the first time."
+                )
 
 
 def register_validations(class_list):

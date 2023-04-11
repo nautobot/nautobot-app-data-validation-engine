@@ -136,9 +136,4 @@ PLUGINS = ["nautobot_data_validation_engine"]
 
 # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
-# PLUGINS_CONFIG = {
-#     'nautobot_data_validation_engine': {
-#         'foo': 'bar',
-#         'buzz': 'bazz'
-#     }
-# }
+PLUGINS_CONFIG = {"nautobot_data_validation_engine": {"VALIDATION_TAB_VISIBILITY": "ALWAYS"}}

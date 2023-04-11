@@ -1,8 +1,10 @@
 """Template content for nautobot_data_validation_engine."""
-# from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 from django.urls import reverse
 from nautobot.extras.plugins import TemplateExtension
 from nautobot_data_validation_engine.models import ValidationResult
+
+PLUGIN_CFG = settings.PLUGINS_CONFIG["nautobot_data_validation_engine"]
 
 
 def tab_factory(content_type_label):
@@ -13,8 +15,20 @@ def tab_factory(content_type_label):
 
         model = content_type_label
 
-        def detail_tabs(self):
+        def __determine_visibility(self):
             app_label, model = self.model.split(".")
+            visibility = PLUGIN_CFG["VALIDATION_TAB_VISIBILITY"].upper()
+            if visibility == "MODEL":
+                return ValidationResult.objects.filter(
+                    content_type__app_label=app_label, content_type__model=model
+                ).exists()
+            if visibility == "INSTANCE":
+                return ValidationResult.objects.filter(
+                    content_type__app_label=app_label, content_type__model=model, object_id=self.context["object"].id
+                ).exists()
+            return True
+
+        def detail_tabs(self):
             return (
                 [
                     {
@@ -25,9 +39,7 @@ def tab_factory(content_type_label):
                         ),
                     }
                 ]
-                if ValidationResult.objects.filter(
-                    content_type__app_label=app_label, content_type__model=model
-                ).exists()
+                if self.__determine_visibility()
                 else []
             )
 

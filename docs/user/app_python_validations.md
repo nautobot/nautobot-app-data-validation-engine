@@ -41,40 +41,9 @@ The job provided in the `jobs.py` file can be run via the UI to run all validate
 
 All validation results can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Pythonic Validations`. This is a basic table that lists all records in the table currently.
 
-The `ObjectValidationView` class can be implemented in your plugin to display all results related to a specific validated object. This class will create an additional detail tab on the object's detail view page.
-
-```python
-### your_plugin/views.py
-from nautobot_data_validation_engine.views import ObjectValidationview
-from your_plugin.models import ModelA
-
-class ModelAValidationView(ObjectValidationView):
-    queryset = ModelA.objects.all()
-```
-
-```python
-### your_plugin/urls.py
-...
-from django.urls import path
-from your_plugin import views
-...
-
-urlpatterns = [
-    ...
-    path("model_a/<id>", views.ModelAValidationView.as_view(), name="modela_validation"),
-    ...
-]
-```
-
-```python
-### your_plugin/template_content.py
-from nautobot_data_validation_engine.template_content import ValidationTab
-
-class ModelAValidationTab(ValidationTab):
-    model = "your_plugin.modela"
-    view_name = "plugins:your_model:modela_validation"
-
-...
-
-template_extensions = [ModelAValidationTab]
-```
+The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Validations` tab to the detail view of all objects.  The visibility of this tab can be set via the `VALIDATION_TAB_VISIBILITY` configuration in `PLUGINS_CONFIG`.
+* Setting `ALWAYS` (the default) will show the `Validations` tab regardless of `ValidationResult` records.
+* Setting `MODEL` will only show the `Validations` tab if there is a `ValidationResult` that matches the content type of the object.
+* * For example, all `dcim.site` objects will have a `Validations` tab if there is at least one `ValidationResult` with `dcim.site` as its content type.
+* Setting `INSTANCE` will only show the `Validations` tab if there is at least one `ValidationResult` for the specific object.
+* * For example, while viewing a specific `Site` object, the `Validations` tab will only be visible if there is at least one `ValidationResult` related to it.
