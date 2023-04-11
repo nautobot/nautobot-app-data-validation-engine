@@ -282,6 +282,13 @@ class ValidationResultTestCase(
 
     model = ValidationResult
 
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
+
     @classmethod
     def setUpTestData(cls):
         s = Site(name="Test Site 1")
