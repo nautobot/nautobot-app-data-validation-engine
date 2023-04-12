@@ -1,13 +1,22 @@
 """Jobs for nautobot_data_validation_engine."""
 from nautobot.extras.jobs import Job, MultiChoiceVar
 from nautobot.extras.utils import registry
-from nautobot_data_validation_engine import CHOICES
+
+
+def get_choices():
+    """Get choices from registry."""
+    choices = []
+    for classes in registry["plugin_validations"].values():
+        for audit_class in classes:
+            choices.append((audit_class.__name__, audit_class.__name__))
+    choices.sort()
+    return choices
 
 
 class RunRegisteredValidations(Job):
     """Run the validate function on all registered ValidationSet classes."""
 
-    validators = MultiChoiceVar(choices=CHOICES, label="Select Validator", required=False)
+    validators = MultiChoiceVar(choices=get_choices, label="Select Validator", required=False)
 
     def run(self, data, commit):
         """Run the validate function on all given ValidationSet classes."""

@@ -15,8 +15,6 @@ from django.db.utils import ProgrammingError
 from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
 from nautobot.extras.plugins.utils import import_object
 
-CHOICES = []
-
 logger = logging.getLogger(__name__)
 
 
@@ -83,8 +81,6 @@ def register_validations(class_list):
         if validation.model is None:
             raise TypeError(f"ValidationSet class {validation} does not declare a valid model!")
         registry["plugin_validations"][validation.model].append(validation)
-        CHOICES.append((validation.__name__, validation.__name__))
-    CHOICES.sort()
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name
