@@ -376,6 +376,9 @@ class ValidationResultFilterForm(BootstrapMixin, forms.Form):
     validated_attribute = forms.CharField(max_length=20, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
     content_type = MultipleContentTypeField(
-        feature=None, queryset=ContentType.objects.all().order_by("app_label", "model"), choices_as_strings=True
+        feature=None,
+        queryset=ContentType.objects.all().order_by("app_label", "model"),
+        choices_as_strings=True,
+        required=False,
     )
     q = forms.CharField(required=False, label="Search")
