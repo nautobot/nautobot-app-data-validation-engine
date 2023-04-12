@@ -32,7 +32,9 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     required_settings = []
     min_version = "1.5.2"
     max_version = "1.9999"
-    default_settings = {}
+    default_settings = {
+        "VALIDATION_TAB_VISIBILITY": "ALWAYS"
+    }
     caching_config = {}
     validations = "validations.validations"
 
