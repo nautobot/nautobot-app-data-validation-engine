@@ -8,11 +8,11 @@ from nautobot.extras.api.serializers import NautobotModelSerializer
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
+    AuditRule,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    ValidationResult,
 )
 
 # Not all of these variable(s) are not actually used anywhere in this file, but required for the
@@ -142,11 +142,11 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
         ]
 
 
-class ValidationResultSerializer(NautobotModelSerializer):
+class AuditRuleSerializer(NautobotModelSerializer):
     """Serializer for Validation Result."""
 
     class Meta:
         """Meta class for serializer."""
 
-        model = ValidationResult
+        model = AuditRule
         fields = "__all__"

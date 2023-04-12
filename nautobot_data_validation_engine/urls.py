@@ -9,13 +9,30 @@ from nautobot_data_validation_engine import views, models
 
 
 router = NautobotUIViewSetRouter()
+router.register("audit-rule", views.AuditRuleListView)
 router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
 router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
 router.register("required-rules", views.RequiredValidationRuleUIViewSet)
 router.register("unique-rules", views.UniqueValidationRuleUIViewSet)
-router.register("validation-result", views.ValidationResultListView)
 
 urlpatterns = [
+    path(
+        "audit-rules/<model>/<id>/",
+        views.AuditRuleObjectView.as_view(),
+        name="auditrules",
+    ),
+    path(
+        "audit-rule/<uuid:pk>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="auditrule_changelog",
+        kwargs={"model": models.AuditRule},
+    ),
+    path(
+        "audit-rule/<uuid:pk>/notes/",
+        ObjectNotesView.as_view(),
+        name="auditrule_notes",
+        kwargs={"model": models.AuditRule},
+    ),
     path(
         "regex-rules/<uuid:pk>/changelog/",
         ObjectChangeLogView.as_view(),
@@ -63,22 +80,5 @@ urlpatterns = [
         ObjectNotesView.as_view(),
         name="uniquevalidationrule_notes",
         kwargs={"model": models.UniqueValidationRule},
-    ),
-    path(
-        "validation-results/<model>/<id>/",
-        views.ValidationResultObjectView.as_view(),
-        name="validationresults",
-    ),
-    path(
-        "validation-result/<uuid:pk>/changelog/",
-        ObjectChangeLogView.as_view(),
-        name="validationresult_changelog",
-        kwargs={"model": models.ValidationResult},
-    ),
-    path(
-        "validation-result/<uuid:pk>/notes/",
-        ObjectNotesView.as_view(),
-        name="validationresult_notes",
-        kwargs={"model": models.ValidationResult},
     ),
 ] + router.urls

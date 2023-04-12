@@ -32,7 +32,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     max_version = "1.9999"
     default_settings = {}
     caching_config = {}
-    validations = "validations.validations"
+    audit_rulesets = "audit_rulesets.audit_rulesets"
 
     def ready(self):
         """Call the ready function and add validations to the registry"""
@@ -41,13 +41,13 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
         from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
         from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
 
-        registry["plugin_validations"] = collections.defaultdict(list)
+        registry["plugin_audit_rulesets"] = collections.defaultdict(list)
         # need to set model_features so filtering gives us the full ContentType set
-        registry["model_features"]["validation results"] = collections.defaultdict(list)
-        validations = import_object(f"{self.__module__}.{self.validations}")
-        if validations is not None:
-            register_validations(validations)
-            self.features["validations"] = sorted(set(validation.model for validation in validations))
+        registry["model_features"]["audit rules"] = collections.defaultdict(list)
+        audit_rulesets = import_object(f"{self.__module__}.{self.audit_rulesets}")
+        if audit_rulesets is not None:
+            register_validations(audit_rulesets)
+            self.features["audit_rulesets"] = sorted(set(audit_ruleset.model for audit_ruleset in audit_rulesets))
             template_content = []
             labels = []
             try:
@@ -55,7 +55,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
                     label = f"{content_type.app_label}.{content_type.model}"
                     labels.append(label)
                     template_content.append(tab_factory(label))
-                    registry["model_features"]["validation results"][content_type.app_label].append(content_type.model)
+                    registry["model_features"]["audit rules"][content_type.app_label].append(content_type.model)
                 register_template_extensions(template_content)
                 self.features["template_extensions"] = sorted(set(labels))
             except ProgrammingError:
@@ -67,20 +67,20 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
 
 
 def register_validations(class_list):
-    """Register ValidationSet classes to the registry."""
+    """Register AuditRuleset classes to the registry."""
     from nautobot.extras.utils import registry  # pylint: disable=C0415
-    from nautobot_data_validation_engine.validations import ValidationSet  # pylint: disable=C0415
+    from nautobot_data_validation_engine.audit_rulesets import AuditRuleset  # pylint: disable=C0415
 
-    for validation in class_list:
-        if not inspect.isclass(validation):
-            raise TypeError(f"ValidationSet class {validation} was passed as an instance!")
-        if not issubclass(validation, ValidationSet):
+    for audit_ruleset in class_list:
+        if not inspect.isclass(audit_ruleset):
+            raise TypeError(f"AuditRuleset class {audit_ruleset} was passed as an instance!")
+        if not issubclass(audit_ruleset, AuditRuleset):
             raise TypeError(
-                f"{validation} is not a subclass of nautobot_data_validation_engine.validations.ValidationSet!"
+                f"{audit_ruleset} is not a subclass of nautobot_data_validation_engine.audit_rulesets.AuditRuleset!"
             )
-        if validation.model is None:
-            raise TypeError(f"ValidationSet class {validation} does not declare a valid model!")
-        registry["plugin_validations"][validation.model].append(validation)
+        if audit_ruleset.model is None:
+            raise TypeError(f"AuditRuleset class {audit_ruleset} does not declare a valid model!")
+        registry["plugin_audit_rulesets"][audit_ruleset.model].append(audit_ruleset)
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name

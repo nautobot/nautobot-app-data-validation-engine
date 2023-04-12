@@ -48,8 +48,8 @@ class UniqueValidationRuleViewSet(NautobotModelViewSet):
     filterset_class = filters.UniqueValidationRuleFilterSet
 
 
-class ValidationResultAPIView(NautobotModelViewSet):
-    """API Views for ValidationResult."""
+class AuditRuleAPIView(NautobotModelViewSet):
+    """API Views for AuditRule."""
 
-    queryset = models.ValidationResult.objects.all()
-    serializer_class = serializers.ValidationResultSerializer
+    queryset = models.AuditRule.objects.all()
+    serializer_class = serializers.AuditRuleSerializer

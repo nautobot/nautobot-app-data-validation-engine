@@ -16,11 +16,11 @@ from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
 from nautobot_data_validation_engine.models import (
+    AuditRule,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    ValidationResult,
 )
 
 
@@ -96,24 +96,24 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class ValidationResultListView(  # pylint: disable=W0223
+class AuditRuleListView(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
-    """Views for the ValidationResultListView model."""
+    """Views for the AuditRuleListView model."""
 
     lookup_field = "pk"
-    queryset = ValidationResult.objects.all()
-    table_class = tables.ValidationResultTable
-    filterset_class = filters.ValidationResultFilterSet
-    filterset_form_class = forms.ValidationResultFilterForm
-    serializer_class = serializers.ValidationResultSerializer
+    queryset = AuditRule.objects.all()
+    table_class = tables.AuditRuleTable
+    filterset_class = filters.AuditRuleFilterSet
+    filterset_form_class = forms.AuditRuleFilterForm
+    serializer_class = serializers.AuditRuleSerializer
     action_buttons = ("export",)
 
 
-class ValidationResultObjectView(ObjectView):
-    """View for the Validations tab dynamically generated on specific object detail views."""
+class AuditRuleObjectView(ObjectView):
+    """View for the Audit Rules tab dynamically generated on specific object detail views."""
 
-    template_name = "nautobot_data_validation_engine/validationresult_tab.html"
+    template_name = "nautobot_data_validation_engine/auditrule_tab.html"
 
     def dispatch(self, request, *args, **kwargs):
         """Set the queryset for the given object and call the inherited dispatch method."""
@@ -123,12 +123,12 @@ class ValidationResultObjectView(ObjectView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):
-        """Generate extra context for rendering the ValidationResultObjectView template."""
-        validations = ValidationResult.objects.filter(
+        """Generate extra context for rendering the AuditRuleObjectView template."""
+        audits = AuditRule.objects.filter(
             content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
         )
-        validation_table = tables.ValidationResultTableTC(validations)
+        audit_table = tables.AuditRuleTableTC(audits)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
-        RequestConfig(request, paginate).configure(validation_table)
-        return {"active_tab": request.GET["tab"], "table": validation_table}
+        RequestConfig(request, paginate).configure(audit_table)
+        return {"active_tab": request.GET["tab"], "table": audit_table}

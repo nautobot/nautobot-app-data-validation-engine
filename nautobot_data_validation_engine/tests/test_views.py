@@ -14,11 +14,11 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    ValidationResult,
+    AuditRule,
 )
-from nautobot_data_validation_engine.tests.test_validations import TestValidationSet
-from nautobot_data_validation_engine.views import ValidationResultObjectView
-from nautobot_data_validation_engine.tables import ValidationResultTableTC
+from nautobot_data_validation_engine.tests.test_audit_rulesets import TestAuditRuleset
+from nautobot_data_validation_engine.views import AuditRuleObjectView
+from nautobot_data_validation_engine.tables import AuditRuleTableTC
 
 try:
     from importlib import metadata
@@ -272,15 +272,15 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
         }
 
 
-class ValidationResultTestCase(
+class AuditRuleTestCase(
     ViewTestCases.GetObjectViewTestCase,
     ViewTestCases.DeleteObjectViewTestCase,
     ViewTestCases.ListObjectsViewTestCase,
     ViewTestCases.BulkDeleteObjectsViewTestCase,
 ):
-    """Test cases for ValidationResult Viewset."""
+    """Test cases for AuditRule Viewset."""
 
-    model = ValidationResult
+    model = AuditRule
 
     @skipIf(
         _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
@@ -293,31 +293,31 @@ class ValidationResultTestCase(
     def setUpTestData(cls):
         s = Site(name="Test Site 1")
         s.save()
-        t = TestValidationSet()
-        t.validate(job_result=MagicMock())
+        t = TestAuditRuleset()
+        t.audit(job_result=MagicMock())
 
 
-class ValidationResultObjectTestCase(TestCase):
-    """Test cases for ValidationResultObjectView."""
+class AuditRuleObjectTestCase(TestCase):
+    """Test cases for AuditRuleObjectView."""
 
     def setUp(self):
         s = Site(name="Test Site 1")
         s.save()
-        t = TestValidationSet()
-        t.validate(job_result=MagicMock())
+        t = TestAuditRuleset()
+        t.audit(job_result=MagicMock())
 
     def test_get_extra_context(self):
-        view = ValidationResultObjectView()
+        view = AuditRuleObjectView()
         site = Site.objects.first()
         mock_request = MagicMock()
         mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
         result = view.get_extra_context(mock_request, site)
         self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
-        self.assertIsInstance(result["table"], ValidationResultTableTC)
+        self.assertIsInstance(result["table"], AuditRuleTableTC)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
     def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
-        view = ValidationResultObjectView()
+        view = AuditRuleObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
         view.dispatch(mock_request, **kwargs)
