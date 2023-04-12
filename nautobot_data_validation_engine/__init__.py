@@ -32,9 +32,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     required_settings = []
     min_version = "1.5.2"
     max_version = "1.9999"
-    default_settings = {
-        "VALIDATION_TAB_VISIBILITY": "ALWAYS"
-    }
+    default_settings = {"VALIDATION_TAB_VISIBILITY": "ALWAYS"}
     caching_config = {}
     validations = "validations.validations"
 
@@ -46,6 +44,8 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
         from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
 
         registry["plugin_validations"] = collections.defaultdict(list)
+        # need to set model_features so filtering gives us the full ContentType set
+        registry["model_features"]["validation results"] = {}
         validations = import_object(f"{self.__module__}.{self.validations}")
         if validations is not None:
             register_validations(validations)

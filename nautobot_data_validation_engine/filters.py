@@ -1,5 +1,6 @@
 """Django filters."""
 
+from django.contrib.contenttypes.models import ContentType
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
@@ -122,8 +123,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
             "name": "icontains",
             "slug": "icontains",
             "error_message": "icontains",
-            "content_type__app_label": "equals",
-            "content_type__model": "equals",
+            "content_type__app_label": "icontains",
+            "content_type__model": "icontains",
             "field": "equals",
         }
     )
@@ -155,10 +156,14 @@ class ValidationResultFilterSet(NautobotFilterSet):
             "class_name": "icontains",
             "method_name": "icontains",
             "message": "icontains",
-            "content_type": "icontains",
+            "content_type__app_label": "icontains",
+            "content_type__model": "icontains",
             "object_id": "icontains",
-            "field": "equals",
         }
+    )
+
+    content_type = ContentTypeMultipleChoiceFilter(
+        choices=[(f"{ct.app_label}.{ct.model}", ct.pk) for ct in ContentType.objects.all()], conjoined=False
     )
 
     class Meta:
