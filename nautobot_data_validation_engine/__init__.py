@@ -45,7 +45,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
 
         registry["plugin_validations"] = collections.defaultdict(list)
         # need to set model_features so filtering gives us the full ContentType set
-        registry["model_features"]["validation results"] = {}
+        registry["model_features"]["validation results"] = collections.defaultdict(list)
         validations = import_object(f"{self.__module__}.{self.validations}")
         if validations is not None:
             register_validations(validations)
@@ -57,6 +57,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
                     label = f"{content_type.app_label}.{content_type.model}"
                     labels.append(label)
                     template_content.append(tab_factory(label))
+                    registry["model_features"]["validation results"][content_type.app_label].append(content_type.model)
                 register_template_extensions(template_content)
                 self.features["template_extensions"] = sorted(set(labels))
             except ProgrammingError:

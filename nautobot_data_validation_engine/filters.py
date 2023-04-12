@@ -1,7 +1,6 @@
 """Django filters."""
 
 import django_filters as filters
-from django.contrib.contenttypes.models import ContentType
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
@@ -166,7 +165,8 @@ class ValidationResultFilterSet(NautobotFilterSet):
     method_name = filters.CharFilter(field_name="method_name", lookup_expr="icontains")
     validated_attribute = filters.CharFilter(field_name="validated_attribute", lookup_expr="icontains")
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=[(f"{ct.app_label}.{ct.model}", ct.pk) for ct in ContentType.objects.all()], conjoined=False
+        choices=FeatureQuery("validation results").get_choices,
+        conjoined=False,
     )
 
     class Meta:
