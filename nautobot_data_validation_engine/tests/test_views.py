@@ -272,7 +272,7 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
         }
 
 
-class AuditRuleTestCase(
+class AuditResultTestCase(
     ViewTestCases.GetObjectViewTestCase,
     ViewTestCases.DeleteObjectViewTestCase,
     ViewTestCases.ListObjectsViewTestCase,

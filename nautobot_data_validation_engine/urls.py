@@ -29,7 +29,7 @@ urlpatterns = [
         kwargs={"model": models.AuditResult},
     ),
     path(
-        "audit-results/<model>/<id>/",
+        "audit-results/<model>/<uuid:id>/",
         views.AuditResultObjectView.as_view(),
         name="auditresults",
     ),

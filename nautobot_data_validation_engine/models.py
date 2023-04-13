@@ -428,4 +428,4 @@ class AuditResult(PrimaryModel):
 
     def get_absolute_url(self):
         """Return the absolute URL to this AuditResult object."""
-        return reverse("plugins:nautobot_data_validation_engine:auditrule", args=[self.pk])
+        return reverse("plugins:nautobot_data_validation_engine:auditresult", args=[self.pk])
