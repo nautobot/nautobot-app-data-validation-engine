@@ -1,6 +1,5 @@
 """Django filters."""
 
-import django_filters as filters
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.extras.utils import FeatureQuery
 from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
