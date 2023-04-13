@@ -375,7 +375,7 @@ class AuditResult(PrimaryModel):
     class_name = models.CharField(max_length=100, blank=False, null=False)
     method_name = models.CharField(max_length=100, blank=False, null=False)
     last_validation_date = models.DateTimeField(blank=False, null=False)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=False, null=False)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
     validated_attribute = models.CharField(max_length=100, blank=True, null=True)
