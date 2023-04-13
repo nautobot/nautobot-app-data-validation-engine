@@ -161,9 +161,6 @@ class AuditResultFilterSet(NautobotFilterSet):
             "object_id": "icontains",
         }
     )
-    class_name = filters.CharFilter(field_name="class_name", lookup_expr="icontains")
-    method_name = filters.CharFilter(field_name="method_name", lookup_expr="icontains")
-    validated_attribute = filters.CharFilter(field_name="validated_attribute", lookup_expr="icontains")
     content_type = ContentTypeMultipleChoiceFilter(
         choices=FeatureQuery("audit rules").get_choices,
         conjoined=False,
@@ -173,4 +170,4 @@ class AuditResultFilterSet(NautobotFilterSet):
         """Meta class for AuditRuleFilterSet."""
 
         model = AuditResult
-        fields = ["class_name", "method_name", "valid"]
+        fields = ["class_name", "method_name", "validated_attribute", "content_type", "valid"]
