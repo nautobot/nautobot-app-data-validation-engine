@@ -16,7 +16,7 @@ from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
 from nautobot_data_validation_engine.models import (
-    AuditRule,
+    AuditResult,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -96,24 +96,24 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class AuditRuleListView(  # pylint: disable=W0223
+class AuditResultListView(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
-    """Views for the AuditRuleListView model."""
+    """Views for the AuditResultListView model."""
 
     lookup_field = "pk"
-    queryset = AuditRule.objects.all()
-    table_class = tables.AuditRuleTable
-    filterset_class = filters.AuditRuleFilterSet
-    filterset_form_class = forms.AuditRuleFilterForm
-    serializer_class = serializers.AuditRuleSerializer
+    queryset = AuditResult.objects.all()
+    table_class = tables.AuditResultTable
+    filterset_class = filters.AuditResultFilterSet
+    filterset_form_class = forms.AuditResultFilterForm
+    serializer_class = serializers.AuditResultSerializer
     action_buttons = ("export",)
 
 
-class AuditRuleObjectView(ObjectView):
-    """View for the Audit Rules tab dynamically generated on specific object detail views."""
+class AuditResultObjectView(ObjectView):
+    """View for the Audit Results tab dynamically generated on specific object detail views."""
 
-    template_name = "nautobot_data_validation_engine/auditrule_tab.html"
+    template_name = "nautobot_data_validation_engine/auditresult_tab.html"
 
     def dispatch(self, request, *args, **kwargs):
         """Set the queryset for the given object and call the inherited dispatch method."""
@@ -123,11 +123,11 @@ class AuditRuleObjectView(ObjectView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):
-        """Generate extra context for rendering the AuditRuleObjectView template."""
-        audits = AuditRule.objects.filter(
+        """Generate extra context for rendering the AuditResultObjectView template."""
+        audits = AuditResult.objects.filter(
             content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
         )
-        audit_table = tables.AuditRuleTableTC(audits)
+        audit_table = tables.AuditResultTableTab(audits)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
         RequestConfig(request, paginate).configure(audit_table)

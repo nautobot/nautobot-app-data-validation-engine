@@ -1,13 +1,13 @@
-# Python Data Validation Guide
+# Audit Ruleset Guide
 
-## Writing Validations
+## Writing Audit Rules
 
-To write validation methods for your plugin, create a `validations.py` file within your plugin. Each class within this file should inherit from the `AuditRuleset` class from `nautobot_data_validation_engine.validations`. The `AuditRuleset` class provides `success` and `fail` methods to create `AuditRule` objects. Additionally, the name of any validation methods written in your implementations must start with `validate_` to be considered a validation. The `validate_` functions takes an parameter `instance` which is the instance of the given model you wish to validate.
+To write audit methods for your plugin, create a `audit_rulesets.py` file within your plugin. Each class within this file should inherit from the `AuditRuleset` class from `nautobot_data_validation_engine.audit_rulesets`. The `AuditRuleset` class provides `success` and `fail` methods to create `AuditResult` objects. Additionally, the name of any audit methods written in your implementations must start with `audit_` to be considered a audit rule. The `audit_` functions takes an parameter `instance` which is the instance of the given model you wish to audit.
 
 ```python
 ### your_plugin/validations.py
 
-from nautobot_data_validation_engine.validations import AuditRuleset
+from nautobot_data_validation_engine.audit_rulesets import AuditRuleset
 from nautobot.dcim.models import Device
 
 class DeviceAuditRuleset(AuditRuleset):
@@ -18,7 +18,7 @@ class DeviceAuditRuleset(AuditRuleset):
         # default queryset is all objects of the given model
         return Device.objects.all()
 
-    def validate_one_name(self, instance):
+    def audit_one_name(self, instance):
         # your logic to determine if this function has succeeded or failed
         if instance.name == "ams01-dist-01":
             self.fail(
@@ -31,19 +31,14 @@ class DeviceAuditRuleset(AuditRuleset):
         else:
             self.success(instance, attribute="name", validated_attribute_value=instance.name)
 
-validations = [DeviceAuditRuleset]
+audit_rulesets = [DeviceAuditRuleset]
 
 ```
 
-The job provided in the `jobs.py` file can be run via the UI to run all validate methods across all validation classes added to the `validations` variable.
+The job provided in the `jobs.py` file can be run via the UI to run all audit methods across all `AuditRuleset` classes added to the `audit_rulesets` variable.
 
 ## Viewing Results
 
-All validation results can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Pythonic Validations`. This is a basic table that lists all records in the table currently.
+All audit rules can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Audit Results`. This is a basic table that lists all records in the table currently.
 
-The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Validations` tab to the detail view of all objects.  The visibility of this tab can be set via the `VALIDATION_TAB_VISIBILITY` configuration in `PLUGINS_CONFIG`.
-* Setting `ALWAYS` (the default) will show the `Validations` tab regardless of `AuditRule` records.
-* Setting `MODEL` will only show the `Validations` tab if there is a `AuditRule` that matches the content type of the object.
-* * For example, all `dcim.site` objects will have a `Validations` tab if there is at least one `AuditRule` with `dcim.site` as its content type.
-* Setting `INSTANCE` will only show the `Validations` tab if there is at least one `AuditRule` for the specific object.
-* * For example, while viewing a specific `Site` object, the `Validations` tab will only be visible if there is at least one `AuditRule` related to it.
+The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Audit Results` tab to the detail view of all objects.  The `Audit Results` tab will only be visible if there is an `AuditResult` that exists for that model.

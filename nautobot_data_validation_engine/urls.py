@@ -9,7 +9,7 @@ from nautobot_data_validation_engine import views, models
 
 
 router = NautobotUIViewSetRouter()
-router.register("audit-rule", views.AuditRuleListView)
+router.register("audit-results", views.AuditResultListView)
 router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
 router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
 router.register("required-rules", views.RequiredValidationRuleUIViewSet)
@@ -17,21 +17,21 @@ router.register("unique-rules", views.UniqueValidationRuleUIViewSet)
 
 urlpatterns = [
     path(
-        "audit-rules/<model>/<id>/",
-        views.AuditRuleObjectView.as_view(),
-        name="auditrules",
-    ),
-    path(
-        "audit-rule/<uuid:pk>/changelog/",
+        "audit-results/<uuid:pk>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="auditrule_changelog",
-        kwargs={"model": models.AuditRule},
+        name="auditresult_changelog",
+        kwargs={"model": models.AuditResult},
     ),
     path(
-        "audit-rule/<uuid:pk>/notes/",
+        "audit-results/<uuid:pk>/notes/",
         ObjectNotesView.as_view(),
-        name="auditrule_notes",
-        kwargs={"model": models.AuditRule},
+        name="auditresult_notes",
+        kwargs={"model": models.AuditResult},
+    ),
+    path(
+        "audit-results/<model>/<id>/",
+        views.AuditResultObjectView.as_view(),
+        name="auditresults",
     ),
     path(
         "regex-rules/<uuid:pk>/changelog/",

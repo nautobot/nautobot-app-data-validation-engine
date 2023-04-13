@@ -369,7 +369,7 @@ class UniqueValidationRule(ValidationRule):
             raise ValidationError({"field": "This field is already unique by default."})
 
 
-class AuditRule(PrimaryModel):
+class AuditResult(PrimaryModel):
     """Model to represent the results of a audit method."""
 
     class_name = models.CharField(max_length=100, blank=False, null=False)
@@ -385,19 +385,19 @@ class AuditRule(PrimaryModel):
     message = models.TextField(blank=True, null=True)
 
     csv_headers = [
-        "Class Name",
-        "Method Name",
-        "Last Validation Date",
-        "Validated Object",
-        "Validated Attribute",
-        "Validated Attribute Value",
-        "Expected Attribute Value",
-        "Valid",
-        "Message",
+        "class_name",
+        "method_name",
+        "last_validation_date",
+        "validated_object",
+        "validated_attribute",
+        "validated_attribute_value",
+        "expected_attribute_value",
+        "valid",
+        "message",
     ]
 
     class Meta:
-        """Meta class for AuditRule model."""
+        """Meta class for AuditResult model."""
 
         unique_together = (
             "class_name",
@@ -423,9 +423,9 @@ class AuditRule(PrimaryModel):
         )
 
     def __str__(self):
-        """Return a string representation of this AuditRule object."""
+        """Return a string representation of this AuditResult object."""
         return f"{self.class_name}.{self.method_name} on {self.validated_object}"
 
     def get_absolute_url(self):
-        """Return the absolute URL to this AuditRule object."""
+        """Return the absolute URL to this AuditResult object."""
         return reverse("plugins:nautobot_data_validation_engine:auditrule", args=[self.pk])

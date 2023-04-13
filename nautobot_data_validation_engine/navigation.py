@@ -72,9 +72,9 @@ menu_items = (
                         ),
                     ),
                     NavMenuItem(
-                        link="plugins:nautobot_data_validation_engine:auditrule_list",
-                        name="Audit Rules",
-                        permissions=["nautobot_data_validation_engine.view_auditrule"],
+                        link="plugins:nautobot_data_validation_engine:auditresult_list",
+                        name="Audit Results",
+                        permissions=["nautobot_data_validation_engine.view_auditresult"],
                         buttons=(),
                     ),
                 ),

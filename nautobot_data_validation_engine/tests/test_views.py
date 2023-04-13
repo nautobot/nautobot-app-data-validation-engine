@@ -14,11 +14,11 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    AuditRule,
+    AuditResult,
 )
 from nautobot_data_validation_engine.tests.test_audit_rulesets import TestAuditRuleset
-from nautobot_data_validation_engine.views import AuditRuleObjectView
-from nautobot_data_validation_engine.tables import AuditRuleTableTC
+from nautobot_data_validation_engine.views import AuditResultObjectView
+from nautobot_data_validation_engine.tables import AuditResultTableTab
 
 try:
     from importlib import metadata
@@ -278,9 +278,9 @@ class AuditRuleTestCase(
     ViewTestCases.ListObjectsViewTestCase,
     ViewTestCases.BulkDeleteObjectsViewTestCase,
 ):
-    """Test cases for AuditRule Viewset."""
+    """Test cases for AuditResult Viewset."""
 
-    model = AuditRule
+    model = AuditResult
 
     @skipIf(
         _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
@@ -297,8 +297,8 @@ class AuditRuleTestCase(
         t.audit(job_result=MagicMock())
 
 
-class AuditRuleObjectTestCase(TestCase):
-    """Test cases for AuditRuleObjectView."""
+class AuditResultObjectTestCase(TestCase):
+    """Test cases for AuditResultObjectView."""
 
     def setUp(self):
         s = Site(name="Test Site 1")
@@ -307,17 +307,17 @@ class AuditRuleObjectTestCase(TestCase):
         t.audit(job_result=MagicMock())
 
     def test_get_extra_context(self):
-        view = AuditRuleObjectView()
+        view = AuditResultObjectView()
         site = Site.objects.first()
         mock_request = MagicMock()
         mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
         result = view.get_extra_context(mock_request, site)
         self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
-        self.assertIsInstance(result["table"], AuditRuleTableTC)
+        self.assertIsInstance(result["table"], AuditResultTableTab)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
     def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
-        view = AuditRuleObjectView()
+        view = AuditResultObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
         view.dispatch(mock_request, **kwargs)

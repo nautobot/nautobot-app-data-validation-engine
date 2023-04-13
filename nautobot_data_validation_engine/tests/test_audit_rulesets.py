@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
 from nautobot.dcim.models import Site
 from nautobot_data_validation_engine.audit_rulesets import AuditRuleset
-from nautobot_data_validation_engine.models import AuditRule
+from nautobot_data_validation_engine.models import AuditResult
 
 
 class TestAuditRuleset(AuditRuleset):
@@ -35,10 +35,10 @@ class TestValidation(TestCase):
         t.audit(job_result=MagicMock())
 
     def test_audit_only_runs_audit_methods(self):
-        self.assertEqual(len(AuditRule.objects.all()), 2)
+        self.assertEqual(len(AuditResult.objects.all()), 2)
 
     def test_audit_success(self):
-        result = AuditRule.objects.filter(valid=True).all()
+        result = AuditResult.objects.filter(valid=True).all()
         self.assertEqual(len(result), 1)
         result = result[0]
         self.assertEqual(result.class_name, "TestAuditRuleset")
@@ -49,7 +49,7 @@ class TestValidation(TestCase):
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_audit_fail(self):
-        result = AuditRule.objects.filter(valid=False).all()
+        result = AuditResult.objects.filter(valid=False).all()
         self.assertEqual(len(result), 1)
         result = result[0]
         self.assertEqual(result.class_name, "TestAuditRuleset")
@@ -61,9 +61,9 @@ class TestValidation(TestCase):
 
     def test_validate_replaces_results(self):
         t = TestAuditRuleset()
-        self.assertEqual(len(AuditRule.objects.all()), 2)
+        self.assertEqual(len(AuditResult.objects.all()), 2)
         t.audit(job_result=MagicMock())
-        self.assertEqual(len(AuditRule.objects.all()), 2)
+        self.assertEqual(len(AuditResult.objects.all()), 2)
 
     def test_validate_exception_if_not_in_validate_function(self):
         t = TestAuditRuleset()

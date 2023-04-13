@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from nautobot_data_validation_engine.models import AuditRule
+from nautobot_data_validation_engine.models import AuditResult
 
 
 class AuditRuleset:
@@ -41,7 +41,7 @@ class AuditRuleset:
         class_name = type(self).__name__
         method_name = self.__find_calling_method_name()
         content_type = ContentType.objects.get_for_model(validated_object)
-        result = AuditRule.objects.filter(
+        result = AuditResult.objects.filter(
             class_name=class_name,
             method_name=method_name,
             content_type=content_type,
@@ -53,7 +53,7 @@ class AuditRuleset:
             result.valid = valid
             result.message = message
         else:
-            result = AuditRule(
+            result = AuditResult(
                 class_name=class_name,
                 method_name=method_name,
                 last_validation_date=self.result_date,
