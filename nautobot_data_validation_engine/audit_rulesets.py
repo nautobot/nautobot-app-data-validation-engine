@@ -20,7 +20,8 @@ class AuditRuleset:
         self.result_date = timezone.now()
         self.job_result = None
 
-    def __find_calling_method_name(self):  # pylint: disable=R0201
+    @staticmethod
+    def find_calling_method_name():
         """Return the calling function that starts with 'audit_' by looking through the current stack."""
         stack = inspect.stack()
         for frame in stack:
@@ -28,7 +29,7 @@ class AuditRuleset:
                 return frame.function
         raise Exception("Unable to find calling method that starts with 'audit_'.")
 
-    def __generate_result(  # pylint: disable=R0913
+    def _generate_result(  # pylint: disable=R0913
         self,
         valid,
         validated_object,
@@ -39,7 +40,7 @@ class AuditRuleset:
     ):
         """Report a audit rule."""
         class_name = type(self).__name__
-        method_name = self.__find_calling_method_name()
+        method_name = self.find_calling_method_name()
         content_type = ContentType.objects.get_for_model(validated_object)
         result = AuditResult.objects.filter(
             class_name=class_name,
@@ -68,11 +69,11 @@ class AuditRuleset:
 
     def success(self, obj, **kwargs):
         """Report a successful audit check."""
-        return self.__generate_result(True, obj, **kwargs)
+        return self._generate_result(True, obj, **kwargs)
 
     def fail(self, obj, **kwargs):
         """Report a failed audit check."""
-        return self.__generate_result(False, obj, **kwargs)
+        return self._generate_result(False, obj, **kwargs)
 
     def get_queryset(self):
         """Return all objects of the given model in a queryset."""
