@@ -14,7 +14,7 @@ class AuditRuleset:
     """Class to handle a set of validation functions."""
 
     class_name: Optional[str] = None
-    method_names: Optional[dict] = None
+    method_names: dict = {}
     model: str
     result_date: timezone
 
@@ -44,7 +44,7 @@ class AuditRuleset:
         """Report a audit rule."""
         class_name = self.class_name or type(self).__name__
         method_name = self.find_calling_method_name()
-        friendly_method_name = self.method_names[method_name] if method_name in self.method_names.keys() else method_name
+        friendly_method_name = self.method_names[method_name] if method_name in self.method_names else method_name
         content_type = ContentType.objects.get_for_model(validated_object)
         result = AuditResult.objects.filter(
             class_name=class_name,
