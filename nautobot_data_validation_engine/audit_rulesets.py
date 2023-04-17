@@ -1,6 +1,7 @@
 """Validation class."""
 
 import inspect
+from typing import Optional
 from django.apps import apps as global_apps
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -12,6 +13,8 @@ from nautobot_data_validation_engine.models import AuditResult
 class AuditRuleset:
     """Class to handle a set of validation functions."""
 
+    class_name: Optional[str] = None
+    method_names: Optional[dict] = None
     model: str
     result_date: timezone
 
@@ -39,12 +42,13 @@ class AuditRuleset:
         message=None,
     ):
         """Report a audit rule."""
-        class_name = type(self).__name__
+        class_name = self.class_name or type(self).__name__
         method_name = self.find_calling_method_name()
+        friendly_method_name = self.method_names[method_name] if method_name in self.method_names.keys() else method_name
         content_type = ContentType.objects.get_for_model(validated_object)
         result = AuditResult.objects.filter(
             class_name=class_name,
-            method_name=method_name,
+            method_name=friendly_method_name,
             content_type=content_type,
             object_id=validated_object.id,
             validated_attribute=attribute,
@@ -56,7 +60,7 @@ class AuditRuleset:
         else:
             result = AuditResult(
                 class_name=class_name,
-                method_name=method_name,
+                method_name=friendly_method_name,
                 last_validation_date=self.result_date,
                 validated_object=validated_object,
                 validated_attribute=attribute if attribute else None,
@@ -96,6 +100,8 @@ class AuditRuleset:
 class AuditRulesetAll(AuditRuleset):
     """AuditRuleset class for all content types."""
 
+    class_name = "All Objects Ruleset"
+    method_names = {"audit_full_clean": "Audit the Full Clean Method"}
     model = "faker"
 
     def _validate_all(self):
