@@ -8,12 +8,9 @@ except ImportError:
 
 __version__ = metadata.version(__name__)
 
-import inspect
-import collections
 import logging
-from django.db.utils import ProgrammingError
-from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
-from nautobot.extras.plugins.utils import import_object
+
+from nautobot.extras.plugins import NautobotAppConfig  # , register_template_extensions
 
 logger = logging.getLogger(__name__)
 
@@ -32,55 +29,6 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     max_version = "1.9999"
     default_settings = {}
     caching_config = {}
-    audit_rulesets = "audit_rulesets.audit_rulesets"
-
-    def ready(self):
-        """Call the ready function and add validations to the registry"""
-        super().ready()
-        from nautobot.extras.utils import registry  # pylint: disable=C0415
-        from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
-        from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
-
-        registry["plugin_audit_rulesets"] = collections.defaultdict(list)
-        # need to set model_features so filtering gives us the full ContentType set
-        registry["model_features"]["audit rules"] = collections.defaultdict(list)
-        audit_rulesets = import_object(f"{self.__module__}.{self.audit_rulesets}")
-        if audit_rulesets is not None:
-            register_validations(audit_rulesets)
-            self.features["audit_rulesets"] = sorted(set(audit_ruleset.model for audit_ruleset in audit_rulesets))
-            template_content = []
-            labels = []
-            try:
-                for content_type in ContentType.objects.all():
-                    label = f"{content_type.app_label}.{content_type.model}"
-                    labels.append(label)
-                    template_content.append(tab_factory(label))
-                    registry["model_features"]["audit rules"][content_type.app_label].append(content_type.model)
-                register_template_extensions(template_content)
-                self.features["template_extensions"] = sorted(set(labels))
-            except ProgrammingError:
-                logger.warning(
-                    "Creating template content for validation engine failed because "
-                    "the ContentType table was not available or populated. This is normal "
-                    "during the execution of the migration command for the first time."
-                )
-
-
-def register_validations(class_list):
-    """Register AuditRuleset classes to the registry."""
-    from nautobot.extras.utils import registry  # pylint: disable=C0415
-    from nautobot_data_validation_engine.audit_rulesets import AuditRuleset  # pylint: disable=C0415
-
-    for audit_ruleset in class_list:
-        if not inspect.isclass(audit_ruleset):
-            raise TypeError(f"AuditRuleset class {audit_ruleset} was passed as an instance!")
-        if not issubclass(audit_ruleset, AuditRuleset):
-            raise TypeError(
-                f"{audit_ruleset} is not a subclass of nautobot_data_validation_engine.audit_rulesets.AuditRuleset!"
-            )
-        if audit_ruleset.model is None:
-            raise TypeError(f"AuditRuleset class {audit_ruleset} does not declare a valid model!")
-        registry["plugin_audit_rulesets"][audit_ruleset.model].append(audit_ruleset)
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name
