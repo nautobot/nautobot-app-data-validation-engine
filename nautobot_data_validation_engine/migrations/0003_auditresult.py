@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('contenttypes', '0002_remove_content_type_name'),
-        ('extras', '0057_jobbutton'),
+        ('extras', '0053_relationship_required_on'),
         ('nautobot_data_validation_engine', '0002_required_unique_types_regex_context'),
     ]
 
