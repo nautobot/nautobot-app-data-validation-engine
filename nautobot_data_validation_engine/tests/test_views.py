@@ -16,7 +16,7 @@ from nautobot_data_validation_engine.models import (
     UniqueValidationRule,
     AuditResult,
 )
-from nautobot_data_validation_engine.tests.test_audit_rulesets import TestAuditRuleset
+from nautobot_data_validation_engine.tests.test_audit_rulesets import TestFailedAuditRuleset
 from nautobot_data_validation_engine.views import AuditResultObjectView
 from nautobot_data_validation_engine.tables import AuditResultTableTab
 
@@ -293,8 +293,9 @@ class AuditResultTestCase(
     def setUpTestData(cls):
         s = Site(name="Test Site 1")
         s.save()
-        t = TestAuditRuleset()
-        t.audit(job_result=MagicMock())
+        for _ in range(4):
+            t = TestFailedAuditRuleset(s)
+            t.clean()
 
 
 class AuditResultObjectTestCase(TestCase):
@@ -303,8 +304,8 @@ class AuditResultObjectTestCase(TestCase):
     def setUp(self):
         s = Site(name="Test Site 1")
         s.save()
-        t = TestAuditRuleset()
-        t.audit(job_result=MagicMock())
+        t = TestFailedAuditRuleset(s)
+        t.clean()
 
     def test_get_extra_context(self):
         view = AuditResultObjectView()

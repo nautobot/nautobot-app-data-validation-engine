@@ -2,143 +2,92 @@
 
 import inspect
 from typing import Optional
-from django.apps import apps as global_apps
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 from django.core.exceptions import ValidationError
+
+from nautobot.extras.plugins import CustomValidator
+from nautobot.extras.registry import registry
+
 from nautobot_data_validation_engine.models import AuditResult
 
 
-class AuditRuleset:
+def is_audit_rule_set(obj):
+    return inspect.isclass(obj) and issubclass(obj, AuditRuleset)
+
+
+def get_audit_rule_sets_map():
+    audit_rulesets = {}
+    for validators in registry["plugin_custom_validators"].value():
+        for validator in validators:
+            if is_audit_rule_set(validator):
+                audit_rulesets.setdefault(validator.model, [])
+                audit_rulesets[validator.model].append(validator)
+
+    return audit_rulesets
+
+
+def get_audit_rule_sets():
+    validators = []
+    for rule_sets in get_audit_rule_sets_map().values():
+        validators.extend(rule_sets)
+    return validators
+
+
+class AuditError(ValidationError):
+    """An audit error is raised only when an object fails an audit."""
+
+
+class AuditRuleset(CustomValidator):
     """Class to handle a set of validation functions."""
 
     class_name: Optional[str] = None
     method_names: dict = {}
     model: str
     result_date: timezone
+    valid = True
+    enforce = False
 
-    def __init__(self):
-        """Create a AuditRuleset object."""
+    def __init__(self, obj):
+        super().__init__(obj)
         self.result_date = timezone.now()
-        self.job_result = None
 
-    @staticmethod
-    def find_calling_method_name():
-        """Return the calling function that starts with 'audit_' by looking through the current stack."""
-        stack = inspect.stack()
-        for frame in stack:
-            if frame.function.startswith("audit_"):
-                return frame.function
-        raise Exception("Unable to find calling method that starts with 'audit_'.")
+    def clean(self):
+        try:
+            self.audit()
+            self.audit_result(message=f"{self.context['object']} is valid")
+        except AuditError as ex:
+            try:
+                for attribute, messages in ex.message_dict.items():
+                    for message in messages:
+                        self.audit_result(message=message, attribute=attribute, valid=False)
+            except AttributeError:
+                for message in ex.messages:
+                    self.audit_result(message=message, valid=False)
+            if self.enforce:
+                raise ex
 
-    def _generate_result(  # pylint: disable=R0913
-        self,
-        valid,
-        validated_object,
-        attribute=None,
-        validated_attribute_value=None,
-        expected_attribute_value=None,
-        message=None,
-    ):
-        """Report a audit rule."""
-        class_name = self.class_name or type(self).__name__
-        method_name = self.find_calling_method_name()
-        friendly_method_name = self.method_names[method_name] if method_name in self.method_names else method_name
-        content_type = ContentType.objects.get_for_model(validated_object)
-        result = AuditResult.objects.filter(
-            class_name=class_name,
-            method_name=friendly_method_name,
-            content_type=content_type,
-            object_id=validated_object.id,
-            validated_attribute=attribute,
-        ).first()
-        if result:
-            result.last_validation_date = self.result_date
-            result.valid = valid
-            result.message = message
+    def audit_error(self, message):
+        raise AuditError(message)
+
+    def audit_result(self, message, attribute=None, valid=True):
+        instance = self.context["object"]
+        attribute_value = None
+        if attribute:
+            attribute_value = getattr(instance, attribute)
         else:
-            result = AuditResult(
-                class_name=class_name,
-                method_name=friendly_method_name,
-                last_validation_date=self.result_date,
-                validated_object=validated_object,
-                validated_attribute=attribute if attribute else None,
-                validated_attribute_value=str(validated_attribute_value) if validated_attribute_value else None,
-                expected_attribute_value=str(expected_attribute_value) if expected_attribute_value else None,
-                valid=valid,
-                message=message,
-            )
-        result.save()
-
-    def success(self, obj, **kwargs):
-        """Report a successful audit check."""
-        return self._generate_result(True, obj, **kwargs)
-
-    def fail(self, obj, **kwargs):
-        """Report a failed audit check."""
-        return self._generate_result(False, obj, **kwargs)
-
-    def get_queryset(self):
-        """Return all objects of the given model in a queryset."""
-        model = global_apps.get_model(self.model)
-        return model.objects.all()
-
-    def audit(self, job_result):
-        """Run all functions from this class that start with 'audit_'."""
-        self.job_result = job_result
-        validation_functions = [
-            function
-            for name, function in inspect.getmembers(self, predicate=inspect.ismethod)
-            if name.startswith("audit_")
-        ]
-        for obj in self.get_queryset():
-            for function in validation_functions:
-                function(obj)
-
-
-class AuditRulesetAll(AuditRuleset):
-    """AuditRuleset class for all content types."""
-
-    class_name = "All Objects Ruleset"
-    method_names = {"audit_full_clean": "Audit the Full Clean Method"}
-    model = "faker"
-
-    def _validate_all(self):
-        """Run full clean on all objects and report any objects that have ValidationErrors."""
-        # Lambdas are used just to sort by attribute value.
-        for app_config in sorted(list(global_apps.get_app_configs()), key=lambda x: x.label):
-            for model in sorted(list(app_config.models.values()), key=lambda x: x._meta.model_name):
-                model_name = f"{model._meta.app_label}.{model._meta.model_name}"
-                # Must swap out for user_model
-                if model_name == "auth.user":
-                    model = get_user_model()
-                # Skip models that aren't actually in the database
-                if not model._meta.managed:
-                    continue
-                self.job_result.log_info(f" --> {type(self).__name__} is Validating Model: {model_name}")
-
-                model.objects.all()
-                for instance in model.objects.all().iterator():
-                    try:
-                        instance.full_clean()
-                    except ValidationError as err:
-                        for attribute, messages in err.message_dict.items():
-                            self.fail(
-                                instance,
-                                attribute=attribute,
-                                validated_attribute_value=getattr(instance, attribute),
-                                message=" AND ".join(messages),
-                            )
-
-    def audit(self, job_result):
-        """."""
-        self.job_result = job_result
-        self.audit_full_clean()
-
-    def audit_full_clean(self):
-        """Run full_clean on all objects and validate the results."""
-        self._validate_all()
-
-
-audit_rulesets = [AuditRulesetAll]
+            attribute = "all"
+        result, _ = AuditResult.objects.update_or_create(
+            audit_class_name=self.__class__.__name__,
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,
+            validated_attribute=attribute,
+            defaults={
+                "last_validation_date": self.result_date,
+                "validated_attribute_value": attribute_value,
+                "message": message,
+                "valid": valid,
+            },
+        )
+        result.validated_save()

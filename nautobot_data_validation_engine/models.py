@@ -372,9 +372,8 @@ class UniqueValidationRule(ValidationRule):
 class AuditResult(PrimaryModel):
     """Model to represent the results of a audit method."""
 
-    class_name = models.CharField(max_length=100, blank=False, null=False)
-    method_name = models.CharField(max_length=100, blank=False, null=False)
-    last_validation_date = models.DateTimeField(blank=False, null=False)
+    audit_class_name = models.CharField(max_length=100, blank=False, null=False)
+    last_validation_date = models.DateTimeField(blank=False, null=False, auto_now=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
@@ -385,8 +384,6 @@ class AuditResult(PrimaryModel):
     message = models.TextField(blank=True, null=True)
 
     csv_headers = [
-        "class_name",
-        "method_name",
         "last_validation_date",
         "validated_object",
         "validated_attribute",
@@ -400,19 +397,15 @@ class AuditResult(PrimaryModel):
         """Meta class for AuditResult model."""
 
         unique_together = (
-            "class_name",
-            "method_name",
+            "audit_class_name",
             "content_type",
             "object_id",
             "validated_attribute",
         )
-        ordering = ("class_name", "method_name")
 
     def to_csv(self):
         """Return a tuple of data that should be exported to CSV."""
         return (
-            self.class_name,
-            self.method_name,
             self.last_validation_date,
             self.validated_object,
             self.validated_attribute,
@@ -424,7 +417,7 @@ class AuditResult(PrimaryModel):
 
     def __str__(self):
         """Return a string representation of this AuditResult object."""
-        return f"{self.class_name}.{self.method_name} on {self.validated_object}"
+        return f"Audit for {self.validated_object} on {self.last_validation_date}"
 
     def get_absolute_url(self):
         """Return the absolute URL to this AuditResult object."""
