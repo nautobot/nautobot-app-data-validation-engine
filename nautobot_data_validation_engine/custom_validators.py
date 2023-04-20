@@ -133,4 +133,8 @@ class CustomValidatorIterator:
                 )
 
 
-custom_validators = CustomValidatorIterator()
+class GitAuditRulesetIterator:
+    """Iterator to generate AuditRulesets for all repos in Git?"""
+
+
+custom_validators = list(CustomValidatorIterator())

@@ -10,7 +10,7 @@ class TestFailedAuditRuleset(AuditRuleset):
 
     model = "dcim.site"
 
-    def audit(self):
+    def audit(self):  # pylint: disable=R0201
         """Raises an AuditError."""
         # this should create 4 different AuditResults, one for each
         # attribute
@@ -53,7 +53,7 @@ class TestValidation(TestCase):
 
     def test_audit_fail(self):
         result = AuditResult.objects.filter(valid=False).all()
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 5)
         result = result[0]
         self.assertEqual(result.audit_class_name, "TestFailedAuditRuleset")
         self.assertEqual(result.validated_object, self.s)
@@ -61,6 +61,6 @@ class TestValidation(TestCase):
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_validate_replaces_results(self):
-        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 4)
+        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)
         TestFailedAuditRuleset(self.s).clean()
-        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 4)
+        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)
