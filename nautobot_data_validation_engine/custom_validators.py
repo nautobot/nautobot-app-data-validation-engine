@@ -166,6 +166,11 @@ class GitBaseValidator(CustomValidator):
             module = import_python_file_from_git_repo(repo)
             if hasattr(module, "audit_rulesets"):
                 for audit_class in module.audit_rulesets:
+                    if (
+                        f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
+                        != audit_class.model
+                    ):
+                        continue
                     ins = audit_class(self.context["object"])
                     ins.clean()
 
@@ -178,7 +183,6 @@ class AuditRuleset(CustomValidator):
     """Class to handle a set of validation functions."""
 
     class_name: Optional[str] = None
-    method_names: dict = {}
     model: str
     result_date: timezone
     valid = True
@@ -272,10 +276,6 @@ class CustomValidatorIterator:
                     (GitBaseValidator,),
                     {"model": f"{app_label}.{model}"},
                 )
-
-
-class GitAuditRulesetIterator:
-    """Iterator to generate AuditRulesets for all repos in Git?"""
 
 
 custom_validators = CustomValidatorIterator()
