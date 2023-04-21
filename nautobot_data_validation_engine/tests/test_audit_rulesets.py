@@ -54,10 +54,10 @@ class TestValidation(TestCase):
     def test_audit_fail(self):
         result = AuditResult.objects.filter(valid=False).all()
         self.assertEqual(len(result), 5)
-        result = result[0]
+        result = AuditResult.objects.get(validated_attribute="tenant")
         self.assertEqual(result.audit_class_name, "TestFailedAuditRuleset")
         self.assertEqual(result.validated_object, self.s)
-        self.assertIn(result.validated_attribute, ["tenant", "region", "name", "status"])
+        self.assertIn(result.validated_attribute, "tenant")
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_validate_replaces_results(self):
