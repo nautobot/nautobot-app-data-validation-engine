@@ -19,8 +19,8 @@ def get_choices():
     for repo in GitRepository.objects.all():
         if "nautobot_data_validation_engine.audit_rulesets" in repo.provided_contents:
             module = import_python_file_from_git_repo(repo)
-            if hasattr(module, "audit_rulesets"):
-                for audit_class in module.audit_rulesets:
+            if hasattr(module, "custom_validators"):
+                for audit_class in module.custom_validators:
                     choices.append((audit_class.__name__, audit_class.__name__))
 
     choices.sort()
@@ -48,8 +48,8 @@ class RunRegisteredAuditRulesets(Job):
         for repo in GitRepository.objects.all():
             if "nautobot_data_validation_engine.audit_rulesets" in repo.provided_contents:
                 module = import_python_file_from_git_repo(repo)
-                if hasattr(module, "audit_rulesets"):
-                    audit_classes.extend(module.audit_rulesets)
+                if hasattr(module, "custom_validators"):
+                    audit_classes.extend(module.custom_validators)
 
         for audit_class in audit_classes:
             if audits and audit_class.__name__ not in audits:

@@ -164,8 +164,8 @@ class GitBaseValidator(CustomValidator):
             provided_contents__contains="nautobot_data_validation_engine.audit_rulesets"
         ):
             module = import_python_file_from_git_repo(repo)
-            if hasattr(module, "audit_rulesets"):
-                for audit_class in module.audit_rulesets:
+            if hasattr(module, "custom_validators"):
+                for audit_class in module.custom_validators:
                     if (
                         f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
                         != audit_class.model
