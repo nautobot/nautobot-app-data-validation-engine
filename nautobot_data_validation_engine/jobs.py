@@ -1,24 +1,14 @@
 """Jobs for nautobot_data_validation_engine."""
-import importlib
 
 from django.apps import apps as global_apps
 
 # from django.contrib.auth import get_user_model
 # from django.core.exceptions import ValidationError
 from nautobot.extras.models import GitRepository
-from nautobot.extras.datasources.git import ensure_git_repository
 from nautobot.extras.jobs import Job, MultiChoiceVar  # , BooleanVar
 
-from .audit_rulesets import get_audit_rule_sets  # , get_audit_rule_sets_map
-
-
-def import_python_file_from_git_repo(repo: GitRepository):
-    """Load python file from git repo to use in job."""
-    ensure_git_repository(repo)
-    spec = importlib.util.spec_from_file_location("audit_rulesets", f"{repo.filesystem_path}/audit_rulesets.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+from .custom_validators import get_audit_rule_sets  # , get_audit_rule_sets_map
+from .utils import import_python_file_from_git_repo
 
 
 def get_choices():

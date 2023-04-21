@@ -1,7 +1,7 @@
 """AuditRuleset test cases."""
 from django.test import TestCase
 from nautobot.dcim.models import Site
-from nautobot_data_validation_engine.audit_rulesets import AuditError, AuditRuleset
+from nautobot_data_validation_engine.custom_validators import AuditError, AuditRuleset
 from nautobot_data_validation_engine.models import AuditResult
 
 
