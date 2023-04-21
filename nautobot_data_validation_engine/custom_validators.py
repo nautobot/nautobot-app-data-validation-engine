@@ -185,28 +185,30 @@ class AuditRuleset(CustomValidator):
     class_name: Optional[str] = None
     model: str
     result_date: timezone
-    valid = True
     enforce = False
 
     def __init__(self, obj):
         """Initialize an AuditRuleset object."""
         super().__init__(obj)
+        self.class_name = self.class_name or self.__class__.__name__
         self.result_date = timezone.now()
 
     def audit(self):
         """Not implemented.  Should raise an AuditError if an attribute is found to be invalid."""
         raise NotImplementedError
 
-    def mark_all_existing_as_valid(self):
+    def mark_existing_attributes_as_valid(self, exclude_attributes=None):
         """Mark all existing fields (any that were previously created) as valid=True."""
         instance = self.context["object"]
+        if not exclude_attributes:
+            exclude_attributes = []
         attributes = (
             AuditResult.objects.filter(
-                audit_class_name=self.__class__.__name__,
+                audit_class_name=self.class_name,
                 content_type=ContentType.objects.get_for_model(instance),
                 object_id=instance.id,
             )
-            .exclude(validated_attribute="all")
+            .exclude(validated_attribute__in=["all"] + exclude_attributes)
             .values_list("validated_attribute", flat=True)
         )
         for attribute in attributes:
@@ -215,18 +217,21 @@ class AuditRuleset(CustomValidator):
     def clean(self):
         """Override the clean method to run the audit function."""
         try:
-            self.mark_all_existing_as_valid()
             self.audit()
+            self.mark_existing_attributes_as_valid()
             self.audit_result(message=f"{self.context['object']} is valid")
         except AuditError as ex:
+            exclude_attributes = []
             try:
                 for attribute, messages in ex.message_dict.items():
+                    exclude_attributes.append(attribute)
                     for message in messages:
                         self.audit_result(message=message, attribute=attribute, valid=False)
             except AttributeError:
                 for message in ex.messages:
                     self.audit_result(message=message, valid=False)
             finally:
+                self.mark_existing_attributes_as_valid(exclude_attributes=exclude_attributes)
                 self.audit_result(message=f"{self.context['object']} is not valid", valid=False)
             if self.enforce:
                 raise ex
@@ -245,7 +250,7 @@ class AuditRuleset(CustomValidator):
         else:
             attribute = "all"
         result, _ = AuditResult.objects.update_or_create(
-            audit_class_name=self.__class__.__name__,
+            audit_class_name=self.class_name,
             content_type=ContentType.objects.get_for_model(instance),
             object_id=instance.id,
             validated_attribute=attribute,

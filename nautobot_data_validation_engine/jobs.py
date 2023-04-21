@@ -5,7 +5,7 @@ from django.apps import apps as global_apps
 # from django.contrib.auth import get_user_model
 # from django.core.exceptions import ValidationError
 from nautobot.extras.models import GitRepository
-from nautobot.extras.jobs import Job, MultiChoiceVar  # , BooleanVar
+from nautobot.extras.jobs import Job, MultiChoiceVar, BooleanVar
 
 from .custom_validators import get_audit_rule_sets  # , get_audit_rule_sets_map
 from .utils import import_python_file_from_git_repo
@@ -31,10 +31,16 @@ class RunRegisteredAuditRulesets(Job):
     """Run the validate function on all registered AuditRuleset classes."""
 
     audits = MultiChoiceVar(choices=get_choices, label="Select Audit Classes", required=False)
+    override_enforce = BooleanVar(
+        default=True,
+        label="Override Ruleset Enforce",
+        description="Override any enforce values set on the AuditRuleset classes. Not overriding this value will cause any AuditErrors to fail the job.",
+    )
 
     def run(self, data, commit):
         """Run the validate function on all given AuditRuleset classes."""
         audits = data.get("audits")
+        override_enforce = data.get("override_enforce")
 
         audit_classes = []
         audit_classes.extend(get_audit_rule_sets())
@@ -52,6 +58,8 @@ class RunRegisteredAuditRulesets(Job):
             app_label, model = audit_class.model.split(".")
             for obj in global_apps.get_model(app_label, model).objects.all():
                 ins = audit_class(obj)
+                if override_enforce:
+                    ins.enforce = False
                 ins.clean()
 
 
