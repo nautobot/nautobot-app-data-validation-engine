@@ -9,7 +9,6 @@ except ImportError:
 __version__ = metadata.version(__name__)
 
 import logging
-from django.db.utils import ProgrammingError
 from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
 
 logger = logging.getLogger(__name__)
@@ -32,24 +31,18 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
 
     def ready(self):
         super().ready()
+        from nautobot.extras.utils import registry  # pylint: disable=C0415
         from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
-        from django.contrib.contenttypes.models import ContentType  # pylint: disable=C0415
 
         template_content = []
         labels = []
-        try:
-            for content_type in ContentType.objects.all():
-                label = f"{content_type.app_label}.{content_type.model}"
+        for app_label, models in registry["model_features"]["custom_validators"].items():
+            for model in models:
+                label = f"{app_label}.{model}"
                 labels.append(label)
                 template_content.append(tab_factory(label))
-            register_template_extensions(template_content)
-            self.features["template_extensions"] = sorted(set(labels))
-        except ProgrammingError:
-            logger.warning(
-                "Creating template content for validation engine failed because "
-                "the ContentType table was not available or populated. This is normal "
-                "during the execution of the migration command for the first time."
-            )
+        register_template_extensions(template_content)
+        self.features["template_extensions"] = sorted(set(labels))
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name
