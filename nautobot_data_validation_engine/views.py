@@ -124,9 +124,7 @@ class AuditObjectView(ObjectView):
 
     def get_extra_context(self, request, instance):
         """Generate extra context for rendering the AuditObjectView template."""
-        audits = Audit.objects.filter(
-            content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
-        )
+        audits = Audit.objects.filter(content_type=ContentType.objects.get_for_model(instance), object_id=instance.id)
         audit_table = tables.AuditTableTab(audits)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
