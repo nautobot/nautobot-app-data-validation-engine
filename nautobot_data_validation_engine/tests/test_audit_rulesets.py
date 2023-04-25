@@ -2,7 +2,7 @@
 from django.test import TestCase
 from nautobot.dcim.models import Site
 from nautobot_data_validation_engine.custom_validators import AuditError, AuditRuleset
-from nautobot_data_validation_engine.models import AuditResult
+from nautobot_data_validation_engine.models import Audit
 
 
 class TestFailedAuditRuleset(AuditRuleset):
@@ -12,7 +12,7 @@ class TestFailedAuditRuleset(AuditRuleset):
 
     def audit(self):  # pylint: disable=R0201
         """Raises an AuditError."""
-        # this should create 4 different AuditResults, one for each
+        # this should create 4 different Audits, one for each
         # attribute
         raise AuditError(
             {
@@ -43,7 +43,7 @@ class TestValidation(TestCase):
         TestPassedAuditRuleset(self.s).clean()
 
     def test_audit_success(self):
-        result = AuditResult.objects.filter(valid=True).all()
+        result = Audit.objects.filter(valid=True).all()
         self.assertEqual(len(result), 1)
         result = result[0]
         self.assertEqual(result.audit_class_name, "TestPassedAuditRuleset")
@@ -52,15 +52,15 @@ class TestValidation(TestCase):
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_audit_fail(self):
-        result = AuditResult.objects.filter(valid=False).all()
+        result = Audit.objects.filter(valid=False).all()
         self.assertEqual(len(result), 5)
-        result = AuditResult.objects.get(validated_attribute="tenant")
+        result = Audit.objects.get(validated_attribute="tenant")
         self.assertEqual(result.audit_class_name, "TestFailedAuditRuleset")
         self.assertEqual(result.validated_object, self.s)
         self.assertIn(result.validated_attribute, "tenant")
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_validate_replaces_results(self):
-        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)
+        self.assertEqual(len(Audit.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)
         TestFailedAuditRuleset(self.s).clean()
-        self.assertEqual(len(AuditResult.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)
+        self.assertEqual(len(Audit.objects.filter(audit_class_name=TestFailedAuditRuleset.__name__)), 5)

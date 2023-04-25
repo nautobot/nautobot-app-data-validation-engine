@@ -22,7 +22,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    AuditResult,
+    Audit,
 )
 
 
@@ -367,10 +367,10 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
     max_instances = forms.IntegerField(required=False)
 
 
-class AuditResultFilterForm(BootstrapMixin, forms.Form):
-    """Form for AuditResult instances."""
+class AuditFilterForm(BootstrapMixin, forms.Form):
+    """Form for Audit instances."""
 
-    model = AuditResult
+    model = Audit
     audit_class_name = forms.CharField(max_length=20, required=False)
     validated_attribute = forms.CharField(max_length=20, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))

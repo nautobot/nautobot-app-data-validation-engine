@@ -10,7 +10,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    AuditResult,
+    Audit,
 )
 
 
@@ -170,7 +170,7 @@ class ValidatedAttributeColumn(tables.Column):
         return value
 
 
-class AuditResultTable(BaseTable):
+class AuditTable(BaseTable):
     """Base table for viewing all Audit Rules."""
 
     pk = ToggleColumn()
@@ -181,7 +181,7 @@ class AuditResultTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta class for AuditRuleTable."""
 
-        model = AuditResult
+        model = Audit
         fields = [
             "pk",
             "id",
@@ -208,15 +208,15 @@ class AuditResultTable(BaseTable):
         ]
 
 
-class AuditResultTableTab(BaseTable):
+class AuditTableTab(BaseTable):
     """Base table for viewing the Audit Rules related to a single object."""
 
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
-        """Meta class for AuditResultTableTab."""
+        """Meta class for AuditTableTab."""
 
-        model = AuditResult
+        model = Audit
         fields = [
             "content_type",
             "audit_class_name",

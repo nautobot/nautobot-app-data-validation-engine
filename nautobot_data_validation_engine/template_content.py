@@ -1,14 +1,14 @@
 """Template content for nautobot_data_validation_engine."""
 from django.urls import reverse
 from nautobot.extras.plugins import TemplateExtension
-from nautobot_data_validation_engine.models import AuditResult
+from nautobot_data_validation_engine.models import Audit
 
 
 def tab_factory(content_type_label):
-    """Generate a AuditResultTab object for a given content type."""
+    """Generate a AuditTab object for a given content type."""
 
-    class AuditResultTab(TemplateExtension):  # pylint: disable=W0223
-        """Dynamically generated AuditResultTab class."""
+    class AuditTab(TemplateExtension):  # pylint: disable=W0223
+        """Dynamically generated AuditTab class."""
 
         model = content_type_label
 
@@ -17,18 +17,18 @@ def tab_factory(content_type_label):
             return (
                 [
                     {
-                        "title": "Audit Results",
+                        "title": "Audit",
                         "url": reverse(
-                            "plugins:nautobot_data_validation_engine:auditresults",
+                            "plugins:nautobot_data_validation_engine:audits",
                             kwargs={"id": self.context["object"].id, "model": self.model},
                         ),
                     }
                 ]
-                if AuditResult.objects.filter(content_type__app_label=app_label, content_type__model=model).exists()
+                if Audit.objects.filter(content_type__app_label=app_label, content_type__model=model).exists()
                 else []
             )
 
-    return AuditResultTab
+    return AuditTab
 
 
 template_extensions = []

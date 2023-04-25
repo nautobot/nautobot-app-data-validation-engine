@@ -14,11 +14,11 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    AuditResult,
+    Audit,
 )
 from nautobot_data_validation_engine.tests.test_audit_rulesets import TestFailedAuditRuleset
-from nautobot_data_validation_engine.views import AuditResultObjectView
-from nautobot_data_validation_engine.tables import AuditResultTableTab
+from nautobot_data_validation_engine.views import AuditObjectView
+from nautobot_data_validation_engine.tables import AuditTableTab
 
 try:
     from importlib import metadata
@@ -272,15 +272,15 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
         }
 
 
-class AuditResultTestCase(
+class AuditTestCase(
     ViewTestCases.GetObjectViewTestCase,
     ViewTestCases.DeleteObjectViewTestCase,
     ViewTestCases.ListObjectsViewTestCase,
     ViewTestCases.BulkDeleteObjectsViewTestCase,
 ):
-    """Test cases for AuditResult Viewset."""
+    """Test cases for Audit Viewset."""
 
-    model = AuditResult
+    model = Audit
 
     @skipIf(
         _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
@@ -298,8 +298,8 @@ class AuditResultTestCase(
             t.clean()
 
 
-class AuditResultObjectTestCase(TestCase):
-    """Test cases for AuditResultObjectView."""
+class AuditObjectTestCase(TestCase):
+    """Test cases for AuditObjectView."""
 
     def setUp(self):
         s = Site(name="Test Site 1")
@@ -308,17 +308,17 @@ class AuditResultObjectTestCase(TestCase):
         t.clean()
 
     def test_get_extra_context(self):
-        view = AuditResultObjectView()
+        view = AuditObjectView()
         site = Site.objects.first()
         mock_request = MagicMock()
         mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
         result = view.get_extra_context(mock_request, site)
         self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
-        self.assertIsInstance(result["table"], AuditResultTableTab)
+        self.assertIsInstance(result["table"], AuditTableTab)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
     def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
-        view = AuditResultObjectView()
+        view = AuditObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
         view.dispatch(mock_request, **kwargs)

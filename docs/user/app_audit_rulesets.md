@@ -52,4 +52,4 @@ The job provided in the `jobs.py` file can be run via the UI to the `clean` meth
 
 All audit rules can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Audit Results`. This is a basic table that lists all records in the table currently.
 
-The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Audit Results` tab to the detail view of all objects.  The `Audit Results` tab will only be visible if there is an `AuditResult` that exists for that model.
+The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Audits` tab to the detail view of all objects.  The `Audits` tab will only be visible if there is an `Audit` that exists for that model.

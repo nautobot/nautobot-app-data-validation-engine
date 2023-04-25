@@ -31,7 +31,7 @@ from nautobot_data_validation_engine.models import (
     validate_regex,
 )
 
-from nautobot_data_validation_engine.models import AuditResult
+from nautobot_data_validation_engine.models import Audit
 from nautobot_data_validation_engine.utils import import_python_file_from_git_repo
 
 LOGGER = logging.getLogger(__name__)
@@ -199,7 +199,7 @@ class AuditRuleset(CustomValidator):
         if not exclude_attributes:
             exclude_attributes = []
         attributes = (
-            AuditResult.objects.filter(
+            Audit.objects.filter(
                 audit_class_name=self.class_name,
                 content_type=ContentType.objects.get_for_model(instance),
                 object_id=instance.id,
@@ -245,7 +245,7 @@ class AuditRuleset(CustomValidator):
             attribute_value = getattr(instance, attribute)
         else:
             attribute = "all"
-        result, _ = AuditResult.objects.update_or_create(
+        result, _ = Audit.objects.update_or_create(
             audit_class_name=self.class_name,
             content_type=ContentType.objects.get_for_model(instance),
             object_id=instance.id,
