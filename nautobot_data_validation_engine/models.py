@@ -369,7 +369,7 @@ class UniqueValidationRule(ValidationRule):
             raise ValidationError({"field": "This field is already unique by default."})
 
 
-class AuditResult(PrimaryModel):
+class Audit(PrimaryModel):
     """Model to represent the results of a audit method."""
 
     audit_class_name = models.CharField(max_length=100, blank=False, null=False)
@@ -379,22 +379,21 @@ class AuditResult(PrimaryModel):
     validated_object = GenericForeignKey("content_type", "object_id")
     validated_attribute = models.CharField(max_length=100, blank=True, null=True)
     validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
-    expected_attribute_value = models.CharField(max_length=200, blank=True, null=True)
     valid = models.BooleanField(blank=False, null=False)
     message = models.TextField(blank=True, null=True)
 
     csv_headers = [
+        "audit_class_name",
         "last_validation_date",
         "validated_object",
         "validated_attribute",
         "validated_attribute_value",
-        "expected_attribute_value",
         "valid",
         "message",
     ]
 
     class Meta:
-        """Meta class for AuditResult model."""
+        """Meta class for Audit model."""
 
         unique_together = (
             "audit_class_name",
@@ -406,19 +405,19 @@ class AuditResult(PrimaryModel):
     def to_csv(self):
         """Return a tuple of data that should be exported to CSV."""
         return (
+            self.audit_class_name,
             self.last_validation_date,
             self.validated_object,
             self.validated_attribute,
             self.validated_attribute_value,
-            self.expected_attribute_value,
             self.valid,
             self.message,
         )
 
     def __str__(self):
-        """Return a string representation of this AuditResult object."""
-        return f"Audit for {self.validated_object} on {self.last_validation_date}"
+        """Return a string representation of this Audit object."""
+        return f"{self.audit_class_name}: Audit of {self.validated_attribute} on {self.validated_object}"
 
     def get_absolute_url(self):
-        """Return the absolute URL to this AuditResult object."""
-        return reverse("plugins:nautobot_data_validation_engine:auditresult", args=[self.pk])
+        """Return the absolute URL to this Audit object."""
+        return reverse("plugins:nautobot_data_validation_engine:audit", args=[self.pk])
