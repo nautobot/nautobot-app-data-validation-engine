@@ -152,6 +152,7 @@ class AuditResultFilterSet(NautobotFilterSet):
 
     q = SearchFilter(
         filter_predicates={
+            "audit_class_name": "icontains",
             "message": "icontains",
             "content_type__app_label": "icontains",
             "content_type__model": "icontains",
@@ -167,4 +168,4 @@ class AuditResultFilterSet(NautobotFilterSet):
         """Meta class for AuditRuleFilterSet."""
 
         model = AuditResult
-        fields = ["validated_attribute", "content_type", "valid"]
+        fields = ["audit_class_name", "validated_attribute", "content_type", "valid"]

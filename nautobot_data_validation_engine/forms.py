@@ -371,8 +371,7 @@ class AuditResultFilterForm(BootstrapMixin, forms.Form):
     """Form for AuditResult instances."""
 
     model = AuditResult
-    class_name = forms.CharField(max_length=20, required=False)
-    method_name = forms.CharField(max_length=20, required=False)
+    audit_class_name = forms.CharField(max_length=20, required=False)
     validated_attribute = forms.CharField(max_length=20, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
     content_type = MultipleContentTypeField(
