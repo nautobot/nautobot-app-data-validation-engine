@@ -126,6 +126,10 @@ class BaseValidator(PluginCustomValidator):
                         or f"There can only be {rule.max_instances} instance{pluralize(rule.max_instances)} with this value."
                     }
                 )
+        
+        # Audit Rulesets
+        for audit_class in get_audit_rule_sets_map()[self.model]:
+            audit_class(obj).clean()
 
 
 def is_audit_rule_set(obj):
