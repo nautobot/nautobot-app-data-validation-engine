@@ -30,7 +30,12 @@ def get_choices():
 class RunRegisteredAuditRulesets(Job):
     """Run the validate function on all registered AuditRuleset classes."""
 
-    audits = MultiChoiceVar(choices=get_choices, label="Select Audit Classes", required=False, description="Not selecting any classes will run all classes listed.")
+    audits = MultiChoiceVar(
+        choices=get_choices,
+        label="Select Audit Classes",
+        required=False,
+        description="Not selecting any classes will run all classes listed.",
+    )
     override_enforce = BooleanVar(
         default=True,
         label="Override Ruleset Enforce",
