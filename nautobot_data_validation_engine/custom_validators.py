@@ -130,6 +130,20 @@ class BaseValidator(PluginCustomValidator):
         # Audit Rulesets
         for audit_class in get_audit_rule_sets_map()[self.model]:
             audit_class(obj).clean()
+        
+        for repo in GitRepository.objects.filter(
+            provided_contents__contains="nautobot_data_validation_engine.audit_rulesets"
+        ):
+            module = import_python_file_from_git_repo(repo)
+            if hasattr(module, "custom_validators"):
+                for audit_class in module.custom_validators:
+                    if (
+                        f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
+                        != audit_class.model
+                    ):
+                        continue
+                    ins = audit_class(self.context["object"])
+                    ins.clean()
 
 
 def is_audit_rule_set(obj):
@@ -155,28 +169,6 @@ def get_audit_rule_sets():
     for rule_sets in get_audit_rule_sets_map().values():
         validators.extend(rule_sets)
     return validators
-
-
-class GitBaseValidator(CustomValidator):
-    """Validator class to be generated for every object to check for audit rulesets from git repositories."""
-
-    model = None
-
-    def clean(self):
-        """Look for and run the clean method on any classes discovered in a git repository."""
-        for repo in GitRepository.objects.filter(
-            provided_contents__contains="nautobot_data_validation_engine.audit_rulesets"
-        ):
-            module = import_python_file_from_git_repo(repo)
-            if hasattr(module, "custom_validators"):
-                for audit_class in module.custom_validators:
-                    if (
-                        f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
-                        != audit_class.model
-                    ):
-                        continue
-                    ins = audit_class(self.context["object"])
-                    ins.clean()
 
 
 class AuditError(ValidationError):
@@ -278,11 +270,6 @@ class CustomValidatorIterator:
                 yield type(
                     f"{app_label.capitalize()}{model.capitalize()}CustomValidator",
                     (BaseValidator,),
-                    {"model": f"{app_label}.{model}"},
-                )
-                yield type(
-                    f"{app_label.capitalize()}{model.capitalize()}GitCustomValidator",
-                    (GitBaseValidator,),
                     {"model": f"{app_label}.{model}"},
                 )
 
