@@ -14,11 +14,11 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    Audit,
+    DataCompliance,
 )
-from nautobot_data_validation_engine.tests.test_audit_rulesets import TestFailedAuditRuleset
-from nautobot_data_validation_engine.views import AuditObjectView
-from nautobot_data_validation_engine.tables import AuditTableTab
+from nautobot_data_validation_engine.tests.test_data_compliance_rules import TestFailedDataComplianceRule
+from nautobot_data_validation_engine.views import DataComplianceObjectView
+from nautobot_data_validation_engine.tables import DataComplianceTableTab
 
 try:
     from importlib import metadata
@@ -272,15 +272,15 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
         }
 
 
-class AuditTestCase(
+class DataComplianceTestCase(
     ViewTestCases.GetObjectViewTestCase,
     ViewTestCases.DeleteObjectViewTestCase,
     ViewTestCases.ListObjectsViewTestCase,
     ViewTestCases.BulkDeleteObjectsViewTestCase,
 ):
-    """Test cases for Audit Viewset."""
+    """Test cases for DataCompliance Viewset."""
 
-    model = Audit
+    model = DataCompliance
 
     @skipIf(
         _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
@@ -294,31 +294,31 @@ class AuditTestCase(
         s = Site(name="Test Site 1")
         s.save()
         for _ in range(4):
-            t = TestFailedAuditRuleset(s)
+            t = TestFailedDataComplianceRule(s)
             t.clean()
 
 
-class AuditObjectTestCase(TestCase):
-    """Test cases for AuditObjectView."""
+class DataComplianceObjectTestCase(TestCase):
+    """Test cases for DataComplianceObjectView."""
 
     def setUp(self):
         s = Site(name="Test Site 1")
         s.save()
-        t = TestFailedAuditRuleset(s)
+        t = TestFailedDataComplianceRule(s)
         t.clean()
 
     def test_get_extra_context(self):
-        view = AuditObjectView()
+        view = DataComplianceObjectView()
         site = Site.objects.first()
         mock_request = MagicMock()
         mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
         result = view.get_extra_context(mock_request, site)
         self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
-        self.assertIsInstance(result["table"], AuditTableTab)
+        self.assertIsInstance(result["table"], DataComplianceTableTab)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
     def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
-        view = AuditObjectView()
+        view = DataComplianceObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
         view.dispatch(mock_request, **kwargs)

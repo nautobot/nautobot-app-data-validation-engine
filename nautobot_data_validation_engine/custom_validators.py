@@ -31,7 +31,7 @@ from nautobot_data_validation_engine.models import (
     validate_regex,
 )
 
-from nautobot_data_validation_engine.models import Audit
+from nautobot_data_validation_engine.models import DataCompliance
 from nautobot_data_validation_engine.utils import import_python_file_from_git_repo
 
 LOGGER = logging.getLogger(__name__)
@@ -127,12 +127,12 @@ class BaseValidator(PluginCustomValidator):
                     }
                 )
 
-        # Audit Rulesets
-        for audit_class in get_audit_rule_sets_map().get(self.model, []):
+        # DataComplianceRules
+        for audit_class in get_data_compliance_rules_map().get(self.model, []):
             audit_class(obj).clean()
 
         for repo in GitRepository.objects.filter(
-            provided_contents__contains="nautobot_data_validation_engine.audit_rulesets"
+            provided_contents__contains="nautobot_data_validation_engine.data_compliance_rules"
         ):
             module = import_python_file_from_git_repo(repo)
             if hasattr(module, "custom_validators"):
@@ -146,36 +146,36 @@ class BaseValidator(PluginCustomValidator):
                     ins.clean()
 
 
-def is_audit_rule_set(obj):
-    """Check to see if object is an AuditRuleset class instance."""
-    return inspect.isclass(obj) and issubclass(obj, AuditRuleset)
+def is_data_compliance_rule(obj):
+    """Check to see if object is an DataComplianceRule class instance."""
+    return inspect.isclass(obj) and issubclass(obj, DataComplianceRule)
 
 
-def get_audit_rule_sets_map():
+def get_data_compliance_rules_map():
     """Generate a dictionary of audit rulesets associated to their models."""
-    audit_rulesets = {}
+    compliance_rulesets = {}
     for validators in registry["plugin_custom_validators"].values():
         for validator in validators:
-            if is_audit_rule_set(validator):
-                audit_rulesets.setdefault(validator.model, [])
-                audit_rulesets[validator.model].append(validator)
+            if is_data_compliance_rule(validator):
+                compliance_rulesets.setdefault(validator.model, [])
+                compliance_rulesets[validator.model].append(validator)
 
-    return audit_rulesets
+    return compliance_rulesets
 
 
-def get_audit_rule_sets():
+def get_data_compliance_rules():
     """Generate a list of Audit Ruleset classes that exist from the registry."""
     validators = []
-    for rule_sets in get_audit_rule_sets_map().values():
+    for rule_sets in get_data_compliance_rules_map().values():
         validators.extend(rule_sets)
     return validators
 
 
-class AuditError(ValidationError):
-    """An audit error is raised only when an object fails an audit."""
+class ComplianceError(ValidationError):
+    """A compliance error is raised only when an object fails an compliance check."""
 
 
-class AuditRuleset(CustomValidator):
+class DataComplianceRule(CustomValidator):
     """Class to handle a set of validation functions."""
 
     class_name: Optional[str] = None
@@ -184,13 +184,13 @@ class AuditRuleset(CustomValidator):
     enforce = False
 
     def __init__(self, obj):
-        """Initialize an AuditRuleset object."""
+        """Initialize an DataComplianceRule object."""
         super().__init__(obj)
         self.class_name = self.class_name or self.__class__.__name__
         self.result_date = timezone.now()
 
     def audit(self):
-        """Not implemented.  Should raise an AuditError if an attribute is found to be invalid."""
+        """Not implemented.  Should raise an ComplianceError if an attribute is found to be invalid."""
         raise NotImplementedError
 
     def mark_existing_attributes_as_valid(self, exclude_attributes=None):
@@ -199,8 +199,8 @@ class AuditRuleset(CustomValidator):
         if not exclude_attributes:
             exclude_attributes = []
         attributes = (
-            Audit.objects.filter(
-                audit_class_name=self.class_name,
+            DataCompliance.objects.filter(
+                compliance_class_name=self.class_name,
                 content_type=ContentType.objects.get_for_model(instance),
                 object_id=instance.id,
             )
@@ -208,36 +208,36 @@ class AuditRuleset(CustomValidator):
             .values_list("validated_attribute", flat=True)
         )
         for attribute in attributes:
-            self.audit_result(message=f"{attribute} is valid.", attribute=attribute)
+            self.compliance_result(message=f"{attribute} is valid.", attribute=attribute)
 
     def clean(self):
         """Override the clean method to run the audit function."""
         try:
             self.audit()
             self.mark_existing_attributes_as_valid()
-            self.audit_result(message=f"{self.context['object']} is valid")
-        except AuditError as ex:
+            self.compliance_result(message=f"{self.context['object']} is valid")
+        except ComplianceError as ex:
             exclude_attributes = []
             try:
                 for attribute, messages in ex.message_dict.items():
                     exclude_attributes.append(attribute)
                     for message in messages:
-                        self.audit_result(message=message, attribute=attribute, valid=False)
+                        self.compliance_result(message=message, attribute=attribute, valid=False)
             except AttributeError:
                 for message in ex.messages:
-                    self.audit_result(message=message, valid=False)
+                    self.compliance_result(message=message, valid=False)
             finally:
                 self.mark_existing_attributes_as_valid(exclude_attributes=exclude_attributes)
-                self.audit_result(message=f"{self.context['object']} is not valid", valid=False)
+                self.compliance_result(message=f"{self.context['object']} is not valid", valid=False)
             if self.enforce:
                 raise ex
 
     @staticmethod
     def audit_error(message):
         """Raise an Audit Error with the given message."""
-        raise AuditError(message)
+        raise ComplianceError(message)
 
-    def audit_result(self, message, attribute=None, valid=True):
+    def compliance_result(self, message, attribute=None, valid=True):
         """Generate an Audit Result object based on the given parameters."""
         instance = self.context["object"]
         attribute_value = None
@@ -245,8 +245,8 @@ class AuditRuleset(CustomValidator):
             attribute_value = getattr(instance, attribute)
         else:
             attribute = "all"
-        result, _ = Audit.objects.update_or_create(
-            audit_class_name=self.class_name,
+        result, _ = DataCompliance.objects.update_or_create(
+            compliance_class_name=self.class_name,
             content_type=ContentType.objects.get_for_model(instance),
             object_id=instance.id,
             validated_attribute=attribute,

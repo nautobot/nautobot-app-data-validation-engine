@@ -369,10 +369,10 @@ class UniqueValidationRule(ValidationRule):
             raise ValidationError({"field": "This field is already unique by default."})
 
 
-class Audit(PrimaryModel):
-    """Model to represent the results of a audit method."""
+class DataCompliance(PrimaryModel):
+    """Model to represent the results of an audit method."""
 
-    audit_class_name = models.CharField(max_length=100, blank=False, null=False)
+    compliance_class_name = models.CharField(max_length=100, blank=False, null=False)
     last_validation_date = models.DateTimeField(blank=False, null=False, auto_now=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
@@ -383,7 +383,7 @@ class Audit(PrimaryModel):
     message = models.TextField(blank=True, null=True)
 
     csv_headers = [
-        "audit_class_name",
+        "compliance_class_name",
         "last_validation_date",
         "validated_object",
         "validated_attribute",
@@ -396,7 +396,7 @@ class Audit(PrimaryModel):
         """Meta class for Audit model."""
 
         unique_together = (
-            "audit_class_name",
+            "compliance_class_name",
             "content_type",
             "object_id",
             "validated_attribute",
@@ -405,7 +405,7 @@ class Audit(PrimaryModel):
     def to_csv(self):
         """Return a tuple of data that should be exported to CSV."""
         return (
-            self.audit_class_name,
+            self.compliance_class_name,
             self.last_validation_date,
             self.validated_object,
             self.validated_attribute,
@@ -415,9 +415,9 @@ class Audit(PrimaryModel):
         )
 
     def __str__(self):
-        """Return a string representation of this Audit object."""
-        return f"{self.audit_class_name}: Audit of {self.validated_attribute} on {self.validated_object}"
+        """Return a string representation of this DataCompliance object."""
+        return f"{self.compliance_class_name}: {self.validated_attribute} compliance for {self.validated_object}"
 
     def get_absolute_url(self):
         """Return the absolute URL to this Audit object."""
-        return reverse("plugins:nautobot_data_validation_engine:audit", args=[self.pk])
+        return reverse("plugins:nautobot_data_validation_engine:datacompliance", args=[self.pk])

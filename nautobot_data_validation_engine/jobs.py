@@ -7,62 +7,62 @@ from django.apps import apps as global_apps
 from nautobot.extras.models import GitRepository
 from nautobot.extras.jobs import Job, MultiChoiceVar, BooleanVar
 
-from .custom_validators import get_audit_rule_sets  # , get_audit_rule_sets_map
+from .custom_validators import get_data_compliance_rules
 from .utils import import_python_file_from_git_repo
 
 
 def get_choices():
     """Get choices from registry."""
     choices = []
-    for ruleset_class in get_audit_rule_sets():
+    for ruleset_class in get_data_compliance_rules():
         choices.append((ruleset_class.__name__, ruleset_class.__name__))
     for repo in GitRepository.objects.all():
-        if "nautobot_data_validation_engine.audit_rulesets" in repo.provided_contents:
+        if "nautobot_data_validation_engine.data_compliance_rules" in repo.provided_contents:
             module = import_python_file_from_git_repo(repo)
             if hasattr(module, "custom_validators"):
-                for audit_class in module.custom_validators:
-                    choices.append((audit_class.__name__, audit_class.__name__))
+                for compliance_class in module.custom_validators:
+                    choices.append((compliance_class.__name__, compliance_class.__name__))
 
     choices.sort()
     return choices
 
 
-class RunRegisteredAuditRulesets(Job):
-    """Run the validate function on all registered AuditRuleset classes."""
+class RunRegisteredDataComplianceRules(Job):
+    """Run the validate function on all registered DataComplianceRule classes."""
 
-    audits = MultiChoiceVar(
+    selected_classes = MultiChoiceVar(
         choices=get_choices,
-        label="Select Audit Classes",
+        label="Select Data Compliance Classes",
         required=False,
         description="Not selecting any classes will run all classes listed.",
     )
     override_enforce = BooleanVar(
         default=True,
         label="Override Ruleset Enforce",
-        description="Override any enforce values set on the AuditRuleset classes. Not overriding this value will cause any enforced AuditErrors to fail the job.",
+        description="Override any enforce values set on the DataComplianceRule classes. Not overriding this value will cause any enforced ComplianceErrors to fail the job.",
     )
 
     def run(self, data, commit):
-        """Run the validate function on all given AuditRuleset classes."""
-        audits = data.get("audits")
+        """Run the validate function on all given DataComplianceRule classes."""
+        selected_classes = data.get("selected_classes")
         override_enforce = data.get("override_enforce")
 
-        audit_classes = []
-        audit_classes.extend(get_audit_rule_sets())
+        compliance_classes = []
+        compliance_classes.extend(get_data_compliance_rules())
 
         for repo in GitRepository.objects.all():
-            if "nautobot_data_validation_engine.audit_rulesets" in repo.provided_contents:
+            if "nautobot_data_validation_engine.data_compliance_rules" in repo.provided_contents:
                 module = import_python_file_from_git_repo(repo)
                 if hasattr(module, "custom_validators"):
-                    audit_classes.extend(module.custom_validators)
+                    compliance_classes.extend(module.custom_validators)
 
-        for audit_class in audit_classes:
-            if audits and audit_class.__name__ not in audits:
+        for compliance_class in compliance_classes:
+            if selected_classes and compliance_class.__name__ not in selected_classes:
                 continue
-            self.log_info(f"Running {audit_class.__name__}")
-            app_label, model = audit_class.model.split(".")
+            self.log_info(f"Running {compliance_class.__name__}")
+            app_label, model = compliance_class.model.split(".")
             for obj in global_apps.get_model(app_label, model).objects.all():
-                ins = audit_class(obj)
+                ins = compliance_class(obj)
                 if override_enforce:
                     ins.enforce = False
                 ins.clean()
@@ -107,4 +107,4 @@ class RunRegisteredAuditRulesets(Job):
 #                         auditor.audit()
 
 
-jobs = [RunRegisteredAuditRulesets]
+jobs = [RunRegisteredDataComplianceRules]

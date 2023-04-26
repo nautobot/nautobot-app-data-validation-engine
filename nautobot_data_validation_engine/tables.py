@@ -10,7 +10,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    Audit,
+    DataCompliance,
 )
 
 
@@ -170,8 +170,8 @@ class ValidatedAttributeColumn(tables.Column):
         return value
 
 
-class AuditTable(BaseTable):
-    """Base table for viewing all Audit Rules."""
+class DataComplianceTable(BaseTable):
+    """Base table for viewing all DataCompliance objects."""
 
     pk = ToggleColumn()
     id = tables.Column(linkify=True, verbose_name="ID")
@@ -179,14 +179,14 @@ class AuditTable(BaseTable):
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
-        """Meta class for AuditRuleTable."""
+        """Meta class for DataComplianceTable."""
 
-        model = Audit
+        model = DataCompliance
         fields = [
             "pk",
             "id",
             "content_type",
-            "audit_class_name",
+            "compliance_class_name",
             "last_validation_date",
             "validated_object",
             "validated_attribute",
@@ -198,7 +198,7 @@ class AuditTable(BaseTable):
             "pk",
             "id",
             "content_type",
-            "audit_class_name",
+            "compliance_class_name",
             "last_validation_date",
             "validated_object",
             "validated_attribute",
@@ -208,18 +208,18 @@ class AuditTable(BaseTable):
         ]
 
 
-class AuditTableTab(BaseTable):
-    """Base table for viewing the Audit Rules related to a single object."""
+class DataComplianceTableTab(BaseTable):
+    """Base table for viewing the DataCompliance related to a single object."""
 
     validated_attribute = ValidatedAttributeColumn()
 
     class Meta(BaseTable.Meta):
-        """Meta class for AuditTableTab."""
+        """Meta class for DataComplianceTableTab."""
 
-        model = Audit
+        model = DataCompliance
         fields = [
             "content_type",
-            "audit_class_name",
+            "compliance_class_name",
             "last_validation_date",
             "validated_attribute",
             "validated_attribute_value",
@@ -228,7 +228,7 @@ class AuditTableTab(BaseTable):
         ]
         default_columns = [
             "content_type",
-            "audit_class_name",
+            "compliance_class_name",
             "last_validation_date",
             "validated_attribute",
             "validated_attribute_value",

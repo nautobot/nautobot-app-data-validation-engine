@@ -9,7 +9,7 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    Audit,
+    DataCompliance,
 )
 
 
@@ -147,8 +147,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
         ]
 
 
-class AuditFilterSet(NautobotFilterSet):
-    """Base filterset for Auditmodel."""
+class DataComplianceFilterSet(NautobotFilterSet):
+    """Base filterset for DataComplianceRule model."""
 
     q = SearchFilter(
         filter_predicates={
@@ -165,7 +165,7 @@ class AuditFilterSet(NautobotFilterSet):
     )
 
     class Meta:
-        """Meta class for AuditRuleFilterSet."""
+        """Meta class for DataComplianceFilterSet."""
 
-        model = Audit
-        fields = ["audit_class_name", "validated_attribute", "content_type", "valid"]
+        model = DataCompliance
+        fields = ["compliance_class_name", "validated_attribute", "content_type", "valid"]

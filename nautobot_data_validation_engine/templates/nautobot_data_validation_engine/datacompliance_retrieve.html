@@ -6,20 +6,15 @@
 {% block content_left_page %}
 <div class="panel panel-default">
     <div class="panel-heading">
-        <strong>Audit Results</strong>
+        <strong>Data Compliance</strong>
     </div>
     <table class="table table-hover panel-body attr-table">
         <tr>
-            <td>Class Name</td>
+            <td>Compliance Class Name</td>
             <td>
-                {{ object.class_name }}
+                {{ object.compliance_class_name }}
             </td>
         </tr>
-        <tr>
-            <td>Method Name</td>
-            <td>
-                {{ object.method_name }}
-            </td>
         </tr>
         <tr>
             <td>Last Validation Date</td>
@@ -43,12 +38,6 @@
             <td>Validated Attribute Value</td>
             <td>
                 {{ object.validated_attribute_value }}
-            </td>
-        </tr>
-        <tr>
-            <td>Expected Attribute Value</td>
-            <td>
-                {{ object.expected_attribute_value }}
             </td>
         </tr>
         <tr>

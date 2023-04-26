@@ -16,7 +16,7 @@ from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
 from nautobot_data_validation_engine.models import (
-    Audit,
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -96,24 +96,24 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
-class AuditListView(  # pylint: disable=W0223
+class DataComplianceListView(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
-    """Views for the AuditListView model."""
+    """Views for the DataComplianceListView model."""
 
     lookup_field = "pk"
-    queryset = Audit.objects.all()
-    table_class = tables.AuditTable
-    filterset_class = filters.AuditFilterSet
-    filterset_form_class = forms.AuditFilterForm
-    serializer_class = serializers.AuditSerializer
+    queryset = DataCompliance.objects.all()
+    table_class = tables.DataComplianceTable
+    filterset_class = filters.DataComplianceFilterSet
+    filterset_form_class = forms.DataComplianceFilterForm
+    serializer_class = serializers.DataComplianceSerializer
     action_buttons = ("export",)
 
 
-class AuditObjectView(ObjectView):
+class DataComplianceObjectView(ObjectView):
     """View for the Audit Results tab dynamically generated on specific object detail views."""
 
-    template_name = "nautobot_data_validation_engine/audit_tab.html"
+    template_name = "nautobot_data_validation_engine/datacompliance_tab.html"
 
     def dispatch(self, request, *args, **kwargs):
         """Set the queryset for the given object and call the inherited dispatch method."""
@@ -123,10 +123,12 @@ class AuditObjectView(ObjectView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):
-        """Generate extra context for rendering the AuditObjectView template."""
-        audits = Audit.objects.filter(content_type=ContentType.objects.get_for_model(instance), object_id=instance.id)
-        audit_table = tables.AuditTableTab(audits)
+        """Generate extra context for rendering the DataComplianceObjectView template."""
+        compliance_objects = DataCompliance.objects.filter(
+            content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
+        )
+        compliance_table = tables.DataComplianceTableTab(compliance_objects)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
-        RequestConfig(request, paginate).configure(audit_table)
-        return {"active_tab": request.GET["tab"], "table": audit_table}
+        RequestConfig(request, paginate).configure(compliance_table)
+        return {"active_tab": request.GET["tab"], "table": compliance_table}
