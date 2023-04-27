@@ -156,6 +156,11 @@ class UniqueValidationRuleTable(BaseTable):
         )
 
 
+#
+# DataCompliance
+#
+
+
 class ValidatedAttributeColumn(tables.Column):
     """Column that links to the object's attribute if it is linkable."""
 

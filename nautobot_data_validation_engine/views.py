@@ -96,6 +96,11 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     table_class = tables.UniqueValidationRuleTable
 
 
+#
+# DataCompliance
+#
+
+
 class DataComplianceListView(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):

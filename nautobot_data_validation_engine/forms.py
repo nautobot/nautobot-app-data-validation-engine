@@ -367,6 +367,11 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
     max_instances = forms.IntegerField(required=False)
 
 
+#
+# DataCompliance
+#
+
+
 class DataComplianceFilterForm(BootstrapMixin, forms.Form):
     """Form for DataCompliance instances."""
 
