@@ -32,7 +32,6 @@ class ComplianceTemplateIterator:
 
     def __iter__(self):
         """Return a generator of PluginCustomValidator classes for each registered model."""
-
         for app_label, models in registry["model_features"]["custom_validators"].items():
             for model in models:
                 label = f"{app_label}.{model}"
