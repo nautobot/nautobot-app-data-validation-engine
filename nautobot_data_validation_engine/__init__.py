@@ -9,7 +9,7 @@ except ImportError:
 __version__ = metadata.version(__name__)
 
 import logging
-from nautobot.extras.plugins import NautobotAppConfig, register_template_extensions
+from nautobot.extras.plugins import NautobotAppConfig
 
 logger = logging.getLogger(__name__)
 
@@ -28,21 +28,6 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     max_version = "1.9999"
     default_settings = {}
     caching_config = {}
-
-    def ready(self):
-        super().ready()
-        from nautobot.extras.utils import registry  # pylint: disable=C0415
-        from nautobot_data_validation_engine.template_content import tab_factory  # pylint: disable=C0415
-
-        template_content = []
-        labels = []
-        for app_label, models in registry["model_features"]["custom_validators"].items():
-            for model in models:
-                label = f"{app_label}.{model}"
-                labels.append(label)
-                template_content.append(tab_factory(label))
-        register_template_extensions(template_content)
-        self.features["template_extensions"] = sorted(set(labels))
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name
