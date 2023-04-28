@@ -11,6 +11,7 @@ validation rules that have been defined for the given model.
 import re
 import logging
 import inspect
+import pkgutil
 
 from typing import Optional
 from django.template.defaultfilters import pluralize
@@ -21,6 +22,7 @@ from django.core.exceptions import ValidationError
 from nautobot.extras.plugins import PluginCustomValidator, CustomValidator
 from nautobot.extras.registry import registry
 from nautobot.extras.models import GitRepository
+from nautobot.extras.datasources import ensure_git_repository
 from nautobot.utilities.utils import render_jinja2
 
 from nautobot_data_validation_engine.models import (
@@ -32,7 +34,6 @@ from nautobot_data_validation_engine.models import (
 )
 
 from nautobot_data_validation_engine.models import DataCompliance
-from nautobot_data_validation_engine.utils import import_python_file_from_git_repo
 
 LOGGER = logging.getLogger(__name__)
 
@@ -128,27 +129,24 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # DataComplianceRules
-        for audit_class in get_data_compliance_rules_map().get(self.model, []):
-            audit_class(obj).clean()
+        for compliance_class in get_data_compliance_rules_map().get(self.model, []):
+            compliance_class(obj).clean()
 
         for repo in GitRepository.objects.filter(
             provided_contents__contains="nautobot_data_validation_engine.data_compliance_rules"
         ):
-            module = import_python_file_from_git_repo(repo)
-            if hasattr(module, "custom_validators"):
-                for audit_class in module.custom_validators:
-                    if (
-                        f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
-                        != audit_class.model
-                    ):
-                        continue
-                    ins = audit_class(self.context["object"])
-                    ins.clean()
+            for compliance_class in get_classes_from_git_repo(repo):
+                if (
+                    f"{self.context['object']._meta.app_label}.{self.context['object']._meta.model_name}"
+                    != compliance_class.model
+                ):
+                    continue
+                compliance_class(self.context["object"]).clean()
 
 
 def is_data_compliance_rule(obj):
     """Check to see if object is an DataComplianceRule class instance."""
-    return inspect.isclass(obj) and issubclass(obj, DataComplianceRule)
+    return inspect.isclass(obj) and issubclass(obj, DataComplianceRule) and obj is not DataComplianceRule
 
 
 def get_data_compliance_rules_map():
@@ -169,6 +167,17 @@ def get_data_compliance_rules():
     for rule_sets in get_data_compliance_rules_map().values():
         validators.extend(rule_sets)
     return validators
+
+
+def get_classes_from_git_repo(repo: GitRepository):
+    """Get list of DataComplianceRule classes found within the custom_validators folder of the given repo."""
+    ensure_git_repository(repo)
+    class_list = []
+    for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
+        module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
+        for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
+            class_list.append(complance_class)
+    return class_list
 
 
 class ComplianceError(ValidationError):

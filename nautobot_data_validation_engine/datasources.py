@@ -1,20 +1,14 @@
 """Datasource definitions."""
-import importlib
 from nautobot.extras.choices import LogLevelChoices
 from nautobot.extras.registry import DatasourceContent
+from nautobot_data_validation_engine.custom_validators import get_classes_from_git_repo
 
 
 def refresh_git_data_compliance_rules(repository_record, job_result, delete=False):  # pylint: disable=W0613
     """Callback for repo refresh."""
     job_result.log("Successfully pulled git repo", level_choice=LogLevelChoices.LOG_SUCCESS)
-    spec = importlib.util.spec_from_file_location(
-        "custom_validators", f"{repository_record.filesystem_path}/custom_validators.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    if hasattr(module, "custom_validators"):
-        for compliance_class in module.custom_validators:
-            job_result.log(f"Found class {str(compliance_class.__name__)}", level_choice=LogLevelChoices.LOG_SUCCESS)
+    for compliance_class in get_classes_from_git_repo(repository_record):
+        job_result.log(f"Found class {str(compliance_class.__name__)}", level_choice=LogLevelChoices.LOG_SUCCESS)
 
 
 datasource_contents = [

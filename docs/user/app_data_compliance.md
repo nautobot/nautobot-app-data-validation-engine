@@ -12,7 +12,7 @@ To write a data compliance rule in a custom plugin, the plugin will need a `cust
 
 ### Writing Data Compliance Rules in a Remote Git Repository
 
-A Git repository can be configured to add the `data compliance rules` context to store `DataComplianceRule` classes in source control.  The plugin looks for a file called `custom_validators.py`, and will import any classes listed within a `custom_validators` variable there.  The Git repo sync job will highlight all classes that it finds and imports.
+A Git repository can be configured to add the `data compliance rules` context to store `DataComplianceRule` classes in source control.  The plugin looks for a folder called `custom_validators`, and any classes that implement `DataComplianceRule` within any file in that folder will be imported.  There is no need to list the classes in any variable.  The Git repo sync job will highlight all classes that it finds and imports.
 
 ```python
 ### your_plugin/custom_validators.py
