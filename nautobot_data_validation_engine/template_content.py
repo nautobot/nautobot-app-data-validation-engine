@@ -3,6 +3,8 @@ from django.urls import reverse
 from nautobot.extras.plugins import TemplateExtension
 from nautobot_data_validation_engine.models import DataCompliance
 
+from nautobot.extras.utils import registry
+
 
 def tab_factory(content_type_label):
     """Generate a DataComplianceTab object for a given content type."""
@@ -31,4 +33,18 @@ def tab_factory(content_type_label):
     return DataComplianceTab
 
 
-template_extensions = []
+class ComplianceTemplateIterator:
+    """Iterator that generates PluginCustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
+
+    def __iter__(self):
+        """Return a generator of PluginCustomValidator classes for each registered model."""
+
+        labels = []
+        for app_label, models in registry["model_features"]["custom_validators"].items():
+            for model in models:
+                label = f"{app_label}.{model}"
+                labels.append(label)
+                yield tab_factory(label)
+
+
+template_extensions = ComplianceTemplateIterator()
