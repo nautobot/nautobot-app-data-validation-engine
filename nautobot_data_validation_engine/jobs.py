@@ -5,7 +5,15 @@ from django.apps import apps as global_apps
 from nautobot.extras.models import GitRepository
 from nautobot.extras.jobs import Job, MultiChoiceVar, BooleanVar
 
-from .custom_validators import get_classes_from_git_repo, get_data_compliance_rules
+from nautobot_data_validation_engine.custom_validators import get_data_compliance_rules_map, get_classes_from_git_repo
+
+
+def get_data_compliance_rules():
+    """Generate a list of Audit Ruleset classes that exist from the registry."""
+    validators = []
+    for rule_sets in get_data_compliance_rules_map().values():
+        validators.extend(rule_sets)
+    return validators
 
 
 def get_choices():

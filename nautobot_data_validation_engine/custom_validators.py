@@ -12,6 +12,7 @@ import re
 import logging
 import inspect
 import pkgutil
+import sys
 
 from typing import Optional
 from django.template.defaultfilters import pluralize
@@ -30,10 +31,9 @@ from nautobot_data_validation_engine.models import (
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+    DataCompliance,
     validate_regex,
 )
-
-from nautobot_data_validation_engine.models import DataCompliance
 
 LOGGER = logging.getLogger(__name__)
 
@@ -161,19 +161,13 @@ def get_data_compliance_rules_map():
     return compliance_rulesets
 
 
-def get_data_compliance_rules():
-    """Generate a list of Audit Ruleset classes that exist from the registry."""
-    validators = []
-    for rule_sets in get_data_compliance_rules_map().values():
-        validators.extend(rule_sets)
-    return validators
-
-
 def get_classes_from_git_repo(repo: GitRepository):
     """Get list of DataComplianceRule classes found within the custom_validators folder of the given repo."""
-    ensure_git_repository(repo)
+    ensure_git_repository(repo, head=repo.current_head)
     class_list = []
     for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
+        if discovered_module_name in sys.modules:
+            del sys.modules[discovered_module_name]
         module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
         for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
             class_list.append(complance_class)
