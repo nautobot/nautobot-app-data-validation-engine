@@ -48,7 +48,7 @@ class TestCompliance(TestCase):
         result = result[0]
         self.assertEqual(result.compliance_class_name, "TestPassedDataComplianceRule")
         self.assertEqual(result.validated_object, self.s)
-        self.assertEqual(result.validated_attribute, "all")
+        self.assertEqual(result.validated_attribute, "__all__")
         self.assertEqual(result.validated_attribute_value, None)
 
     def test_audit_fail(self):
