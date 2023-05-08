@@ -3,7 +3,7 @@
 from django.apps import apps as global_apps
 
 from nautobot.extras.models import GitRepository
-from nautobot.extras.jobs import Job, MultiChoiceVar, BooleanVar
+from nautobot.extras.jobs import Job, MultiChoiceVar
 
 from nautobot_data_validation_engine.custom_validators import get_data_compliance_rules_map, get_classes_from_git_repo
 
