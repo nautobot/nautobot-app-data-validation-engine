@@ -39,16 +39,10 @@ class RunRegisteredDataComplianceRules(Job):
         required=False,
         description="Not selecting any rules will run all rules listed.",
     )
-    override_enforce = BooleanVar(
-        default=True,
-        label="Override Ruleset Enforce",
-        description="Override any enforce values set on the DataComplianceRule classes. Not overriding this value will cause any enforced ComplianceErrors to fail the job.",
-    )
 
     def run(self, data, commit):
         """Run the validate function on all given DataComplianceRule classes."""
         selected_data_compliance_rules = data.get("selected_data_compliance_rules")
-        override_enforce = data.get("override_enforce")
 
         compliance_classes = []
         compliance_classes.extend(get_data_compliance_rules())
@@ -64,8 +58,7 @@ class RunRegisteredDataComplianceRules(Job):
             app_label, model = compliance_class.model.split(".")
             for obj in global_apps.get_model(app_label, model).objects.all():
                 ins = compliance_class(obj)
-                if override_enforce:
-                    ins.enforce = False
+                ins.enforce = False
                 ins.clean()
 
 
