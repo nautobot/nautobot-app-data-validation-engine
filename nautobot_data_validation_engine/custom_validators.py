@@ -236,12 +236,12 @@ class DataComplianceRule(CustomValidator):
                 raise ex
 
     @staticmethod
-    def audit_error(message):
-        """Raise an Audit Error with the given message."""
+    def compliance_error(message):
+        """Raise a Compliance Error with the given message."""
         raise ComplianceError(message)
 
     def compliance_result(self, message, attribute=None, valid=True):
-        """Generate an Audit Result object based on the given parameters."""
+        """Generate an DataCompliance object based on the given parameters."""
         instance = self.context["object"]
         attribute_value = None
         if attribute:
