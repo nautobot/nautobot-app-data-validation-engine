@@ -33,11 +33,11 @@ def get_choices():
 class RunRegisteredDataComplianceRules(Job):
     """Run the validate function on all registered DataComplianceRule classes."""
 
-    selected_classes = MultiChoiceVar(
+    selected_data_compliance_rules = MultiChoiceVar(
         choices=get_choices,
-        label="Select Data Compliance Classes",
+        label="Select Data Compliance Rules",
         required=False,
-        description="Not selecting any classes will run all classes listed.",
+        description="Not selecting any rules will run all rules listed.",
     )
     override_enforce = BooleanVar(
         default=True,
@@ -47,7 +47,7 @@ class RunRegisteredDataComplianceRules(Job):
 
     def run(self, data, commit):
         """Run the validate function on all given DataComplianceRule classes."""
-        selected_classes = data.get("selected_classes")
+        selected_data_compliance_rules = data.get("selected_data_compliance_rules")
         override_enforce = data.get("override_enforce")
 
         compliance_classes = []
@@ -58,7 +58,7 @@ class RunRegisteredDataComplianceRules(Job):
                 compliance_classes.extend(get_classes_from_git_repo(repo))
 
         for compliance_class in compliance_classes:
-            if selected_classes and compliance_class.__name__ not in selected_classes:
+            if selected_data_compliance_rules and compliance_class.__name__ not in selected_data_compliance_rules:
                 continue
             self.log_info(f"Running {compliance_class.__name__}")
             app_label, model = compliance_class.model.split(".")
