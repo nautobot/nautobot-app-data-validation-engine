@@ -207,7 +207,7 @@ class DataComplianceRule(CustomValidator):
                 content_type=ContentType.objects.get_for_model(instance),
                 object_id=instance.id,
             )
-            .exclude(validated_attribute__in=["all"] + exclude_attributes)
+            .exclude(validated_attribute__in=["__all__"] + exclude_attributes)
             .values_list("validated_attribute", flat=True)
         )
         for attribute in attributes:
@@ -247,7 +247,7 @@ class DataComplianceRule(CustomValidator):
         if attribute:
             attribute_value = getattr(instance, attribute)
         else:
-            attribute = "all"
+            attribute = "__all__"
         result, _ = DataCompliance.objects.update_or_create(
             compliance_class_name=self.name,
             content_type=ContentType.objects.get_for_model(instance),
