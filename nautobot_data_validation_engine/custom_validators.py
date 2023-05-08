@@ -181,7 +181,7 @@ class ComplianceError(ValidationError):
 class DataComplianceRule(CustomValidator):
     """Class to handle a set of validation functions."""
 
-    class_name: Optional[str] = None
+    name: Optional[str] = None
     model: str
     result_date: timezone
     enforce = False
@@ -189,7 +189,7 @@ class DataComplianceRule(CustomValidator):
     def __init__(self, obj):
         """Initialize an DataComplianceRule object."""
         super().__init__(obj)
-        self.class_name = self.class_name or self.__class__.__name__
+        self.name = self.name or self.__class__.__name__
         self.result_date = timezone.now()
 
     def audit(self):
@@ -203,7 +203,7 @@ class DataComplianceRule(CustomValidator):
             exclude_attributes = []
         attributes = (
             DataCompliance.objects.filter(
-                compliance_class_name=self.class_name,
+                compliance_class_name=self.name,
                 content_type=ContentType.objects.get_for_model(instance),
                 object_id=instance.id,
             )
@@ -249,7 +249,7 @@ class DataComplianceRule(CustomValidator):
         else:
             attribute = "all"
         result, _ = DataCompliance.objects.update_or_create(
-            compliance_class_name=self.class_name,
+            compliance_class_name=self.name,
             content_type=ContentType.objects.get_for_model(instance),
             object_id=instance.id,
             validated_attribute=attribute,
