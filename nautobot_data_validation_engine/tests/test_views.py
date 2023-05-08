@@ -7,18 +7,18 @@ from packaging import version
 from django.contrib.contenttypes.models import ContentType
 from django.http.request import QueryDict
 from nautobot.dcim.models import Device, PowerFeed, Site
-from nautobot.utilities.testing import ViewTestCases, TestCase
+from nautobot.utilities.testing import TestCase, ViewTestCases
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    DataCompliance,
 )
+from nautobot_data_validation_engine.tables import DataComplianceTableTab
 from nautobot_data_validation_engine.tests.test_data_compliance_rules import TestFailedDataComplianceRule
 from nautobot_data_validation_engine.views import DataComplianceObjectView
-from nautobot_data_validation_engine.tables import DataComplianceTableTab
 
 try:
     from importlib import metadata

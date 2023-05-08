@@ -6,11 +6,11 @@ from django.utils.safestring import mark_safe
 from nautobot.utilities.tables import BaseTable, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    DataCompliance,
 )
 
 
