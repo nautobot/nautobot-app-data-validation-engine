@@ -2,9 +2,9 @@
 
 ## DataComplianceRule Class
 
-The `DataComplianceRule` class takes advantage of the `CustomValidator` workflow.  The basic idea is that during an object's `full_clean` method call, any `DataComplianceRule` classes are called to run their `clean` method.  That method calls the class's `audit` method, which you should implement.  The expected return of the `audit` method is `None`; however, any issues found during the `audit` method should raise an `ComplianceError`.  Multiple key value pairs can be passed in to an `ComplianceError` to create multiple data compliance objects.  If there are no `AuditErrors` that are raised, any existing data compliance objects for the class will be marked as valid.  Otherwise, attributes that were passed in via an `ComplianceError` will be marked as invalid with the given message.
+The `DataComplianceRule` class takes advantage of the `CustomValidator` workflow.  The basic idea is that during an object's `full_clean` method call, any `DataComplianceRule` classes are called to run their `clean` method.  That method calls the class's `audit` method, which you should implement.  The expected return of the `audit` method is `None`; however, any issues found during the `audit` method should raise an `ComplianceError`.  Multiple key value pairs can be passed in to an `ComplianceError`.  The data within a `ComplianceError` is used by the `full_clean` method to create `DataCompliance` objects, which relates the given object to the `DataComplianceRule` class, the attribute checked, and the message passed into the `ComplianceError` as to why the attribute is not valid.  If there are no `ComplianceErrors` raised within the `audit` method, any existing `DataCompliance` objects for the given object and `DataComplianceRule` pair are marked as valid.
 
-Any `DataComplianceRule` class can have a `class_name` defined to provide a friendly name to be shown within in the UI.  The `enforce` variable can also be set to decide whether or not the `ComplianceError` caught in the `audit` method is raised again to the `clean` method, acting like a `ValidationError` wherever the original `full_clean` was called.
+Any `DataComplianceRule` class can have a `name` defined to provide a friendly name to be shown within in the UI.  The `enforce` attribute can also be set to decide whether or not the `ComplianceError` caught in the `audit` method is raised again to the `clean` method, acting like a `ValidationError` wherever the original `full_clean` was called.  Setting `enforce` to `True` changes the `DataComplianceRule` from a passive validation of data to an active enforcement of the logic within it.
 
 ### Writing Data Compliance Rules in a Plugin
 
@@ -46,10 +46,10 @@ custom_validators = [DeviceDataComplianceRule]
 
 ```
 
-The job provided in the `jobs.py` file can be run via the UI to the `clean` method on any `DataComplianceRule` class available to the plugin.
+The provided `RunRegisteredDataComplianceRules` job can be used to run the `audit` method for any number of registered `DataComplianceRule` classes in an ad-hoc fashion.  This can be used to rerun the data compliance rules for the first time over a set of objects or rerun the rules after an update to the compliance logic.
 
 ## Viewing Results
 
-All data compliance objects can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Data Compliance`. This is a basic table that lists all records in the table currently.
+All data compliance objects can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Data Compliance`. This view lists all available data compliance results.
 
-The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Data Compliance` tab to the detail view of all objects.  The `Data Compliance` tab will only be visible if there is an `DataCompliance` object that exists for that model.
+The `nautobot_data_validation_engine` app automatically creates template extensions to add a `Data Compliance` tab to the detail view of all objects.
