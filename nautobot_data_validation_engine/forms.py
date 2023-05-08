@@ -18,11 +18,11 @@ from nautobot.utilities.forms import (
 from nautobot.utilities.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    DataCompliance,
 )
 
 
