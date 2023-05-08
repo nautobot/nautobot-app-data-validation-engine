@@ -197,7 +197,12 @@ class DataComplianceRule(CustomValidator):
         raise NotImplementedError
 
     def mark_existing_attributes_as_valid(self, exclude_attributes=None):
-        """Mark all existing fields (any that were previously created) as valid=True."""
+        """Mark all existing attributes (any that were previously created) as valid=True.
+
+        We call this function after running the audit method to update any attributes that didn't have ComplianceErrors raised to set them as valid.
+        We pass in any attributes that had ComplianceErrors raised so that we end up with the list of attributes that should now be valid.
+        This doesn't create DataCompliance objects for any fields that have always been valid or not referenced in the DataComplianceRule.
+        """
         instance = self.context["object"]
         if not exclude_attributes:
             exclude_attributes = []
@@ -220,10 +225,13 @@ class DataComplianceRule(CustomValidator):
             self.mark_existing_attributes_as_valid()
             self.compliance_result(message=f"{self.context['object']} is valid")
         except ComplianceError as ex:
+            # create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
             try:
                 for attribute, messages in ex.message_dict.items():
+                    # add attribute to excluded list
                     exclude_attributes.append(attribute)
+                    # create/update DataCompliance object for the given attribute
                     for message in messages:
                         self.compliance_result(message=message, attribute=attribute, valid=False)
             except AttributeError:
