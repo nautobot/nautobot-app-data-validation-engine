@@ -14,11 +14,11 @@ import inspect
 import pkgutil
 import sys
 
+from typing import Optional
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
 from django.utils import timezone
-from typing import Optional
 
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
