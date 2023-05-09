@@ -377,6 +377,7 @@ class DataCompliance(PrimaryModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
+    validated_object_str = models.CharField(max_length=200, blank=True, null=True)
     validated_attribute = models.CharField(max_length=100, blank=True, null=True)
     validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
     valid = models.BooleanField(blank=False, null=False)
@@ -394,6 +395,8 @@ class DataCompliance(PrimaryModel):
 
     class Meta:
         """Meta class for Audit model."""
+
+        verbose_name_plural = "Data Compliance"
 
         unique_together = (
             "compliance_class_name",

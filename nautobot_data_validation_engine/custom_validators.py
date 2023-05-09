@@ -263,6 +263,7 @@ class DataComplianceRule(CustomValidator):
             validated_attribute=attribute,
             defaults={
                 "last_validation_date": self.result_date,
+                "validated_object_str": str(instance),
                 "validated_attribute_value": str(attribute_value) if attribute_value else None,
                 "message": message,
                 "valid": valid,
