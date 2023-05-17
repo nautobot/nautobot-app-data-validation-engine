@@ -1,18 +1,24 @@
 """Unit tests for nautobot_data_validation_engine views."""
 
 from unittest import skipIf
+from unittest.mock import MagicMock, patch
 from packaging import version
 
 from django.contrib.contenttypes.models import ContentType
+from django.http.request import QueryDict
 from nautobot.dcim.models import Device, PowerFeed, Site
-from nautobot.utilities.testing import ViewTestCases
+from nautobot.utilities.testing import TestCase, ViewTestCases
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
 )
+from nautobot_data_validation_engine.tables import DataComplianceTableTab
+from nautobot_data_validation_engine.tests.test_data_compliance_rules import TestFailedDataComplianceRule
+from nautobot_data_validation_engine.views import DataComplianceObjectView
 
 try:
     from importlib import metadata
@@ -264,3 +270,57 @@ class UniqueValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
             "enabled": False,
             "error_message": "no soup",
         }
+
+
+class DataComplianceTestCase(
+    ViewTestCases.GetObjectViewTestCase,
+    ViewTestCases.DeleteObjectViewTestCase,
+    ViewTestCases.ListObjectsViewTestCase,
+    ViewTestCases.BulkDeleteObjectsViewTestCase,
+):
+    """Test cases for DataCompliance Viewset."""
+
+    model = DataCompliance
+
+    @skipIf(
+        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
+        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
+    )
+    def test_list_objects_with_permission(self):
+        super().test_list_objects_with_permission()
+
+    @classmethod
+    def setUpTestData(cls):
+        s = Site(name="Test Site 1")
+        s.save()
+        for _ in range(4):
+            t = TestFailedDataComplianceRule(s)
+            t.clean()
+
+
+class DataComplianceObjectTestCase(TestCase):
+    """Test cases for DataComplianceObjectView."""
+
+    def setUp(self):
+        s = Site(name="Test Site 1")
+        s.save()
+        t = TestFailedDataComplianceRule(s)
+        t.clean()
+
+    def test_get_extra_context(self):
+        view = DataComplianceObjectView()
+        site = Site.objects.first()
+        mock_request = MagicMock()
+        mock_request.GET = QueryDict("tab=nautobot_data_validation_engine:1")
+        result = view.get_extra_context(mock_request, site)
+        self.assertEqual(result["active_tab"], "nautobot_data_validation_engine:1")
+        self.assertIsInstance(result["table"], DataComplianceTableTab)
+
+    @patch("nautobot.core.views.generic.ObjectView.dispatch")
+    def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
+        view = DataComplianceObjectView()
+        mock_request = MagicMock()
+        kwargs = {"model": "dcim.site", "other_arg": "other_arg", "another_arg": "another_arg"}
+        view.dispatch(mock_request, **kwargs)
+        mocked_dispatch.assert_called()
+        mocked_dispatch.assert_called_with(mock_request, other_arg="other_arg", another_arg="another_arg")

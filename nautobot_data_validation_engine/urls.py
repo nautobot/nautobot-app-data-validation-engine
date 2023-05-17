@@ -9,13 +9,30 @@ from nautobot_data_validation_engine import views, models
 
 
 router = NautobotUIViewSetRouter()
+router.register("data-compliance", views.DataComplianceListView)
 router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
 router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
 router.register("required-rules", views.RequiredValidationRuleUIViewSet)
 router.register("unique-rules", views.UniqueValidationRuleUIViewSet)
 
-
 urlpatterns = [
+    path(
+        "data-compliance/<uuid:pk>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="datacompliance_changelog",
+        kwargs={"model": models.DataCompliance},
+    ),
+    path(
+        "data-compliance/<uuid:pk>/notes/",
+        ObjectNotesView.as_view(),
+        name="datacompliance_notes",
+        kwargs={"model": models.DataCompliance},
+    ),
+    path(
+        "data-compliance/<model>/<uuid:id>/",
+        views.DataComplianceObjectView.as_view(),
+        name="data-compliance-tab",
+    ),
     path(
         "regex-rules/<uuid:pk>/changelog/",
         ObjectChangeLogView.as_view(),

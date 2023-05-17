@@ -8,6 +8,7 @@ from nautobot.extras.api.serializers import NautobotModelSerializer
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -139,3 +140,13 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
             "created",
             "last_updated",
         ]
+
+
+class DataComplianceSerializer(NautobotModelSerializer):
+    """Serializer for DataCompliance."""
+
+    class Meta:
+        """Meta class for serializer."""
+
+        model = DataCompliance
+        fields = "__all__"

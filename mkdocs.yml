@@ -98,6 +98,7 @@ nav:
       - App Overview: "user/app_overview.md"
       - Getting Started: "user/app_getting_started.md"
       - Using the App: "user/app_use_cases.md"
+      - Data Compliance: "user/app_data_compliance.md"
       - Frequently Asked Questions: "user/faq.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"

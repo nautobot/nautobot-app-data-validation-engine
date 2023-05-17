@@ -11,10 +11,14 @@ from nautobot.utilities.forms import (
     CSVContentTypeField,
     CSVMultipleContentTypeField,
     CSVModelForm,
+    MultipleContentTypeField,
     SlugField,
+    StaticSelect2,
 )
+from nautobot.utilities.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -361,3 +365,24 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
         required=False,
     )
     max_instances = forms.IntegerField(required=False)
+
+
+#
+# DataCompliance
+#
+
+
+class DataComplianceFilterForm(BootstrapMixin, forms.Form):
+    """Form for DataCompliance instances."""
+
+    model = DataCompliance
+    compliance_class_name = forms.CharField(max_length=20, required=False)
+    validated_attribute = forms.CharField(max_length=20, required=False)
+    valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
+    content_type = MultipleContentTypeField(
+        feature=None,
+        queryset=ContentType.objects.all().order_by("app_label", "model"),
+        choices_as_strings=True,
+        required=False,
+    )
+    q = forms.CharField(required=False, label="Search")
