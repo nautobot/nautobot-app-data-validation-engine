@@ -20,5 +20,8 @@ router.register("required-rules", views.RequiredValidationRuleViewSet)
 # Unique rules
 router.register("unique-rules", views.UniqueValidationRuleViewSet)
 
+# Data Compliance
+router.register("data-compliance", views.DataComplianceAPIView)
+
 
 urlpatterns = router.urls

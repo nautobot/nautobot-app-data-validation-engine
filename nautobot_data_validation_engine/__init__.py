@@ -8,10 +8,13 @@ except ImportError:
 
 __version__ = metadata.version(__name__)
 
-from nautobot.extras.plugins import PluginConfig
+import logging
+from nautobot.extras.plugins import NautobotAppConfig
+
+logger = logging.getLogger(__name__)
 
 
-class NautobotDataValidationEngineConfig(PluginConfig):
+class NautobotDataValidationEngineConfig(NautobotAppConfig):
     """Plugin configuration for the nautobot_data_validation_engine plugin."""
 
     name = "nautobot_data_validation_engine"

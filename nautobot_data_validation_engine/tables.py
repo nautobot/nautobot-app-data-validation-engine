@@ -1,10 +1,12 @@
 """Django tables."""
 
 import django_tables2 as tables
+from django.utils.safestring import mark_safe
 
 from nautobot.utilities.tables import BaseTable, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -152,3 +154,95 @@ class UniqueValidationRuleTable(BaseTable):
             "max_instances",
             "error_message",
         )
+
+
+#
+# DataCompliance
+#
+
+
+class ValidatedAttributeColumn(tables.Column):
+    """Column that links to the object's attribute if it is linkable."""
+
+    def render(self, value, record):  # pylint: disable=W0221
+        """Generate a link to a validated attribute if it is linkable, otherwise return the attribute."""
+        if hasattr(record.validated_object, value) and hasattr(
+            getattr(record.validated_object, value), "get_absolute_url"
+        ):
+            return mark_safe(
+                f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>'
+            )  # nosec B703, B308
+        return value
+
+
+class DataComplianceTable(BaseTable):
+    """Base table for viewing all DataCompliance objects."""
+
+    pk = ToggleColumn()
+    id = tables.Column(linkify=True, verbose_name="ID")
+    validated_object = tables.RelatedLinkColumn()
+    validated_attribute = ValidatedAttributeColumn()
+
+    def order_validated_object(self, queryset, is_descending):  # pylint:disable=R0201
+        """Reorder table by string representation of validated_object."""
+        qs = queryset.order_by(("-" if is_descending else "") + "validated_object_str")
+        return (qs, True)
+
+    class Meta(BaseTable.Meta):
+        """Meta class for DataComplianceTable."""
+
+        model = DataCompliance
+        fields = [
+            "pk",
+            "id",
+            "content_type",
+            "compliance_class_name",
+            "last_validation_date",
+            "validated_object",
+            "validated_attribute",
+            "validated_attribute_value",
+            "valid",
+            "message",
+        ]
+        default_columns = [
+            "pk",
+            "id",
+            "content_type",
+            "compliance_class_name",
+            "last_validation_date",
+            "validated_object",
+            "validated_attribute",
+            "validated_attribute_value",
+            "valid",
+            "message",
+        ]
+
+
+class DataComplianceTableTab(BaseTable):
+    """Base table for viewing the DataCompliance related to a single object."""
+
+    validated_attribute = ValidatedAttributeColumn()
+
+    class Meta(BaseTable.Meta):
+        """Meta class for DataComplianceTableTab."""
+
+        model = DataCompliance
+        order_by = ("compliance_class_name", "validated_attribute")
+        fields = [
+            "content_type",
+            "compliance_class_name",
+            "last_validation_date",
+            "validated_attribute",
+            "validated_attribute_value",
+            "valid",
+            "message",
+        ]
+        default_columns = [
+            "content_type",
+            "compliance_class_name",
+            "last_validation_date",
+            "validated_attribute",
+            "validated_attribute_value",
+            "valid",
+            "message",
+        ]

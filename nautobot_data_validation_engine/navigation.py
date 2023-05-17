@@ -71,6 +71,12 @@ menu_items = (
                             ),
                         ),
                     ),
+                    NavMenuItem(
+                        link="plugins:nautobot_data_validation_engine:datacompliance_list",
+                        name="Data Compliance",
+                        permissions=["nautobot_data_validation_engine.view_datacompliance"],
+                        buttons=(),
+                    ),
                 ),
             ),
         ),

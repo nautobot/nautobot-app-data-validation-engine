@@ -3,6 +3,7 @@
 import re
 
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
@@ -366,3 +367,60 @@ class UniqueValidationRule(ValidationRule):
 
         if getattr(model_field, "unique", False):
             raise ValidationError({"field": "This field is already unique by default."})
+
+
+class DataCompliance(PrimaryModel):
+    """Model to represent the results of an audit method."""
+
+    compliance_class_name = models.CharField(max_length=100, blank=False, null=False)
+    last_validation_date = models.DateTimeField(blank=False, null=False, auto_now=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
+    object_id = models.CharField(max_length=200, blank=False, null=False)
+    validated_object = GenericForeignKey("content_type", "object_id")
+    validated_object_str = models.CharField(max_length=200, blank=True, null=True)
+    validated_attribute = models.CharField(max_length=100, blank=True, null=True)
+    validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
+    valid = models.BooleanField(blank=False, null=False)
+    message = models.TextField(blank=True, null=True)
+
+    csv_headers = [
+        "compliance_class_name",
+        "last_validation_date",
+        "validated_object",
+        "validated_attribute",
+        "validated_attribute_value",
+        "valid",
+        "message",
+    ]
+
+    class Meta:
+        """Meta class for Audit model."""
+
+        verbose_name_plural = "Data Compliance"
+
+        unique_together = (
+            "compliance_class_name",
+            "content_type",
+            "object_id",
+            "validated_attribute",
+        )
+
+    def to_csv(self):
+        """Return a tuple of data that should be exported to CSV."""
+        return (
+            self.compliance_class_name,
+            self.last_validation_date,
+            self.validated_object,
+            self.validated_attribute,
+            self.validated_attribute_value,
+            self.valid,
+            self.message,
+        )
+
+    def __str__(self):
+        """Return a string representation of this DataCompliance object."""
+        return f"{self.compliance_class_name}: {self.validated_attribute} compliance for {self.validated_object}"
+
+    def get_absolute_url(self):
+        """Return the absolute URL to this Audit object."""
+        return reverse("plugins:nautobot_data_validation_engine:datacompliance", args=[self.pk])
