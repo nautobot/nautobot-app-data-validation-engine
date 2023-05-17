@@ -35,6 +35,7 @@ class RunRegisteredDataComplianceRules(Job):
     """Run the validate function on all registered DataComplianceRule classes."""
 
     name = "Run Registered Data Compliance Rules"
+description = "Runs selected Data Compliance rule classes."
 
     selected_data_compliance_rules = MultiChoiceVar(
         choices=get_choices,
