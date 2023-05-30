@@ -2,7 +2,7 @@
 Filterset test cases
 """
 from django.contrib.contenttypes.models import ContentType
-from nautobot.utilities.testing.filters import FilterTestCases
+from nautobot.core.testing.filters import FilterTestCases
 
 from nautobot.dcim.models import PowerFeed, Rack, Region, Site, Platform, Manufacturer
 

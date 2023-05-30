@@ -7,7 +7,7 @@ from packaging import version
 from django.contrib.contenttypes.models import ContentType
 from django.http.request import QueryDict
 from nautobot.dcim.models import Device, PowerFeed, Site
-from nautobot.utilities.testing import TestCase, ViewTestCases
+from nautobot.core.testing import TestCase, ViewTestCases
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,

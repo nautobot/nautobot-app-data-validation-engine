@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 
 from nautobot.extras.utils import FeatureQuery
-from nautobot.utilities.forms import (
+from nautobot.core.forms import (
     BootstrapMixin,
     BulkEditForm,
     BulkEditNullBooleanSelect,
@@ -15,7 +15,7 @@ from nautobot.utilities.forms import (
     SlugField,
     StaticSelect2,
 )
-from nautobot.utilities.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
+from nautobot.core.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,

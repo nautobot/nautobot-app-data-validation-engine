@@ -10,7 +10,7 @@ from django.shortcuts import reverse
 
 from nautobot.core.models.generics import PrimaryModel
 from nautobot.extras.utils import FeatureQuery, extras_features
-from nautobot.utilities.querysets import RestrictedQuerySet
+from nautobot.core.models.querysets import RestrictedQuerySet
 
 
 def validate_regex(value):

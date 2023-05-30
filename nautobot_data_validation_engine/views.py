@@ -11,7 +11,7 @@ from nautobot.apps.views import (
     ObjectDestroyViewMixin,
     ObjectBulkDestroyViewMixin,
 )
-from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
+from nautobot.core.views.paginator import EnhancedPaginator, get_paginate_count
 
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers

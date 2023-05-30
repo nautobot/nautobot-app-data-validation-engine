@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from nautobot.dcim.models import PowerFeed, Site, Region, Platform, Manufacturer
-from nautobot.utilities.testing import APITestCase, APIViewTestCases
+from nautobot.core.testing import APITestCase, APIViewTestCases
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
