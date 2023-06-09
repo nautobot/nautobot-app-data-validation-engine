@@ -2,12 +2,14 @@
 
 from django.apps import apps as global_apps
 
+from nautobot.core.celery import register_jobs
 from nautobot.extras.models import GitRepository
-from nautobot.extras.jobs import Job, MultiChoiceVar
+from nautobot.extras.jobs import Job, MultiChoiceVar, get_task_logger
 
 from nautobot_data_validation_engine.custom_validators import get_data_compliance_rules_map, get_classes_from_git_repo
 from nautobot_data_validation_engine.models import DataCompliance
 
+logger = get_task_logger(__name__)
 
 def get_data_compliance_rules():
     """Generate a list of Audit Ruleset classes that exist from the registry."""
@@ -44,9 +46,8 @@ class RunRegisteredDataComplianceRules(Job):
         description="Not selecting any rules will run all rules listed.",
     )
 
-    def run(self, data, commit):
+    def run(self, selected_data_compliance_rules):
         """Run the validate function on all given DataComplianceRule classes."""
-        selected_data_compliance_rules = data.get("selected_data_compliance_rules")
 
         compliance_classes = []
         compliance_classes.extend(get_data_compliance_rules())
@@ -58,7 +59,7 @@ class RunRegisteredDataComplianceRules(Job):
         for compliance_class in compliance_classes:
             if selected_data_compliance_rules and compliance_class.__name__ not in selected_data_compliance_rules:
                 continue
-            self.log_info(f"Running {compliance_class.__name__}")
+            logger.info(f"Running {compliance_class.__name__}")
             app_label, model = compliance_class.model.split(".")
             for obj in global_apps.get_model(app_label, model).objects.all():
                 ins = compliance_class(obj)
@@ -72,15 +73,19 @@ class DeleteOrphanedDataComplianceData(Job):
     name = "Delete Orphaned Data Compliance Data"
     description = "Delete any Data Compliance objects where its validated object no longer exists."
 
-    def run(self, data, commit):
+    def run(self):
         """Delete DataCompliance objects where its validated_object no longer exists."""
         number_deleted = 0
         for obj in DataCompliance.objects.all():
             if obj.validated_object is None:
-                self.log_info(f"Deleting {obj}.")
+                logger.info(f"Deleting {obj}.")
                 obj.delete()
                 number_deleted += 1
-        self.log_success(f"Deleted {number_deleted} orphaned DataCompliance objects.")
+        logger.info(f"Deleted {number_deleted} orphaned DataCompliance objects.")
 
 
-jobs = [RunRegisteredDataComplianceRules, DeleteOrphanedDataComplianceData]
+jobs = (
+    RunRegisteredDataComplianceRules,
+    DeleteOrphanedDataComplianceData,
+)
+register_jobs(*jobs)
