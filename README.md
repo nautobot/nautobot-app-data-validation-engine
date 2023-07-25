@@ -15,13 +15,15 @@
 
 An app for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for Source of Truth data.
 
-The data validation engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
+The Data Validation Engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
 
 Supported rule types include:
 - Regular expression
 - Min/max value
 - Required fields
 - Unique values
+
+Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
 
 ![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/dropdown.png)
 
@@ -45,6 +47,10 @@ More screenshots can be found in the [Using the App](https://docs.nautobot.com/p
 
 ![Unique Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/unique-rules-list.png)
 
+**Data Compliance**
+
+![Data Compliance Results List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/data-compliance-results-list.png)
+
 ## Try it out!
 
 This App is installed in the Nautobot Community Sandbox found over at [demo.nautobot.com](https://demo.nautobot.com/)!
@@ -55,7 +61,7 @@ This App is installed in the Nautobot Community Sandbox found over at [demo.naut
 
 Full web-based HTML documentation for this app can be found over on the [Nautobot Docs](https://docs.nautobot.com) website:
 
-- [User Guide](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_overview/) - Overview, Using the App, Getting Started.
+- [User Guide](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_overview/) - Overview, Getting Started, Using the App.
 - [Administrator Guide](https://docs.nautobot.com/projects/data-validation/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the App.
 - [Developer Guide](https://docs.nautobot.com/projects/data-validation/en/latest/dev/contributing/) - Extending the App, Code Reference, Contribution Guide.
 - [Release Notes / Changelog](https://docs.nautobot.com/projects/data-validation/en/latest/admin/release_notes/).
