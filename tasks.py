@@ -38,9 +38,9 @@ namespace = Collection("nautobot_data_validation_engine")
 namespace.configure(
     {
         "nautobot_data_validation_engine": {
-            "nautobot_ver": "latest",
+            "nautobot_ver": "2.0.0-beta.2",
             "project_name": "nautobot_data_validation_engine",
-            "python_ver": "3.8",
+            "python_ver": "3.10",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
             "compose_files": [
