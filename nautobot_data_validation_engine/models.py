@@ -92,7 +92,7 @@ class RegularExpressionValidationRule(ValidationRule):
 
     def get_absolute_url(self):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.slug])
+        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.id])
 
     def to_csv(self):
         """Return tuple representing the instance, which this used for CSV export."""
@@ -177,7 +177,7 @@ class MinMaxValidationRule(ValidationRule):
 
     def get_absolute_url(self):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.slug])
+        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.id])
 
     def to_csv(self):
         """Return tuple representing the instance, which this used for CSV export."""
@@ -258,7 +258,7 @@ class RequiredValidationRule(ValidationRule):
 
     def get_absolute_url(self):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.slug])
+        return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.id])
 
     def to_csv(self):
         """Return tuple representing the instance, which this used for CSV export."""
@@ -331,7 +331,7 @@ class UniqueValidationRule(ValidationRule):
 
     def get_absolute_url(self):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.slug])
+        return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.id])
 
     def to_csv(self):
         """Return tuple representing the instance, which this used for CSV export."""
