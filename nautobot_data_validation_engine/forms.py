@@ -8,9 +8,7 @@ from nautobot.core.forms import (
     BootstrapMixin,
     BulkEditForm,
     BulkEditNullBooleanSelect,
-    CSVContentTypeField,
     CSVMultipleContentTypeField,
-    CSVModelForm,
     MultipleContentTypeField,
     SlugField,
     StaticSelect2,
@@ -55,22 +53,6 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "context_processing",
             "error_message",
         ]
-
-
-class RegularExpressionValidationRuleCSVForm(CSVModelForm):
-    """Base csv form for the RegularExpressionValidationRule model."""
-
-    slug = SlugField()
-    content_type = CSVContentTypeField(
-        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
-        help_text="The object type to which this regular expression rule applies.",
-    )
-
-    class Meta:
-        """CSV form metadata for the RegularExpressionValidationRule model."""
-
-        model = RegularExpressionValidationRule
-        fields = RegularExpressionValidationRule.csv_headers
 
 
 class RegularExpressionValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
@@ -143,22 +125,6 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
         fields = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
 
 
-class MinMaxValidationRuleCSVForm(CSVModelForm):
-    """Base csv form for the MinMaxValidationRule model."""
-
-    slug = SlugField()
-    content_type = CSVContentTypeField(
-        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
-        help_text="The object type to which this min/max rule applies.",
-    )
-
-    class Meta:
-        """CSV form metadata for the MinMaxValidationRule model."""
-
-        model = MinMaxValidationRule
-        fields = MinMaxValidationRule.csv_headers
-
-
 class MinMaxValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     """Base bulk edit form for the MinMaxValidationRule model."""
 
@@ -222,22 +188,6 @@ class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "field",
             "error_message",
         ]
-
-
-class RequiredValidationRuleCSVForm(CSVModelForm):
-    """Base csv form for the RequiredValidationRule model."""
-
-    slug = SlugField()
-    content_type = CSVContentTypeField(
-        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
-        help_text="The object type to which this required field rule applies.",
-    )
-
-    class Meta:
-        """CSV form metadata for the RequiredValidationRule model."""
-
-        model = RequiredValidationRule
-        fields = RequiredValidationRule.csv_headers
 
 
 class RequiredValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
@@ -307,22 +257,6 @@ class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "max_instances",
             "error_message",
         ]
-
-
-class UniqueValidationRuleCSVForm(CSVModelForm):
-    """Base csv form for the UniqueValidationRule model."""
-
-    slug = SlugField()
-    content_type = CSVContentTypeField(
-        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
-        help_text="The object type to which this unique field rule applies.",
-    )
-
-    class Meta:
-        """CSV form metadata for the UniqueValidationRule model."""
-
-        model = UniqueValidationRule
-        fields = UniqueValidationRule.csv_headers
 
 
 class UniqueValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
