@@ -81,7 +81,6 @@ class RegularExpressionValidationRule(ValidationRule):
         help_text="When enabled, the regular expression value is first processed as a Jinja2 template with access to the context of the data being validated in a variable named <code>object</code>.",
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
     clone_fields = ["enabled", "content_type", "regular_expression", "error_message"]
 
     class Meta:
@@ -93,18 +92,6 @@ class RegularExpressionValidationRule(ValidationRule):
     def get_absolute_url(self):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.id])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.regular_expression,
-            self.error_message,
-        )
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -166,7 +153,6 @@ class MinMaxValidationRule(ValidationRule):
         null=True, blank=True, help_text="When set, apply a maximum value contraint to the value of the model field."
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
     clone_fields = ["enabled", "content_type", "min", "max", "error_message"]
 
     class Meta:
@@ -178,19 +164,6 @@ class MinMaxValidationRule(ValidationRule):
     def get_absolute_url(self):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.id])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.min,
-            self.max,
-            self.error_message,
-        )
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -247,7 +220,6 @@ class RequiredValidationRule(ValidationRule):
         max_length=50,
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "error_message"]
     clone_fields = ["enabled", "content_type", "error_message"]
 
     class Meta:
@@ -259,17 +231,6 @@ class RequiredValidationRule(ValidationRule):
     def get_absolute_url(self):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.id])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.error_message,
-        )
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -320,7 +281,6 @@ class UniqueValidationRule(ValidationRule):
     )
     max_instances = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "max_instances", "error_message"]
     clone_fields = ["enabled", "content_type", "max_instances", "error_message"]
 
     class Meta:
@@ -332,18 +292,6 @@ class UniqueValidationRule(ValidationRule):
     def get_absolute_url(self):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.id])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.max_instances,
-            self.error_message,
-        )
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -383,16 +331,6 @@ class DataCompliance(PrimaryModel):
     valid = models.BooleanField(blank=False, null=False)
     message = models.TextField(blank=True, null=True)
 
-    csv_headers = [
-        "compliance_class_name",
-        "last_validation_date",
-        "validated_object",
-        "validated_attribute",
-        "validated_attribute_value",
-        "valid",
-        "message",
-    ]
-
     class Meta:
         """Meta class for Audit model."""
 
@@ -403,18 +341,6 @@ class DataCompliance(PrimaryModel):
             "content_type",
             "object_id",
             "validated_attribute",
-        )
-
-    def to_csv(self):
-        """Return a tuple of data that should be exported to CSV."""
-        return (
-            self.compliance_class_name,
-            self.last_validation_date,
-            self.validated_object,
-            self.validated_attribute,
-            self.validated_attribute_value,
-            self.valid,
-            self.message,
         )
 
     def __str__(self):
