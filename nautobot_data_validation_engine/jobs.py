@@ -11,6 +11,7 @@ from nautobot_data_validation_engine.models import DataCompliance
 
 logger = get_task_logger(__name__)
 
+
 def get_data_compliance_rules():
     """Generate a list of Audit Ruleset classes that exist from the registry."""
     validators = []
@@ -48,7 +49,6 @@ class RunRegisteredDataComplianceRules(Job):
 
     def run(self, selected_data_compliance_rules):
         """Run the validate function on all given DataComplianceRule classes."""
-
         compliance_classes = []
         compliance_classes.extend(get_data_compliance_rules())
 
