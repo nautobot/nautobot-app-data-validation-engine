@@ -4,7 +4,7 @@ API test cases
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
-from nautobot.dcim.models import PowerFeed, Site, Region, Platform, Manufacturer
+from nautobot.dcim.models import Location, PowerFeed, Platform, Manufacturer
 from nautobot.core.testing import APITestCase, APIViewTestCases
 
 from nautobot_data_validation_engine.models import (
@@ -48,21 +48,21 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
         {
             "name": "Regex rule 4",
             "slug": "regex-rule-4",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "contact_name",
             "regular_expression": "^.*$",
         },
         {
             "name": "Regex rule 5",
             "slug": "regex-rule-5",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "physical_address",
             "regular_expression": "^.*$",
         },
         {
             "name": "Regex rule 6",
             "slug": "regex-rule-6",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "shipping_address",
             "regular_expression": "^.*$",
         },
@@ -78,22 +78,19 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
         """
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="name",
             regular_expression="^.*$",
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 2",
-            slug="regex-rule-2",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="description",
             regular_expression="^.*$",
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 3",
-            slug="regex-rule-3",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="comments",
             regular_expression="^.*$",
         )
@@ -189,19 +186,19 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
         {
             "name": "Required rule 4",
             "slug": "required-rule-4",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "description",
         },
         {
             "name": "Required rule 5",
             "slug": "required-rule-5",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "asn",
         },
         {
             "name": "Required rule 6",
             "slug": "required-rule-6",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "facility",
         },
     ]
@@ -217,7 +214,7 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
         RequiredValidationRule.objects.create(
             name="Required rule 1",
             slug="required-rule-1",
-            content_type=ContentType.objects.get_for_model(Region),
+            content_type=ContentType.objects.get_for_model(Location),
             field="description",
         )
         RequiredValidationRule.objects.create(
@@ -252,21 +249,21 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
         {
             "name": "Unique rule 4",
             "slug": "unique-rule-4",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "description",
             "max_instances": 1,
         },
         {
             "name": "Unique rule 5",
             "slug": "unique-rule-5",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "asn",
             "max_instances": 2,
         },
         {
             "name": "Unique rule 6",
             "slug": "unique-rule-6",
-            "content_type": "dcim.site",
+            "content_type": "dcim.location",
             "field": "facility",
             "max_instances": 3,
         },
@@ -283,7 +280,7 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
         UniqueValidationRule.objects.create(
             name="Unique rule 1",
             slug="unique-rule-1",
-            content_type=ContentType.objects.get_for_model(Region),
+            content_type=ContentType.objects.get_for_model(Location),
             field="description",
             max_instances=1,
         )

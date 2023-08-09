@@ -4,7 +4,7 @@ Filterset test cases
 from django.contrib.contenttypes.models import ContentType
 from nautobot.core.testing.filters import FilterTestCases
 
-from nautobot.dcim.models import PowerFeed, Rack, Region, Site, Platform, Manufacturer
+from nautobot.dcim.models import Location, PowerFeed, Rack, Platform, Manufacturer
 
 from nautobot_data_validation_engine.filters import (
     MinMaxValidationRuleFilterSet,
@@ -44,7 +44,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 2",
             slug="regex-rule-2",
-            content_type=ContentType.objects.get_for_model(Region),
+            content_type=ContentType.objects.get_for_model(Location),
             field="description",
             regular_expression="DEF$",
             error_message="B",
@@ -52,7 +52,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 3",
             slug="regex-rule-3",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="comments",
             regular_expression="GHI",
             error_message="C",
@@ -65,7 +65,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.rack", "dcim.site"]}
+        params = {"content_type": ["dcim.rack", "dcim.location"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
     def test_regular_expression(self):
@@ -160,7 +160,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
         RequiredValidationRule.objects.create(
             name="Required rule 1",
             slug="required-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             error_message="A",
         )
@@ -186,7 +186,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.site"]}
+        params = {"content_type": ["dcim.location"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_error_message(self):
@@ -216,7 +216,7 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         UniqueValidationRule.objects.create(
             name="Unique rule 1",
             slug="unique-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             max_instances=1,
             error_message="A",
@@ -245,7 +245,7 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.site"]}
+        params = {"content_type": ["dcim.location"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_error_message(self):

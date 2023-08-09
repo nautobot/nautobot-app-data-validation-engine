@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import ValidationError
 from django.test import TestCase
 
-from nautobot.dcim.models import Cable, Device, PowerFeed, Site
+from nautobot.dcim.models import Cable, Device, Location, PowerFeed
 from nautobot.extras.models import Job
 
 from nautobot_data_validation_engine.models import (
@@ -236,7 +236,7 @@ class RequiredValidationRuleModelTestCase(TestCase):
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
             slug="required-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="name",
         )
 
@@ -248,7 +248,7 @@ class RequiredValidationRuleModelTestCase(TestCase):
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
             slug="required-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="physical_address",
         )
 
@@ -304,7 +304,7 @@ class UniqueValidationRuleModelTestCase(TestCase):
         rule = UniqueValidationRule.objects.create(
             name="Unique rule 1",
             slug="unique-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="name",
         )
 
