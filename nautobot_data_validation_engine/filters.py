@@ -21,7 +21,6 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -40,7 +39,6 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         fields = [
             "id",
             "name",
-            "slug",
             "regular_expression",
             "context_processing",
             "enabled",
@@ -56,7 +54,6 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -74,7 +71,6 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
         fields = [
             "id",
             "name",
-            "slug",
             "min",
             "max",
             "enabled",
@@ -90,7 +86,6 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -108,7 +103,6 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
         fields = [
             "id",
             "name",
-            "slug",
             "enabled",
             "content_type",
             "field",
@@ -122,7 +116,6 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "icontains",
             "content_type__model": "icontains",
@@ -140,7 +133,6 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
         fields = [
             "id",
             "name",
-            "slug",
             "max_instances",
             "enabled",
             "content_type",

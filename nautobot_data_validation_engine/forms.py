@@ -10,7 +10,6 @@ from nautobot.core.forms import (
     BulkEditNullBooleanSelect,
     CSVMultipleContentTypeField,
     MultipleContentTypeField,
-    SlugField,
     StaticSelect2,
 )
 from nautobot.core.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
@@ -32,7 +31,6 @@ from nautobot_data_validation_engine.models import (
 class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
     """Base model form for the RegularExpressionValidationRule model."""
 
-    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -45,7 +43,6 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
         model = RegularExpressionValidationRule
         fields = [
             "name",
-            "slug",
             "enabled",
             "content_type",
             "field",
@@ -111,7 +108,6 @@ class RegularExpressionValidationRuleFilterForm(BootstrapMixin, forms.Form):
 class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
     """Base model form for the MinMaxValidationRule model."""
 
-    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -122,7 +118,7 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
         """Form metadata for the MinMaxValidationRule model."""
 
         model = MinMaxValidationRule
-        fields = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
+        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message"]
 
 
 class MinMaxValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
@@ -169,7 +165,6 @@ class MinMaxValidationRuleFilterForm(BootstrapMixin, forms.Form):
 class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
     """Base model form for the RequiredValidationRule model."""
 
-    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -182,7 +177,6 @@ class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
         model = RequiredValidationRule
         fields = [
             "name",
-            "slug",
             "enabled",
             "content_type",
             "field",
@@ -237,7 +231,6 @@ class RequiredValidationRuleFilterForm(BootstrapMixin, forms.Form):
 class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
     """Base model form for the UniqueValidationRule model."""
 
-    slug = SlugField()
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
@@ -250,7 +243,6 @@ class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
         model = UniqueValidationRule
         fields = [
             "name",
-            "slug",
             "enabled",
             "content_type",
             "field",

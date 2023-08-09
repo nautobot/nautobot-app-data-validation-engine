@@ -39,7 +39,6 @@ class ValidationRule(PrimaryModel):
     """Base model for all validation engine rule models."""
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
     content_type = models.ForeignKey(
         to=ContentType, on_delete=models.CASCADE, limit_choices_to=FeatureQuery("custom_validators")
     )
