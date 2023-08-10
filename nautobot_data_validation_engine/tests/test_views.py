@@ -279,7 +279,11 @@ class DataComplianceTestCase(
     def setUpTestData(cls):
         location_type = LocationType(name="Region")
         location_type.validated_save()
-        s = Location(name="Test Location 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
+        s = Location(
+            name="Test Location 1",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+        )
         s.save()
         for _ in range(4):
             t = TestFailedDataComplianceRule(s)
@@ -292,7 +296,11 @@ class DataComplianceObjectTestCase(TestCase):
     def setUp(self):
         location_type = LocationType(name="Region")
         location_type.validated_save()
-        s = Location(name="Test Location 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
+        s = Location(
+            name="Test Location 1",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+        )
         s.save()
         t = TestFailedDataComplianceRule(s)
         t.clean()

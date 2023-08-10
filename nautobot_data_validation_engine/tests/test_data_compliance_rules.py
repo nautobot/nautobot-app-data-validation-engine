@@ -40,7 +40,11 @@ class TestCompliance(TestCase):
     def setUp(self):
         self.location_type = LocationType(name="Region")
         self.location_type.save()
-        self.s = Location(name="Test 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
+        self.s = Location(
+            name="Test 1",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+        )
         self.s.save()
         TestFailedDataComplianceRule(self.s).clean()
         TestPassedDataComplianceRule(self.s).clean()

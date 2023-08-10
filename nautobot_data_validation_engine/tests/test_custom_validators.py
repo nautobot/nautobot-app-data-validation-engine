@@ -37,7 +37,11 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             regular_expression="^ABC$",
         )
 
-        location = Location(name="does not match the regex", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
+        location = Location(
+            name="does not match the regex",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+        )
 
         with self.assertRaises(ValidationError):
             location.clean()
@@ -50,7 +54,11 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
             regular_expression="^ABC$",
         )
 
-        location = Location(name="ABC", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
+        location = Location(
+            name="ABC",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+        )
 
         try:
             location.clean()
@@ -153,7 +161,7 @@ class MinMaxValidationRuleModelTestCase(TestCase):
             min=1,
             max=1,
         )
-        
+
         location = Location(
             name="does not match the regex",
             location_type=LocationType.objects.get(composite_key="Region"),
@@ -305,7 +313,9 @@ class RequiredValidationRuleModelTestCase(TestCase):
         )
 
         location = Location(
-            name="Location 1 does not have a description", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active")
+            name="Location 1 does not have a description",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -393,8 +403,18 @@ class UniqueValidationRuleModelTestCase(TestCase):
             max_instances=1,
         )
 
-        location1 = Location(name="Location 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"), asn=None)
-        location2 = Location(name="Location 2", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"), asn=None)
+        location1 = Location(
+            name="Location 1",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+            asn=None,
+        )
+        location2 = Location(
+            name="Location 2",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+            asn=None,
+        )
 
         location1.validated_save()
 
@@ -412,13 +432,25 @@ class UniqueValidationRuleModelTestCase(TestCase):
         )
 
         location1 = Location(
-            name="Location 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"), asn=1, description="same"
+            name="Location 1",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+            asn=1,
+            description="same",
         )
         location2 = Location(
-            name="Location 2", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"), asn=2, description="same"
+            name="Location 2",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+            asn=2,
+            description="same",
         )
         location3 = Location(
-            name="Location 3", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"), asn=3, description="same"
+            name="Location 3",
+            location_type=LocationType.objects.get(composite_key="Region"),
+            status=Status.objects.get(composite_key="Active"),
+            asn=3,
+            description="same",
         )
 
         location1.validated_save()
