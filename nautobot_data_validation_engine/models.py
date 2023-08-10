@@ -88,7 +88,7 @@ class RegularExpressionValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.id])
 
@@ -160,7 +160,7 @@ class MinMaxValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.id])
 
@@ -227,7 +227,7 @@ class RequiredValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.id])
 
@@ -288,7 +288,7 @@ class UniqueValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
         return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.id])
 
@@ -346,6 +346,6 @@ class DataCompliance(PrimaryModel):
         """Return a string representation of this DataCompliance object."""
         return f"{self.compliance_class_name}: {self.validated_attribute} compliance for {self.validated_object}"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Return the absolute URL to this Audit object."""
         return reverse("plugins:nautobot_data_validation_engine:datacompliance", args=[self.pk])
