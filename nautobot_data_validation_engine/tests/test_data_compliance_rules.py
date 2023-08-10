@@ -1,6 +1,7 @@
 """DataComplianceRule test cases."""
 from django.test import TestCase
-from nautobot.dcim.models import Location
+from nautobot.dcim.models import Location, LocationType
+from nautobot.extras.models import Status
 from nautobot_data_validation_engine.custom_validators import ComplianceError, DataComplianceRule
 from nautobot_data_validation_engine.models import DataCompliance
 
@@ -37,7 +38,9 @@ class TestCompliance(TestCase):
     """Test DataComplianceRule methods."""
 
     def setUp(self):
-        self.s = Location(name="Test 1")
+        self.location_type = LocationType(name="Region")
+        self.location_type.save()
+        self.s = Location(name="Test 1", location_type=LocationType.objects.get(composite_key="Region"), status=Status.objects.get(composite_key="Active"))
         self.s.save()
         TestFailedDataComplianceRule(self.s).clean()
         TestPassedDataComplianceRule(self.s).clean()

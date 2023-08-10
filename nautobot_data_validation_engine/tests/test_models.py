@@ -3,6 +3,7 @@ Model test cases
 """
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import ValidationError
+from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from nautobot.dcim.models import Cable, Device, Location, PowerFeed
@@ -25,7 +26,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that a non-existent model field is rejected."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="afieldthatdoesnotexist",
             regular_expression="^.*$",
@@ -38,7 +38,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that a private model field is rejected."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="_name",  # _name is a private field
             regular_expression="^.*$",
@@ -51,7 +50,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that a non-editable model field is rejected."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="created",  # created has auto_now_add=True, making it editable=False
             regular_expression="^.*$",
@@ -64,7 +62,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="id",  # id is a uuid field which is blacklisted
             regular_expression="^.*$",
@@ -77,7 +74,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that an invalid regex string fails validation."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="name",
             regular_expression="[",  # this is an invalid regex pattern
@@ -90,7 +86,6 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
         """Test that an invalid regex string fails validation."""
         rule = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Device),
             field="name",
             regular_expression="[",  # this is an invalid regex pattern
@@ -112,7 +107,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a non-existent model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="afieldthatdoesnotexist",
             min=1,
@@ -125,7 +119,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a private model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(Cable),
             field="_abs_length",  # this is a private field used for caching a denormalized value
             min=1,
@@ -138,7 +131,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(Job),
             field="id",  # Job.id is an AutoField which is blacklisted
             min=1,
@@ -151,7 +143,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
         )
@@ -163,7 +154,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
@@ -177,7 +167,6 @@ class MinMaxValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
@@ -199,7 +188,6 @@ class RequiredValidationRuleModelTestCase(TestCase):
         """Test that a non-existent model field is rejected."""
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="afieldthatdoesnotexist",
         )
@@ -211,7 +199,6 @@ class RequiredValidationRuleModelTestCase(TestCase):
         """Test that a private model field is rejected."""
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Cable),
             field="_abs_length",  # this is a private field used for caching a denormalized value
         )
@@ -223,7 +210,6 @@ class RequiredValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Job),
             field="id",  # Job.id is an AutoField which is blacklisted
         )
@@ -235,7 +221,6 @@ class RequiredValidationRuleModelTestCase(TestCase):
         """Test that a field that is already required cannot be used."""
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="name",
         )
@@ -247,7 +232,6 @@ class RequiredValidationRuleModelTestCase(TestCase):
         """Test that Field(null=False, blank=True) can be used."""
         rule = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="physical_address",
         )
@@ -267,7 +251,6 @@ class UniqueValidationRuleModelTestCase(TestCase):
         """Test that a non-existent model field is rejected."""
         rule = UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="afieldthatdoesnotexist",
         )
@@ -279,7 +262,6 @@ class UniqueValidationRuleModelTestCase(TestCase):
         """Test that a private model field is rejected."""
         rule = UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Cable),
             field="_abs_length",  # this is a private field used for caching a denormalized value
         )
@@ -291,7 +273,6 @@ class UniqueValidationRuleModelTestCase(TestCase):
         """Test that a blacklisted model field is rejected."""
         rule = UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Job),
             field="id",  # Job.id is an AutoField which is blacklisted
         )
@@ -301,12 +282,17 @@ class UniqueValidationRuleModelTestCase(TestCase):
 
     def test_default_unique_field_cannot_be_used(self):
         """Test that a field that is already unique cannot be used."""
-        rule = UniqueValidationRule.objects.create(
-            name="Unique rule 1",
-            slug="unique-rule-1",
+        UniqueValidationRule.objects.create(
+            name="Unique rule existing",
             content_type=ContentType.objects.get_for_model(Location),
             field="name",
         )
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(IntegrityError):
+            rule = UniqueValidationRule.objects.create(
+                name="Unique rule 1",
+                content_type=ContentType.objects.get_for_model(Location),
+                field="name",
+            )
+
             rule.clean()

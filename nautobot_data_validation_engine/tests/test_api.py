@@ -40,28 +40,25 @@ class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
         "display",
         "id",
         "name",
-        "slug",
         "url",
     ]
+    choices_fields = {"content_type"}
 
     create_data = [
         {
             "name": "Regex rule 4",
-            "slug": "regex-rule-4",
             "content_type": "dcim.location",
             "field": "contact_name",
             "regular_expression": "^.*$",
         },
         {
             "name": "Regex rule 5",
-            "slug": "regex-rule-5",
             "content_type": "dcim.location",
             "field": "physical_address",
             "regular_expression": "^.*$",
         },
         {
             "name": "Regex rule 6",
-            "slug": "regex-rule-6",
             "content_type": "dcim.location",
             "field": "shipping_address",
             "regular_expression": "^.*$",
@@ -106,14 +103,13 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
         "display",
         "id",
         "name",
-        "slug",
         "url",
     ]
+    choices_fields = {"content_type"}
 
     create_data = [
         {
             "name": "Min max rule 4",
-            "slug": "min-max-rule-4",
             "content_type": "dcim.device",
             "field": "vc_position",
             "min": 0,
@@ -121,7 +117,6 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
         },
         {
             "name": "Min max rule 5",
-            "slug": "min-max-rule-5",
             "content_type": "dcim.device",
             "field": "vc_priority",
             "min": -5.6,
@@ -129,7 +124,6 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
         },
         {
             "name": "Min max rule 6",
-            "slug": "min-max-rule-6",
             "content_type": "dcim.device",
             "field": "position",
             "min": 5,
@@ -147,21 +141,18 @@ class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
         """
         MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 2",
-            slug="min-max-rule-2",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="max_utilization",
             min=1,
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 3",
-            slug="min-max-rule-3",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="voltage",
             min=1,
@@ -178,26 +169,23 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
         "display",
         "id",
         "name",
-        "slug",
         "url",
     ]
+    choices_fields = {"content_type"}
 
     create_data = [
         {
             "name": "Required rule 4",
-            "slug": "required-rule-4",
             "content_type": "dcim.location",
-            "field": "description",
+            "field": "physical_address",
         },
         {
             "name": "Required rule 5",
-            "slug": "required-rule-5",
             "content_type": "dcim.location",
             "field": "asn",
         },
         {
             "name": "Required rule 6",
-            "slug": "required-rule-6",
             "content_type": "dcim.location",
             "field": "facility",
         },
@@ -213,19 +201,16 @@ class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
         """
         RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="description",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 2",
-            slug="required-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 3",
-            slug="required-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
         )
@@ -241,28 +226,25 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
         "display",
         "id",
         "name",
-        "slug",
         "url",
     ]
+    choices_fields = {"content_type"}
 
     create_data = [
         {
             "name": "Unique rule 4",
-            "slug": "unique-rule-4",
             "content_type": "dcim.location",
-            "field": "description",
+            "field": "physical_address",
             "max_instances": 1,
         },
         {
             "name": "Unique rule 5",
-            "slug": "unique-rule-5",
             "content_type": "dcim.location",
             "field": "asn",
             "max_instances": 2,
         },
         {
             "name": "Unique rule 6",
-            "slug": "unique-rule-6",
             "content_type": "dcim.location",
             "field": "facility",
             "max_instances": 3,
@@ -279,21 +261,18 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
         """
         UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="description",
             max_instances=1,
         )
         UniqueValidationRule.objects.create(
             name="Unique rule 2",
-            slug="unique-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             max_instances=2,
         )
         UniqueValidationRule.objects.create(
             name="Unique rule 3",
-            slug="unique-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             max_instances=3,

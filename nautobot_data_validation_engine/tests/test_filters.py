@@ -2,8 +2,8 @@
 Filterset test cases
 """
 from django.contrib.contenttypes.models import ContentType
-from nautobot.core.testing.filters import FilterTestCases
 
+from nautobot.core.testing.filters import FilterTestCases
 from nautobot.dcim.models import Location, PowerFeed, Rack, Platform, Manufacturer
 
 from nautobot_data_validation_engine.filters import (
@@ -20,7 +20,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
     """
@@ -35,7 +35,6 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         """
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Rack),
             field="name",
             regular_expression="^ABC$",
@@ -43,7 +42,6 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 2",
-            slug="regex-rule-2",
             content_type=ContentType.objects.get_for_model(Location),
             field="description",
             regular_expression="DEF$",
@@ -51,7 +49,6 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 3",
-            slug="regex-rule-3",
             content_type=ContentType.objects.get_for_model(Location),
             field="comments",
             regular_expression="GHI",
@@ -66,7 +63,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
     def test_content_type(self):
         """Test content type lookups."""
         params = {"content_type": ["dcim.rack", "dcim.location"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
 
     def test_regular_expression(self):
         """Test regex lookups."""
@@ -85,7 +82,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the MinMaxValidationRule model
     """
@@ -100,7 +97,6 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         """
         MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
@@ -108,7 +104,6 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 2",
-            slug="min-max-rule-2",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="max_utilization",
             min=1,
@@ -116,7 +111,6 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 3",
-            slug="min-max-rule-3",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="voltage",
             min=1,
@@ -144,7 +138,7 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class RequiredValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the RequiredValidationRule model
     """
@@ -159,21 +153,18 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
         """
         RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             error_message="A",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 2",
-            slug="required-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             error_message="B",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 3",
-            slug="required-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             error_message="C",
@@ -200,7 +191,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
 
-class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class UniqueValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the UniqueValidationRule model
     """
@@ -215,7 +206,6 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         """
         UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
             content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             max_instances=1,
@@ -223,7 +213,6 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         UniqueValidationRule.objects.create(
             name="Unique rule 2",
-            slug="unique-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             max_instances=2,
@@ -231,7 +220,6 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         UniqueValidationRule.objects.create(
             name="Unique rule 3",
-            slug="unique-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             max_instances=3,
