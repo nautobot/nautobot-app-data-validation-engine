@@ -47,8 +47,10 @@ class RunRegisteredDataComplianceRules(Job):
         description="Not selecting any rules will run all rules listed.",
     )
 
-    def run(self, selected_data_compliance_rules):
+    def run(self, *args, **kwargs):
         """Run the validate function on all given DataComplianceRule classes."""
+        selected_data_compliance_rules = kwargs.get("selected_data_compliance_rules", None)
+
         compliance_classes = []
         compliance_classes.extend(get_data_compliance_rules())
 
@@ -73,7 +75,7 @@ class DeleteOrphanedDataComplianceData(Job):
     name = "Delete Orphaned Data Compliance Data"
     description = "Delete any Data Compliance objects where its validated object no longer exists."
 
-    def run(self):
+    def run(self, *args, **kwargs):
         """Delete DataCompliance objects where its validated_object no longer exists."""
         number_deleted = 0
         for obj in DataCompliance.objects.all():
