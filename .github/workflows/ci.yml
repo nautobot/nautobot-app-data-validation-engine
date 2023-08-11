@@ -82,8 +82,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.8"]
-        nautobot-version: ["1.5.2"]
+        python-version: ["3.10"]
+        nautobot-version: ["2.0.0-beta.2"]
     env:
       INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_PYTHON_VER: "${{ matrix.python-version }}"
       INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
@@ -119,7 +119,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10"]
         db-backend: ["postgresql"]
         nautobot-version: ["stable"]
         include:
