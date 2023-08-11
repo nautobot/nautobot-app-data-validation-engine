@@ -120,18 +120,8 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        db-backend: ["postgresql"]
-        nautobot-version: ["stable"]
-        include:
-          - python-version: "3.10"
-            db-backend: "postgresql"
-            nautobot-version: "2.0.0-beta.2"
-          - python-version: "3.10"
-            db-backend: "mysql"
-            nautobot-version: "2.0.0-beta.2"
-          - python-version: "3.8"
-            db-backend: "mysql"
-            nautobot-version: "stable"
+        db-backend: ["mysql", "postgresql"]
+        nautobot-version: ["2.0.0-beta.2"] #Add in nautobot version latest
     runs-on: "ubuntu-20.04"
     env:
       INVOKE_NAUTOBOT_DATA_VALIDATION_ENGINE_PYTHON_VER: "${{ matrix.python-version }}"
