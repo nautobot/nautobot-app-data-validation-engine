@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 
 from nautobot.core.forms import (
+    BootstrapMixin,
     BulkEditNullBooleanSelect,
     CSVMultipleContentTypeField,
     DynamicModelChoiceField,
@@ -200,7 +201,9 @@ class RequiredValidationRuleForm(NautobotModelForm):
 class RequiredValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
     """Base bulk edit form for the RequiredValidationRule model."""
 
-    pk = DynamicModelMultipleChoiceField(queryset=RequiredValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = DynamicModelMultipleChoiceField(
+        queryset=RequiredValidationRule.objects.all(), widget=forms.MultipleHiddenInput
+    )
     enabled = forms.NullBooleanField(
         required=False,
         widget=BulkEditNullBooleanSelect(),
@@ -316,7 +319,7 @@ class UniqueValidationRuleFilterForm(NautobotFilterForm):
 #
 
 
-class DataComplianceFilterForm(NautobotModelForm):
+class DataComplianceFilterForm(BootstrapMixin, forms.Form):
     """Form for DataCompliance instances."""
 
     model = DataCompliance
