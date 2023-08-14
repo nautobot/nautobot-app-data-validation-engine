@@ -3,7 +3,7 @@
 import django_tables2 as tables
 from django.utils.safestring import mark_safe
 
-from nautobot.core.tables import BaseTable, ToggleColumn
+from nautobot.core.tables import BaseTable, TagColumn, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,
@@ -24,6 +24,7 @@ class RegularExpressionValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    tags = TagColumn()
 
     class Meta(BaseTable.Meta):
         """Table metadata for the RegularExpressionValidationRule model."""
@@ -38,6 +39,7 @@ class RegularExpressionValidationRuleTable(BaseTable):
             "regular_expression",
             "context_processing",
             "error_message",
+            "tags",
         )
         default_columns = (
             "pk",
@@ -61,6 +63,7 @@ class MinMaxValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    tags = TagColumn()
 
     class Meta(BaseTable.Meta):
         """Table metadata for the MinMaxValidationRuleTable model."""
@@ -75,6 +78,7 @@ class MinMaxValidationRuleTable(BaseTable):
             "min",
             "max",
             "error_message",
+            "tags",
         )
         default_columns = (
             "pk",
@@ -98,6 +102,7 @@ class RequiredValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    tags = TagColumn()
 
     class Meta(BaseTable.Meta):
         """Table metadata for the RequiredValidationRuleTable model."""
@@ -110,6 +115,7 @@ class RequiredValidationRuleTable(BaseTable):
             "content_type",
             "field",
             "error_message",
+            "tags",
         )
         default_columns = (
             "pk",
@@ -131,6 +137,7 @@ class UniqueValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    tags = TagColumn()
 
     class Meta(BaseTable.Meta):
         """Table metadata for the UniqueValidationRuleTable model."""
@@ -144,6 +151,7 @@ class UniqueValidationRuleTable(BaseTable):
             "field",
             "max_instances",
             "error_message",
+            "tags",
         )
         default_columns = (
             "pk",
