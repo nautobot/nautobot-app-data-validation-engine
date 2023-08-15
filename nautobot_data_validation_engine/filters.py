@@ -4,7 +4,7 @@ import django_filters as filters
 from django.db import models
 
 from nautobot.apps.filters import NautobotFilterSet
-from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter, TagFilter
+from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
