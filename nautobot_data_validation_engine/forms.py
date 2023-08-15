@@ -108,7 +108,7 @@ class RegularExpressionValidationRuleFilterForm(NautobotFilterForm):
         ),
         required=False,
     )
-    tag = TagFilterField(model)
+    tags = TagFilterField(model)
 
 
 #
@@ -167,7 +167,7 @@ class MinMaxValidationRuleFilterForm(NautobotFilterForm):
     )
     min = forms.IntegerField(required=False)
     max = forms.IntegerField(required=False)
-    tag = TagFilterField(model)
+    tags = TagFilterField(model)
 
 
 #
@@ -238,7 +238,7 @@ class RequiredValidationRuleFilterForm(NautobotFilterForm):
         ),
         required=False,
     )
-    tag = TagFilterField(model)
+    tags = TagFilterField(model)
 
 
 #
@@ -311,7 +311,7 @@ class UniqueValidationRuleFilterForm(NautobotFilterForm):
         required=False,
     )
     max_instances = forms.IntegerField(required=False)
-    tag = TagFilterField(model)
+    tags = TagFilterField(model)
 
 
 #
