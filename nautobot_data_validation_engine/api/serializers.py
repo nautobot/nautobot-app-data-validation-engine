@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from nautobot.core.api import ContentTypeField
 from nautobot.extras.api.serializers import NautobotModelSerializer
+from nautobot.extras.api.mixins import TaggedModelSerializerMixin
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
@@ -16,7 +17,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
+class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `RegularExpressionValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -42,10 +43,11 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
             "error_message",
             "created",
             "last_updated",
+            "tags",
         ]
 
 
-class MinMaxValidationRuleSerializer(NautobotModelSerializer):
+class MinMaxValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `MinMaxValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -71,10 +73,11 @@ class MinMaxValidationRuleSerializer(NautobotModelSerializer):
             "error_message",
             "created",
             "last_updated",
+            "tags",
         ]
 
 
-class RequiredValidationRuleSerializer(NautobotModelSerializer):
+class RequiredValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `RequiredValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -98,10 +101,11 @@ class RequiredValidationRuleSerializer(NautobotModelSerializer):
             "error_message",
             "created",
             "last_updated",
+            "tags",
         ]
 
 
-class UniqueValidationRuleSerializer(NautobotModelSerializer):
+class UniqueValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `UniqueValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -126,6 +130,7 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
             "error_message",
             "created",
             "last_updated",
+            "tags",
         ]
 
 

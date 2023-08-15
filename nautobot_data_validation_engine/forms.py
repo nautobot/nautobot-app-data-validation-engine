@@ -3,16 +3,24 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 
-from nautobot.extras.utils import FeatureQuery
 from nautobot.core.forms import (
     BootstrapMixin,
-    BulkEditForm,
     BulkEditNullBooleanSelect,
     CSVMultipleContentTypeField,
+    DynamicModelChoiceField,
+    DynamicModelMultipleChoiceField,
     MultipleContentTypeField,
     StaticSelect2,
+    TagFilterField,
 )
 from nautobot.core.forms.constants import BOOLEAN_WITH_BLANK_CHOICES
+from nautobot.extras.forms import (
+    NautobotBulkEditForm,
+    NautobotFilterForm,
+    NautobotModelForm,
+    TagsBulkEditFormMixin,
+)
+from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,
@@ -28,10 +36,10 @@ from nautobot_data_validation_engine.models import (
 #
 
 
-class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
+class RegularExpressionValidationRuleForm(NautobotModelForm):
     """Base model form for the RegularExpressionValidationRule model."""
 
-    content_type = forms.ModelChoiceField(
+    content_type = DynamicModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
         ),
@@ -49,13 +57,14 @@ class RegularExpressionValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "regular_expression",
             "context_processing",
             "error_message",
+            "tags",
         ]
 
 
-class RegularExpressionValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
+class RegularExpressionValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
     """Base bulk edit form for the RegularExpressionValidationRule model."""
 
-    pk = forms.ModelMultipleChoiceField(
+    pk = DynamicModelMultipleChoiceField(
         queryset=RegularExpressionValidationRule.objects.all(), widget=forms.MultipleHiddenInput
     )
     enabled = forms.NullBooleanField(
@@ -72,10 +81,11 @@ class RegularExpressionValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Bulk edit form metadata for the RegularExpressionValidationRule model."""
 
+        fields = ["tags"]
         nullable_fields = ["error_message"]
 
 
-class RegularExpressionValidationRuleFilterForm(BootstrapMixin, forms.Form):
+class RegularExpressionValidationRuleFilterForm(NautobotFilterForm):
     """Base filter form for the RegularExpressionValidationRule model."""
 
     model = RegularExpressionValidationRule
@@ -98,6 +108,7 @@ class RegularExpressionValidationRuleFilterForm(BootstrapMixin, forms.Form):
         ),
         required=False,
     )
+    tag = TagFilterField(model)
 
 
 #
@@ -105,10 +116,10 @@ class RegularExpressionValidationRuleFilterForm(BootstrapMixin, forms.Form):
 #
 
 
-class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
+class MinMaxValidationRuleForm(NautobotModelForm):
     """Base model form for the MinMaxValidationRule model."""
 
-    content_type = forms.ModelChoiceField(
+    content_type = DynamicModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
         ),
@@ -118,13 +129,13 @@ class MinMaxValidationRuleForm(BootstrapMixin, forms.ModelForm):
         """Form metadata for the MinMaxValidationRule model."""
 
         model = MinMaxValidationRule
-        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message"]
+        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message", "tags"]
 
 
-class MinMaxValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
+class MinMaxValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
     """Base bulk edit form for the MinMaxValidationRule model."""
 
-    pk = forms.ModelMultipleChoiceField(queryset=MinMaxValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = DynamicModelMultipleChoiceField(queryset=MinMaxValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
     enabled = forms.NullBooleanField(
         required=False,
         widget=BulkEditNullBooleanSelect(),
@@ -136,10 +147,11 @@ class MinMaxValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Bulk edit form metadata for the MinMaxValidationRule model."""
 
+        fields = ["tags"]
         nullable_fields = ["error_message"]
 
 
-class MinMaxValidationRuleFilterForm(BootstrapMixin, forms.Form):
+class MinMaxValidationRuleFilterForm(NautobotFilterForm):
     """Base filter form for the MinMaxValidationRule model."""
 
     model = MinMaxValidationRule
@@ -155,6 +167,7 @@ class MinMaxValidationRuleFilterForm(BootstrapMixin, forms.Form):
     )
     min = forms.IntegerField(required=False)
     max = forms.IntegerField(required=False)
+    tag = TagFilterField(model)
 
 
 #
@@ -162,10 +175,10 @@ class MinMaxValidationRuleFilterForm(BootstrapMixin, forms.Form):
 #
 
 
-class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
+class RequiredValidationRuleForm(NautobotModelForm):
     """Base model form for the RequiredValidationRule model."""
 
-    content_type = forms.ModelChoiceField(
+    content_type = DynamicModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
         ),
@@ -181,13 +194,16 @@ class RequiredValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "content_type",
             "field",
             "error_message",
+            "tags",
         ]
 
 
-class RequiredValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
+class RequiredValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
     """Base bulk edit form for the RequiredValidationRule model."""
 
-    pk = forms.ModelMultipleChoiceField(queryset=RequiredValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = DynamicModelMultipleChoiceField(
+        queryset=RequiredValidationRule.objects.all(), widget=forms.MultipleHiddenInput
+    )
     enabled = forms.NullBooleanField(
         required=False,
         widget=BulkEditNullBooleanSelect(),
@@ -197,10 +213,11 @@ class RequiredValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Bulk edit form metadata for the RequiredValidationRule model."""
 
+        fields = ["tags"]
         nullable_fields = ["error_message"]
 
 
-class RequiredValidationRuleFilterForm(BootstrapMixin, forms.Form):
+class RequiredValidationRuleFilterForm(NautobotFilterForm):
     """Base filter form for the RequiredValidationRule model."""
 
     model = RequiredValidationRule
@@ -221,6 +238,7 @@ class RequiredValidationRuleFilterForm(BootstrapMixin, forms.Form):
         ),
         required=False,
     )
+    tag = TagFilterField(model)
 
 
 #
@@ -228,10 +246,10 @@ class RequiredValidationRuleFilterForm(BootstrapMixin, forms.Form):
 #
 
 
-class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
+class UniqueValidationRuleForm(NautobotModelForm):
     """Base model form for the UniqueValidationRule model."""
 
-    content_type = forms.ModelChoiceField(
+    content_type = DynamicModelChoiceField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
         ),
@@ -248,13 +266,14 @@ class UniqueValidationRuleForm(BootstrapMixin, forms.ModelForm):
             "field",
             "max_instances",
             "error_message",
+            "tags",
         ]
 
 
-class UniqueValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
+class UniqueValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
     """Base bulk edit form for the UniqueValidationRule model."""
 
-    pk = forms.ModelMultipleChoiceField(queryset=UniqueValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = DynamicModelMultipleChoiceField(queryset=UniqueValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
     enabled = forms.NullBooleanField(
         required=False,
         widget=BulkEditNullBooleanSelect(),
@@ -265,10 +284,11 @@ class UniqueValidationRuleBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Bulk edit form metadata for the UniqueValidationRule model."""
 
+        fields = ["tags"]
         nullable_fields = ["error_message"]
 
 
-class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
+class UniqueValidationRuleFilterForm(NautobotFilterForm):
     """Base filter form for the UniqueValidationRule model."""
 
     model = UniqueValidationRule
@@ -291,6 +311,7 @@ class UniqueValidationRuleFilterForm(BootstrapMixin, forms.Form):
         required=False,
     )
     max_instances = forms.IntegerField(required=False)
+    tag = TagFilterField(model)
 
 
 #

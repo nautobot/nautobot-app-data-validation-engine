@@ -1,10 +1,11 @@
 """Django filters."""
 
-from nautobot.apps.filters import NautobotFilterSet
-from nautobot.extras.utils import FeatureQuery
-from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter
 import django_filters as filters
 from django.db import models
+
+from nautobot.apps.filters import NautobotFilterSet
+from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter, TagFilter
+from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
@@ -31,6 +32,7 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     content_type = ContentTypeMultipleChoiceFilter(
         choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
+    tag = TagFilter()
 
     class Meta:
         """Filterset metadata for the RegularExpressionValidationRule model."""
@@ -63,6 +65,7 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
     content_type = ContentTypeMultipleChoiceFilter(
         choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
+    tag = TagFilter()
 
     class Meta:
         """Filterset metadata for the MinMaxValidationRuleFilterSet model."""
@@ -95,6 +98,7 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
     content_type = ContentTypeMultipleChoiceFilter(
         choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
+    tag = TagFilter()
 
     class Meta:
         """Filterset metadata for the RequiredValidationRuleFilterSet model."""
@@ -125,6 +129,7 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
     content_type = ContentTypeMultipleChoiceFilter(
         choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
     )
+    tag = TagFilter()
 
     class Meta:
         """Filterset metadata for the UniqueValidationRuleFilterSet model."""
