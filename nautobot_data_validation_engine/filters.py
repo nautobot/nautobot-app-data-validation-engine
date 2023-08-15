@@ -38,16 +38,7 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the RegularExpressionValidationRule model."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "id",
-            "name",
-            "regular_expression",
-            "context_processing",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class MinMaxValidationRuleFilterSet(NautobotFilterSet):
@@ -71,16 +62,7 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the MinMaxValidationRuleFilterSet model."""
 
         model = MinMaxValidationRule
-        fields = [
-            "id",
-            "name",
-            "min",
-            "max",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class RequiredValidationRuleFilterSet(NautobotFilterSet):
@@ -104,14 +86,7 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the RequiredValidationRuleFilterSet model."""
 
         model = RequiredValidationRule
-        fields = [
-            "id",
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class UniqueValidationRuleFilterSet(NautobotFilterSet):
@@ -135,15 +110,7 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the UniqueValidationRuleFilterSet model."""
 
         model = UniqueValidationRule
-        fields = [
-            "id",
-            "name",
-            "max_instances",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 #
