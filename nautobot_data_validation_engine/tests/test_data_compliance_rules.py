@@ -18,7 +18,7 @@ class TestFailedDataComplianceRule(DataComplianceRule):
         raise ComplianceError(
             {
                 "tenant": "Tenant",
-                "location": "Location",
+                "description": "Description",
                 "name": "Name",
                 "status": "Status",
             }
