@@ -117,16 +117,19 @@ class BaseValidator(PluginCustomValidator):
         # Unique rules
         for rule in UniqueValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
-            if (
-                field_value is not None
-                and obj.__class__._default_manager.filter(**{rule.field: field_value}).count() >= rule.max_instances
-            ):
-                self.validation_error(
-                    {
-                        rule.field: rule.error_message
-                        or f"There can only be {rule.max_instances} instance{pluralize(rule.max_instances)} with this value."
-                    }
+            if field_value is not None:
+                # Exclude the current object from the count
+                count_excluding_current = (
+                    obj.__class__._default_manager.filter(**{rule.field: field_value}).exclude(pk=obj.pk).count()
                 )
+
+                if count_excluding_current >= rule.max_instances:
+                    self.validation_error(
+                        {
+                            rule.field: rule.error_message
+                            or f"There can only be {rule.max_instances} instance{pluralize(rule.max_instances)} with this value."
+                        }
+                    )
 
         # DataComplianceRules
         for compliance_class in get_data_compliance_rules_map().get(self.model, []):
