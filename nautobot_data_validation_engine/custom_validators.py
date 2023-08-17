@@ -117,7 +117,7 @@ class BaseValidator(PluginCustomValidator):
         # Unique rules
         for rule in UniqueValidationRule.objects.get_for_model(self.model):
             field_value = getattr(obj, rule.field)
-            if field_value is not None:
+            if field_value:
                 # Exclude the current object from the count
                 count_excluding_current = (
                     obj.__class__._default_manager.filter(**{rule.field: field_value}).exclude(pk=obj.pk).count()
