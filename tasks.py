@@ -38,7 +38,7 @@ namespace = Collection("nautobot_data_validation_engine")
 namespace.configure(
     {
         "nautobot_data_validation_engine": {
-            "nautobot_ver": "2.0.0-beta.2",
+            "nautobot_ver": "2.0.0-rc.1",
             "project_name": "nautobot_data_validation_engine",
             "python_ver": "3.10",
             "local": False,

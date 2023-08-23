@@ -7,7 +7,7 @@
 # !!! USE CAUTION WHEN MODIFYING LINES BELOW
 
 # Accepts a desired Nautobot version as build argument, default to 1.5
-ARG NAUTOBOT_VER="2.0.0-beta.2"
+ARG NAUTOBOT_VER="2.0.0-rc.1"
 
 # Accepts a desired Python version as build argument, default to 3.8
 ARG PYTHON_VER
@@ -26,7 +26,7 @@ ENV NAUTOBOT_ROOT ${NAUTOBOT_ROOT}
 # and CI and local development may have a newer version of Poetry
 # Since this is only used for development and we don't ship this container, pinning Poetry back is not expressly necessary
 # We also don't need virtual environments in container
-RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.5.1 python3 - && \
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
   poetry config virtualenvs.create false
 
 # !!! USE CAUTION WHEN MODIFYING LINES ABOVE
