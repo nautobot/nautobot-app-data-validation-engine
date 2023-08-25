@@ -1796,7 +1796,7 @@ files = [
 
 [[package]]
 name = "nautobot"
-version = "2.0.0rc1"
+version = "2.0.0rc2"
 description = "Source of truth and network automation platform."
 optional = false
 python-versions = ">=3.8,<3.12"
@@ -1855,8 +1855,8 @@ sso = ["social-auth-core[openidconnect,saml] (>=4.4.2,<4.5.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/nautobot/nautobot.git"
-reference = "v2.0.0-rc.1"
-resolved_reference = "f7568dc83462d21f2ce91af7b83d54f110099ec0"
+reference = "v2.0.0-rc.2"
+resolved_reference = "40352694518b14bc1cb6e479b9eacc46d1dd1e87"
 
 [[package]]
 name = "netaddr"
@@ -3216,4 +3216,4 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "7662d0b07b5360688a7998ca60dd2c40f61434626b08c306a18dfa2d3b93b8ae"
+content-hash = "e24cdbce2c65715ad5dc1fce1a18c13a2a4b7a88753f29b209652dc2e1f10653"
