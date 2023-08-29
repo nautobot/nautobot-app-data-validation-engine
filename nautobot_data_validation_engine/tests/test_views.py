@@ -315,7 +315,7 @@ class DataComplianceObjectTestCase(TestCase):
         self.assertIsInstance(result["table"], DataComplianceTableTab)
 
     @patch("nautobot.core.views.generic.ObjectView.dispatch")
-    def test_dispatch(self, mocked_dispatch):  # pylint: disable=R0201
+    def test_dispatch(self, mocked_dispatch):
         view = DataComplianceObjectView()
         mock_request = MagicMock()
         kwargs = {"model": "dcim.location", "other_arg": "other_arg", "another_arg": "another_arg"}

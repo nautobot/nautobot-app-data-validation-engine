@@ -191,7 +191,7 @@ class DataComplianceTable(BaseTable):
     validated_object = tables.RelatedLinkColumn()
     validated_attribute = ValidatedAttributeColumn()
 
-    def order_validated_object(self, queryset, is_descending):  # pylint:disable=R0201
+    def order_validated_object(self, queryset, is_descending):
         """Reorder table by string representation of validated_object."""
         qs = queryset.order_by(("-" if is_descending else "") + "validated_object_str")
         return (qs, True)
