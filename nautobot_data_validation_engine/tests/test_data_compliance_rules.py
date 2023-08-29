@@ -11,7 +11,7 @@ class TestFailedDataComplianceRule(DataComplianceRule):
 
     model = "dcim.location"
 
-    def audit(self):  # pylint: disable=R0201
+    def audit(self):
         """Raises an AuditError."""
         # this should create 4 different Audits, one for each
         # attribute
