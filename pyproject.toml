@@ -18,8 +18,6 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
-# Required for Python 3.7 for now. See: https://stackoverflow.com/a/73932581/194311
-importlib-metadata = "4.13.0"
 # Used for local development
 nautobot = {git = "https://github.com/nautobot/nautobot.git", rev = "v2.0.0-rc.1"}
 
