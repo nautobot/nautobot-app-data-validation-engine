@@ -56,7 +56,7 @@ nautobot = ["nautobot"]
 
 [tool.black]
 line-length = 120
-target-version = ['py37']
+target-versions = ["py38", "py39", "py310", "py311"]
 include = '\.pyi?$'
 exclude = '''
 (
