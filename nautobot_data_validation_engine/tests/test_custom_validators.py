@@ -39,8 +39,8 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -56,8 +56,8 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="ABC",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         try:
@@ -75,9 +75,9 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             description=None,  # empty value not allowed by the regex
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -94,9 +94,9 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="AMS-195",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             description="AMS-195 is really cool",  # This should match `AMS.*`
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         try:
@@ -115,9 +115,9 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="AMS-195",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             description="I don't like AMS-195",  # This should *not* match `AMS.*`
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -134,8 +134,8 @@ class RegularExpressionValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="AMS-195",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -164,9 +164,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=None,  # empty value not allowed by the rule
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -183,9 +183,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude="foobar",  # wrong type
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -202,9 +202,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=4,  # less than min of 5
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -221,9 +221,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=11,  # more than max of 10
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -240,9 +240,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=-5,
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         try:
@@ -261,9 +261,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=30,
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         try:
@@ -282,9 +282,9 @@ class MinMaxValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="does not match the regex",
-            location_type=LocationType.objects.get(composite_key="Region"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
             latitude=8,  # within bounds
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         try:
@@ -314,8 +314,8 @@ class RequiredValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="Location 1 does not have a description",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
 
         with self.assertRaises(ValidationError):
@@ -330,8 +330,8 @@ class RequiredValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="Location 2 does have a description",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             description="Location 2",
         )
 
@@ -349,8 +349,8 @@ class RequiredValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="Location 3 has an empty string description",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             description="",
         )
 
@@ -366,15 +366,15 @@ class RequiredValidationRuleModelTestCase(TestCase):
 
         location = Location(
             name="Location 3",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
         location.save()
 
         rack = Rack(
             name="Rack 1",
             location=location,
-            status=Status.objects.get(composite_key="Active"),
+            status=Status.objects.get_by_natural_key("Active"),
             serial=0,  # test that zero passes validation
         )
 
@@ -405,14 +405,14 @@ class UniqueValidationRuleModelTestCase(TestCase):
 
         location1 = Location(
             name="Location 1",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             asn=None,
         )
         location2 = Location(
             name="Location 2",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             asn=None,
         )
 
@@ -433,22 +433,22 @@ class UniqueValidationRuleModelTestCase(TestCase):
 
         location1 = Location(
             name="Location 1",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             asn=1,
             description="same",
         )
         location2 = Location(
             name="Location 2",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             asn=2,
             description="same",
         )
         location3 = Location(
             name="Location 3",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
             asn=3,
             description="same",
         )

@@ -281,8 +281,8 @@ class DataComplianceTestCase(
         location_type.validated_save()
         s = Location(
             name="Test Location 1",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
         s.save()
         for _ in range(4):
@@ -298,8 +298,8 @@ class DataComplianceObjectTestCase(TestCase):
         location_type.validated_save()
         s = Location(
             name="Test Location 1",
-            location_type=LocationType.objects.get(composite_key="Region"),
-            status=Status.objects.get(composite_key="Active"),
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
         )
         s.save()
         t = TestFailedDataComplianceRule(s)
