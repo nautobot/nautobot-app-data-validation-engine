@@ -6,7 +6,7 @@ This document describes all new features and changes in the release `2.2`. The f
 
 This release adds support for Nautobot v1.6 LTM which also removes support for Python 3.7.
 
-## [v2.2.0] - 2023-09-07
+## [v2.2.0] - 2023-09-08
 
 ### Changed
 
