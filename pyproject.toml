@@ -19,7 +19,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
 # Used for local development
-nautobot = {git = "https://github.com/nautobot/nautobot.git", rev = "v2.0.0-rc.1"}
+nautobot = ">=2.0.0rc1,<2.0.0rc99"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
