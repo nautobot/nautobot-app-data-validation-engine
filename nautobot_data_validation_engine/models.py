@@ -44,7 +44,7 @@ class ValidationRule(PrimaryModel):
     )
     enabled = models.BooleanField(default=True)
     error_message = models.CharField(
-        max_length=255, null=True, blank=True, help_text="Optional error message to display when validation fails."
+        max_length=255, blank=True, default="", help_text="Optional error message to display when validation fails."
     )
 
     objects = ValidationRuleManager.as_manager()
@@ -324,11 +324,11 @@ class DataCompliance(PrimaryModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
-    validated_object_str = models.CharField(max_length=200, blank=True, null=True)
-    validated_attribute = models.CharField(max_length=100, blank=True, null=True)
-    validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
+    validated_object_str = models.CharField(max_length=200, blank=True, default="")
+    validated_attribute = models.CharField(max_length=100, blank=True, default="")
+    validated_attribute_value = models.CharField(max_length=200, blank=True, default="")
     valid = models.BooleanField(blank=False, null=False)
-    message = models.TextField(blank=True, null=True)
+    message = models.TextField(blank=True, default="")
 
     class Meta:
         """Meta class for Audit model."""

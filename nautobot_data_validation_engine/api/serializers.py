@@ -31,20 +31,7 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedM
         """Serializer metadata for RegularExpressionValidationRule objects."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "content_type",
-            "field",
-            "regular_expression",
-            "context_processing",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class MinMaxValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
@@ -61,20 +48,7 @@ class MinMaxValidationRuleSerializer(NautobotModelSerializer, TaggedModelSeriali
         """Serializer metadata for MinMaxValidationRule objects."""
 
         model = MinMaxValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "content_type",
-            "field",
-            "min",
-            "max",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class RequiredValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
@@ -91,18 +65,7 @@ class RequiredValidationRuleSerializer(NautobotModelSerializer, TaggedModelSeria
         """Serializer metadata for RequiredValidationRule objects."""
 
         model = RequiredValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "content_type",
-            "field",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class UniqueValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
@@ -119,19 +82,7 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer, TaggedModelSeriali
         """Serializer metadata for UniqueValidationRule objects."""
 
         model = UniqueValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "content_type",
-            "field",
-            "max_instances",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class DataComplianceSerializer(NautobotModelSerializer):
