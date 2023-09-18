@@ -125,10 +125,10 @@ jobs:
         include:
           - python-version: "3.11"
             db-backend: "postgresql"
-            nautobot-version: "2.0.0-rc.1"  # Min nautobot version
+            nautobot-version: "2.0.0-rc.2"  # Min nautobot version
           - python-version: "3.8"
             db-backend: "mysql"
-            nautobot-version: "2.0.0-rc.1"  # Min nautobot version
+            nautobot-version: "2.0.0-rc.2"  # Min nautobot version
           - python-version: "3.11"
             db-backend: "mysql"
             nautobot-version: "2.0.0-rc.3"  # Change to nautobot version stable
