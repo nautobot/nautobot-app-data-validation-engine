@@ -2411,13 +2411,13 @@ with-django = ["Django"]
 
 [[package]]
 name = "pylint-nautobot"
-version = "0.2.0"
+version = "0.2.1"
 description = "Custom Pylint Rules for Nautobot"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "pylint_nautobot-0.2.0-py3-none-any.whl", hash = "sha256:178b7963addedd549d39decb7d05ef5c653b24165d1f9f22d77e423eb64b5521"},
-    {file = "pylint_nautobot-0.2.0.tar.gz", hash = "sha256:54ba24d3c9f9c814e5616c079c3ae0eb0c61f389f8aed42b6a9dca45107a441d"},
+    {file = "pylint_nautobot-0.2.1-py3-none-any.whl", hash = "sha256:6656cd571d6e997e6d7e37631308f1de25949a596a8309ab6d47a2e387c892c6"},
+    {file = "pylint_nautobot-0.2.1.tar.gz", hash = "sha256:2872106a29236b0e31293efe4a2d02a66527c67f33437f3e2345251c4cf71b4d"},
 ]
 
 [package.dependencies]
