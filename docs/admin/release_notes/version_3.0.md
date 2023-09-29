@@ -1,19 +1,12 @@
-# v2.3 Release Notes
+# v3.0 Release Notes
 
-This document describes all new features and changes in the release `2.3`. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This document describes all new features and changes in the release `3.0`. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Release Overview
 
 This release adds support for Nautobot v2.0.0.
 
-## [v2.3.0] - 2023-09-29
-
-### Changed
-
-- All Nautobot 2.0.0 compatibility changes from `v2.3.0-rc.1`
-- Dependency updates
-
-## [v2.3.0-rc.1] - 2023-09-14
+## [v3.0.0] - 2023-09-29
 
 ### Added
 

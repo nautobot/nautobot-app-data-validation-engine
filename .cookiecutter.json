@@ -15,7 +15,7 @@
     "nautobot_version": "latest",
     "camel_name": "NautobotDataValidationEngine",
     "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
-    "version": "2.3.0",
+    "version": "3.0.0",
     "model_class_name": "None",
     "open_source_license": "Apache-2.0",
     "docs_base_url": "https://docs.nautobot.com",
