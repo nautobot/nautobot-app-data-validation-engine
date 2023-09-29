@@ -11,7 +11,7 @@ from nautobot.apps.views import (
     ObjectDestroyViewMixin,
     ObjectBulkDestroyViewMixin,
 )
-from nautobot.utilities.paginator import EnhancedPaginator, get_paginate_count
+from nautobot.core.views.paginator import EnhancedPaginator, get_paginate_count
 
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
@@ -32,7 +32,6 @@ from nautobot_data_validation_engine.models import (
 class RegularExpressionValidationRuleUIViewSet(NautobotUIViewSet):
     """Views for the RegularExpressionValidationRule model."""
 
-    bulk_create_form_class = forms.RegularExpressionValidationRuleCSVForm
     bulk_update_form_class = forms.RegularExpressionValidationRuleBulkEditForm
     filterset_class = filters.RegularExpressionValidationRuleFilterSet
     filterset_form_class = forms.RegularExpressionValidationRuleFilterForm
@@ -50,7 +49,6 @@ class RegularExpressionValidationRuleUIViewSet(NautobotUIViewSet):
 class MinMaxValidationRuleUIViewSet(NautobotUIViewSet):
     """Views for the MinMaxValidationRuleUIViewSet model."""
 
-    bulk_create_form_class = forms.MinMaxValidationRuleCSVForm
     bulk_update_form_class = forms.MinMaxValidationRuleBulkEditForm
     filterset_class = filters.MinMaxValidationRuleFilterSet
     filterset_form_class = forms.MinMaxValidationRuleFilterForm
@@ -68,7 +66,6 @@ class MinMaxValidationRuleUIViewSet(NautobotUIViewSet):
 class RequiredValidationRuleUIViewSet(NautobotUIViewSet):
     """Views for the RequiredValidationRuleUIViewSet model."""
 
-    bulk_create_form_class = forms.RequiredValidationRuleCSVForm
     bulk_update_form_class = forms.RequiredValidationRuleBulkEditForm
     filterset_class = filters.RequiredValidationRuleFilterSet
     filterset_form_class = forms.RequiredValidationRuleFilterForm
@@ -86,7 +83,6 @@ class RequiredValidationRuleUIViewSet(NautobotUIViewSet):
 class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
     """Views for the UniqueValidationRuleUIViewSet model."""
 
-    bulk_create_form_class = forms.UniqueValidationRuleCSVForm
     bulk_update_form_class = forms.UniqueValidationRuleBulkEditForm
     filterset_class = filters.UniqueValidationRuleFilterSet
     filterset_form_class = forms.UniqueValidationRuleFilterForm

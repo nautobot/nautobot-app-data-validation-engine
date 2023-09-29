@@ -24,7 +24,7 @@ from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
 from nautobot.extras.plugins import CustomValidator, PluginCustomValidator
 from nautobot.extras.registry import registry
-from nautobot.utilities.utils import render_jinja2
+from nautobot.core.utils.data import render_jinja2
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,

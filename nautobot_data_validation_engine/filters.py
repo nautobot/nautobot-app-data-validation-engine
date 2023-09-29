@@ -1,10 +1,11 @@
 """Django filters."""
 
-from nautobot.apps.filters import NautobotFilterSet
-from nautobot.extras.utils import FeatureQuery
-from nautobot.utilities.filters import ContentTypeMultipleChoiceFilter, SearchFilter
 import django_filters as filters
 from django.db import models
+
+from nautobot.apps.filters import NautobotFilterSet
+from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter
+from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
@@ -21,7 +22,6 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -37,17 +37,7 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the RegularExpressionValidationRule model."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "regular_expression",
-            "context_processing",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class MinMaxValidationRuleFilterSet(NautobotFilterSet):
@@ -56,7 +46,6 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -71,17 +60,7 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the MinMaxValidationRuleFilterSet model."""
 
         model = MinMaxValidationRule
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "min",
-            "max",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class RequiredValidationRuleFilterSet(NautobotFilterSet):
@@ -90,7 +69,6 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "equals",
             "content_type__model": "equals",
@@ -105,15 +83,7 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the RequiredValidationRuleFilterSet model."""
 
         model = RequiredValidationRule
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 class UniqueValidationRuleFilterSet(NautobotFilterSet):
@@ -122,7 +92,6 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
     q = SearchFilter(
         filter_predicates={
             "name": "icontains",
-            "slug": "icontains",
             "error_message": "icontains",
             "content_type__app_label": "icontains",
             "content_type__model": "icontains",
@@ -137,16 +106,7 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
         """Filterset metadata for the UniqueValidationRuleFilterSet model."""
 
         model = UniqueValidationRule
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "max_instances",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-        ]
+        fields = "__all__"
 
 
 #

@@ -10,7 +10,7 @@ from django.shortcuts import reverse
 
 from nautobot.core.models.generics import PrimaryModel
 from nautobot.extras.utils import FeatureQuery, extras_features
-from nautobot.utilities.querysets import RestrictedQuerySet
+from nautobot.core.models.querysets import RestrictedQuerySet
 
 
 def validate_regex(value):
@@ -39,13 +39,12 @@ class ValidationRule(PrimaryModel):
     """Base model for all validation engine rule models."""
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
     content_type = models.ForeignKey(
         to=ContentType, on_delete=models.CASCADE, limit_choices_to=FeatureQuery("custom_validators")
     )
     enabled = models.BooleanField(default=True)
     error_message = models.CharField(
-        max_length=255, null=True, blank=True, help_text="Optional error message to display when validation fails."
+        max_length=255, blank=True, default="", help_text="Optional error message to display when validation fails."
     )
 
     objects = ValidationRuleManager.as_manager()
@@ -81,7 +80,6 @@ class RegularExpressionValidationRule(ValidationRule):
         help_text="When enabled, the regular expression value is first processed as a Jinja2 template with access to the context of the data being validated in a variable named <code>object</code>.",
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "regular_expression", "error_message"]
     clone_fields = ["enabled", "content_type", "regular_expression", "error_message"]
 
     class Meta:
@@ -90,21 +88,9 @@ class RegularExpressionValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.slug])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.regular_expression,
-            self.error_message,
-        )
+        return reverse("plugins:nautobot_data_validation_engine:regularexpressionvalidationrule", args=[self.id])
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -166,7 +152,6 @@ class MinMaxValidationRule(ValidationRule):
         null=True, blank=True, help_text="When set, apply a maximum value contraint to the value of the model field."
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "min", "max", "error_message"]
     clone_fields = ["enabled", "content_type", "min", "max", "error_message"]
 
     class Meta:
@@ -175,22 +160,9 @@ class MinMaxValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.slug])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.min,
-            self.max,
-            self.error_message,
-        )
+        return reverse("plugins:nautobot_data_validation_engine:minmaxvalidationrule", args=[self.id])
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -247,7 +219,6 @@ class RequiredValidationRule(ValidationRule):
         max_length=50,
     )
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "error_message"]
     clone_fields = ["enabled", "content_type", "error_message"]
 
     class Meta:
@@ -256,20 +227,9 @@ class RequiredValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.slug])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.error_message,
-        )
+        return reverse("plugins:nautobot_data_validation_engine:requiredvalidationrule", args=[self.id])
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -320,7 +280,6 @@ class UniqueValidationRule(ValidationRule):
     )
     max_instances = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
 
-    csv_headers = ["name", "slug", "enabled", "content_type", "field", "max_instances", "error_message"]
     clone_fields = ["enabled", "content_type", "max_instances", "error_message"]
 
     class Meta:
@@ -329,21 +288,9 @@ class UniqueValidationRule(ValidationRule):
         ordering = ("name",)
         unique_together = [["content_type", "field"]]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Absolute url for the instance."""
-        return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.slug])
-
-    def to_csv(self):
-        """Return tuple representing the instance, which this used for CSV export."""
-        return (
-            self.name,
-            self.slug,
-            self.enabled,
-            f"{self.content_type.app_label}.{self.content_type.model}",
-            self.field,
-            self.max_instances,
-            self.error_message,
-        )
+        return reverse("plugins:nautobot_data_validation_engine:uniquevalidationrule", args=[self.id])
 
     def clean(self):
         """Ensure field is valid for the model and has not been blacklisted."""
@@ -377,21 +324,11 @@ class DataCompliance(PrimaryModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
     object_id = models.CharField(max_length=200, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
-    validated_object_str = models.CharField(max_length=200, blank=True, null=True)
-    validated_attribute = models.CharField(max_length=100, blank=True, null=True)
-    validated_attribute_value = models.CharField(max_length=200, blank=True, null=True)
+    validated_object_str = models.CharField(max_length=200, blank=True, default="")
+    validated_attribute = models.CharField(max_length=100, blank=True, default="")
+    validated_attribute_value = models.CharField(max_length=200, blank=True, default="")
     valid = models.BooleanField(blank=False, null=False)
-    message = models.TextField(blank=True, null=True)
-
-    csv_headers = [
-        "compliance_class_name",
-        "last_validation_date",
-        "validated_object",
-        "validated_attribute",
-        "validated_attribute_value",
-        "valid",
-        "message",
-    ]
+    message = models.TextField(blank=True, default="")
 
     class Meta:
         """Meta class for Audit model."""
@@ -405,22 +342,10 @@ class DataCompliance(PrimaryModel):
             "validated_attribute",
         )
 
-    def to_csv(self):
-        """Return a tuple of data that should be exported to CSV."""
-        return (
-            self.compliance_class_name,
-            self.last_validation_date,
-            self.validated_object,
-            self.validated_attribute,
-            self.validated_attribute_value,
-            self.valid,
-            self.message,
-        )
-
     def __str__(self):
         """Return a string representation of this DataCompliance object."""
         return f"{self.compliance_class_name}: {self.validated_attribute} compliance for {self.validated_object}"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
         """Return the absolute URL to this Audit object."""
         return reverse("plugins:nautobot_data_validation_engine:datacompliance", args=[self.pk])
