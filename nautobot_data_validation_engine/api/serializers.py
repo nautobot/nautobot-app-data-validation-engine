@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from nautobot.core.api import ContentTypeField
 from nautobot.extras.api.serializers import NautobotModelSerializer
+from nautobot.extras.api.mixins import TaggedModelSerializerMixin
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
@@ -15,17 +16,8 @@ from nautobot_data_validation_engine.models import (
     UniqueValidationRule,
 )
 
-# Not all of these variable(s) are not actually used anywhere in this file, but required for the
-# automagically replacing a Serializer with its corresponding NestedSerializer.
-from nautobot_data_validation_engine.api.nested_serializers import (  # noqa: F401
-    NestedMinMaxValidationRuleSerializer,
-    NestedRegularExpressionValidationRuleSerializer,
-    NestedRequiredValidationRuleSerializer,
-    NestedUniqueValidationRuleSerializer,
-)
 
-
-class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
+class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `RegularExpressionValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -39,23 +31,10 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer):
         """Serializer metadata for RegularExpressionValidationRule objects."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "slug",
-            "content_type",
-            "field",
-            "regular_expression",
-            "context_processing",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-        ]
+        fields = "__all__"
 
 
-class MinMaxValidationRuleSerializer(NautobotModelSerializer):
+class MinMaxValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `MinMaxValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -69,23 +48,10 @@ class MinMaxValidationRuleSerializer(NautobotModelSerializer):
         """Serializer metadata for MinMaxValidationRule objects."""
 
         model = MinMaxValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "slug",
-            "content_type",
-            "field",
-            "min",
-            "max",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-        ]
+        fields = "__all__"
 
 
-class RequiredValidationRuleSerializer(NautobotModelSerializer):
+class RequiredValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `RequiredValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -99,21 +65,10 @@ class RequiredValidationRuleSerializer(NautobotModelSerializer):
         """Serializer metadata for RequiredValidationRule objects."""
 
         model = RequiredValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "slug",
-            "content_type",
-            "field",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-        ]
+        fields = "__all__"
 
 
-class UniqueValidationRuleSerializer(NautobotModelSerializer):
+class UniqueValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `UniqueValidationRule` objects."""
 
     url = serializers.HyperlinkedIdentityField(
@@ -127,19 +82,7 @@ class UniqueValidationRuleSerializer(NautobotModelSerializer):
         """Serializer metadata for UniqueValidationRule objects."""
 
         model = UniqueValidationRule
-        fields = [
-            "id",
-            "url",
-            "name",
-            "slug",
-            "content_type",
-            "field",
-            "max_instances",
-            "enabled",
-            "error_message",
-            "created",
-            "last_updated",
-        ]
+        fields = "__all__"
 
 
 class DataComplianceSerializer(NautobotModelSerializer):

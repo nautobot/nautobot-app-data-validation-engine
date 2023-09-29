@@ -1,6 +1,7 @@
 """DataComplianceRule test cases."""
 from django.test import TestCase
-from nautobot.dcim.models import Site
+from nautobot.dcim.models import Location, LocationType
+from nautobot.extras.models import Status
 from nautobot_data_validation_engine.custom_validators import ComplianceError, DataComplianceRule
 from nautobot_data_validation_engine.models import DataCompliance
 
@@ -8,16 +9,16 @@ from nautobot_data_validation_engine.models import DataCompliance
 class TestFailedDataComplianceRule(DataComplianceRule):
     """Test implementation of DataComplianceRule."""
 
-    model = "dcim.site"
+    model = "dcim.location"
 
-    def audit(self):  # pylint: disable=R0201
+    def audit(self):
         """Raises an AuditError."""
         # this should create 4 different Audits, one for each
         # attribute
         raise ComplianceError(
             {
                 "tenant": "Tenant",
-                "region": "Region",
+                "description": "Description",
                 "name": "Name",
                 "status": "Status",
             }
@@ -27,7 +28,7 @@ class TestFailedDataComplianceRule(DataComplianceRule):
 class TestPassedDataComplianceRule(DataComplianceRule):
     """Test implementation of DataComplianceRule."""
 
-    model = "dcim.site"
+    model = "dcim.location"
 
     def audit(self):
         """No exception means the audit passes."""
@@ -37,7 +38,13 @@ class TestCompliance(TestCase):
     """Test DataComplianceRule methods."""
 
     def setUp(self):
-        self.s = Site(name="Test 1")
+        self.location_type = LocationType(name="Region")
+        self.location_type.save()
+        self.s = Location(
+            name="Test 1",
+            location_type=LocationType.objects.get_by_natural_key("Region"),
+            status=Status.objects.get_by_natural_key("Active"),
+        )
         self.s.save()
         TestFailedDataComplianceRule(self.s).clean()
         TestPassedDataComplianceRule(self.s).clean()

@@ -2,9 +2,10 @@
 Filterset test cases
 """
 from django.contrib.contenttypes.models import ContentType
-from nautobot.utilities.testing.filters import FilterTestCases
 
-from nautobot.dcim.models import PowerFeed, Rack, Region, Site, Platform, Manufacturer
+from nautobot.core.testing.filters import FilterTestCases
+from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed, Rack
+from nautobot.extras.models import Tag
 
 from nautobot_data_validation_engine.filters import (
     MinMaxValidationRuleFilterSet,
@@ -20,7 +21,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
     """
@@ -33,26 +34,36 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         """
         Create test data
         """
-        RegularExpressionValidationRule.objects.create(
+        tag_1 = Tag.objects.create(
+            name="Tag 1",
+            color="00bcd4",
+            description="Test tag 1",
+        )
+        tag_1.content_types.set([ContentType.objects.get_for_model(RegularExpressionValidationRule)])
+        tag_2 = Tag.objects.create(
+            name="Tag 2",
+            color="ff5722",
+            description="Test tag 2",
+        )
+        tag_2.content_types.set([ContentType.objects.get_for_model(RegularExpressionValidationRule)])
+        regex_1 = RegularExpressionValidationRule.objects.create(
             name="Regex rule 1",
-            slug="regex-rule-1",
             content_type=ContentType.objects.get_for_model(Rack),
             field="name",
             regular_expression="^ABC$",
             error_message="A",
         )
+        regex_1.tags.set([tag_1, tag_2])
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 2",
-            slug="regex-rule-2",
-            content_type=ContentType.objects.get_for_model(Region),
+            content_type=ContentType.objects.get_for_model(Location),
             field="description",
             regular_expression="DEF$",
             error_message="B",
         )
         RegularExpressionValidationRule.objects.create(
             name="Regex rule 3",
-            slug="regex-rule-3",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="comments",
             regular_expression="GHI",
             error_message="C",
@@ -65,8 +76,8 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.rack", "dcim.site"]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+        params = {"content_type": ["dcim.rack", "dcim.location"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
 
     def test_regular_expression(self):
         """Test regex lookups."""
@@ -85,7 +96,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameSlugFilt
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the MinMaxValidationRule model
     """
@@ -98,17 +109,28 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         """
         Create test data
         """
-        MinMaxValidationRule.objects.create(
+        tag_1 = Tag.objects.create(
+            name="Tag 1",
+            color="00bcd4",
+            description="Test tag 1",
+        )
+        tag_1.content_types.set([ContentType.objects.get_for_model(MinMaxValidationRule)])
+        tag_2 = Tag.objects.create(
+            name="Tag 2",
+            color="ff5722",
+            description="Test tag 2",
+        )
+        tag_2.content_types.set([ContentType.objects.get_for_model(MinMaxValidationRule)])
+        min_max_1 = MinMaxValidationRule.objects.create(
             name="Min max rule 1",
-            slug="min-max-rule-1",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="amperage",
             min=1,
             error_message="A",
         )
+        min_max_1.tags.set([tag_1, tag_2])
         MinMaxValidationRule.objects.create(
             name="Min max rule 2",
-            slug="min-max-rule-2",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="max_utilization",
             min=1,
@@ -116,7 +138,6 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         MinMaxValidationRule.objects.create(
             name="Min max rule 3",
-            slug="min-max-rule-3",
             content_type=ContentType.objects.get_for_model(PowerFeed),
             field="voltage",
             min=1,
@@ -144,7 +165,7 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class RequiredValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the RequiredValidationRule model
     """
@@ -157,23 +178,33 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
         """
         Create test data
         """
-        RequiredValidationRule.objects.create(
+        tag_1 = Tag.objects.create(
+            name="Tag 1",
+            color="00bcd4",
+            description="Test tag 1",
+        )
+        tag_1.content_types.set([ContentType.objects.get_for_model(RequiredValidationRule)])
+        tag_2 = Tag.objects.create(
+            name="Tag 2",
+            color="ff5722",
+            description="Test tag 2",
+        )
+        tag_2.content_types.set([ContentType.objects.get_for_model(RequiredValidationRule)])
+        required_1 = RequiredValidationRule.objects.create(
             name="Required rule 1",
-            slug="required-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             error_message="A",
         )
+        required_1.tags.set([tag_1, tag_2])
         RequiredValidationRule.objects.create(
             name="Required rule 2",
-            slug="required-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             error_message="B",
         )
         RequiredValidationRule.objects.create(
             name="Required rule 3",
-            slug="required-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             error_message="C",
@@ -186,7 +217,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.site"]}
+        params = {"content_type": ["dcim.location"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_error_message(self):
@@ -200,7 +231,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCas
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
 
-class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase):
+class UniqueValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the UniqueValidationRule model
     """
@@ -213,17 +244,28 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         """
         Create test data
         """
-        UniqueValidationRule.objects.create(
+        tag_1 = Tag.objects.create(
+            name="Tag 1",
+            color="00bcd4",
+            description="Test tag 1",
+        )
+        tag_1.content_types.set([ContentType.objects.get_for_model(UniqueValidationRule)])
+        tag_2 = Tag.objects.create(
+            name="Tag 2",
+            color="ff5722",
+            description="Test tag 2",
+        )
+        tag_2.content_types.set([ContentType.objects.get_for_model(UniqueValidationRule)])
+        unique_1 = UniqueValidationRule.objects.create(
             name="Unique rule 1",
-            slug="unique-rule-1",
-            content_type=ContentType.objects.get_for_model(Site),
+            content_type=ContentType.objects.get_for_model(Location),
             field="asn",
             max_instances=1,
             error_message="A",
         )
+        unique_1.tags.set([tag_1, tag_2])
         UniqueValidationRule.objects.create(
             name="Unique rule 2",
-            slug="unique-rule-2",
             content_type=ContentType.objects.get_for_model(Platform),
             field="description",
             max_instances=2,
@@ -231,7 +273,6 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
         )
         UniqueValidationRule.objects.create(
             name="Unique rule 3",
-            slug="unique-rule-3",
             content_type=ContentType.objects.get_for_model(Manufacturer),
             field="description",
             max_instances=3,
@@ -245,7 +286,7 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameSlugFilterTestCase)
 
     def test_content_type(self):
         """Test content type lookups."""
-        params = {"content_type": ["dcim.site"]}
+        params = {"content_type": ["dcim.location"]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_error_message(self):

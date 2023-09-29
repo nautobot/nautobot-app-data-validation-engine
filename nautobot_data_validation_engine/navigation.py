@@ -1,6 +1,6 @@
 """Plugin navigation menu items."""
 
-from nautobot.core.apps import NavMenuAddButton, NavMenuGroup, NavMenuItem, NavMenuImportButton, NavMenuTab
+from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuImportButton, NavMenuItem, NavMenuTab
 
 
 menu_items = (
@@ -75,7 +75,6 @@ menu_items = (
                         link="plugins:nautobot_data_validation_engine:datacompliance_list",
                         name="Data Compliance",
                         permissions=["nautobot_data_validation_engine.view_datacompliance"],
-                        buttons=(),
                     ),
                 ),
             ),
