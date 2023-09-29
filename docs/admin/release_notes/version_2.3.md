@@ -6,7 +6,7 @@ This document describes all new features and changes in the release `2.3`. The f
 
 This release adds support for Nautobot v2.0.0.
 
-## [v2.3.0] - 2023-XX-XX
+## [v2.3.0] - 2023-09-29
 
 ### Changed
 
