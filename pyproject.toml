@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-data-validation-engine"
-version = "2.3.0"
+version = "3.0.0"
 description = "Provides UI to build custom data validation rules for data in Nautobot"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
