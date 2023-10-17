@@ -56,7 +56,7 @@ class TestCompliance(TestCase):
         self.assertEqual(result.compliance_class_name, "TestPassedDataComplianceRule")
         self.assertEqual(result.validated_object, self.s)
         self.assertEqual(result.validated_attribute, "__all__")
-        self.assertEqual(result.validated_attribute_value, None)
+        self.assertEqual(result.validated_attribute_value, "")
 
     def test_audit_fail(self):
         result = DataCompliance.objects.filter(valid=False).all()
@@ -65,7 +65,7 @@ class TestCompliance(TestCase):
         self.assertEqual(result.compliance_class_name, "TestFailedDataComplianceRule")
         self.assertEqual(result.validated_object, self.s)
         self.assertIn(result.validated_attribute, "tenant")
-        self.assertEqual(result.validated_attribute_value, None)
+        self.assertEqual(result.validated_attribute_value, "")
 
     def test_validate_replaces_results(self):
         self.assertEqual(
