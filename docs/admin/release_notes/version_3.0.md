@@ -6,6 +6,16 @@ This document describes all new features and changes in the release `3.0`. The f
 
 This release adds support for Nautobot v2.0.0.
 
+## [v3.0.1] - 2023-10-19
+
+### Added
+
+- Added migration `0060_add_field_defaults`
+
+### Changed
+
+- Dependency updates
+
 ## [v3.0.0] - 2023-09-29
 
 ### Added
