@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nautobot-data-validation-engine"
-version = "0.1.0"
-description = "Data Validation Engine"
+version = "3.0.1"
+description = "Provides UI to build custom data validation rules for data in Nautobot"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -91,7 +91,18 @@ no-docstring-rgx="^(_|test_|Meta$)"
 # Line length is enforced by Black, so pylint doesn't need to check it.
 # Pylint and Black disagree about how to format multi-line arrays; Black wins.
 disable = """,
-    line-too-long
+    broad-except,
+    consider-using-f-string,
+    duplicate-code,
+    invalid-name,
+    line-too-long,
+    logging-fstring-interpolation,
+    protected-access,
+    raise-missing-from,
+    too-few-public-methods,
+    too-many-ancestors,
+    too-many-branches,
+    unused-import,
     """
 
 [tool.pylint.miscellaneous]
