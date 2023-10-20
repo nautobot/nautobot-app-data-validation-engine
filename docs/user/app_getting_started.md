@@ -8,9 +8,12 @@ To install the App, please follow the instructions detailed in the [Installation
 
 ## First steps with the App
 
-Once the App is installed, under the "Extensibility" tab, you will find the supported Data Validation Engine rules in the "Data Validation" section. For example, "Min/Max Rules" or "Regex Rules".
+!!! warning "Developer Note - Remove Me!"
+    What (with screenshots preferably) does it look like to perform the simplest workflow within the App once installed?
 
-There you can list the existing validation rules of each type, or create them (one by one, or dumping them).
+## What are the next steps?
 
-!!! note
-    The validation rules only take effect for new data entries, not for previous existing data. So, when you create a new object, for instance, an `ipam.VLAN`, that is when the existing validation rules will be enforced. Validation rules will be enforced when explicitly editing existing data.
+!!! warning "Developer Note - Remove Me!"
+    After taking the first steps, what else could the users look at doing.
+
+You can check out the [Use Cases](app_use_cases.md) section for more examples.

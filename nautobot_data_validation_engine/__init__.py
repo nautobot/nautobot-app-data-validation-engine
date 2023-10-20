@@ -4,10 +4,7 @@ from importlib import metadata
 
 __version__ = metadata.version(__name__)
 
-import logging
 from nautobot.extras.plugins import NautobotAppConfig
-
-logger = logging.getLogger(__name__)
 
 
 class NautobotDataValidationEngineConfig(NautobotAppConfig):
@@ -17,7 +14,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     verbose_name = "Data Validation Engine"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Provides UI to build custom data validation rules for data in Nautobot."
+    description = "Data Validation Engine."
     base_url = "nautobot-data-validation-engine"
     required_settings = []
     min_version = "2.0.0"

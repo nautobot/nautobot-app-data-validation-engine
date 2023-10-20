@@ -7,18 +7,24 @@ This document provides an overview of the App including critical information and
 
 ## Description
 
-The data validation engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
-
-Supported rule types include:
-- Regular expression
-- Min/max value
-- Required fields
-- Unique values
 
 ## Audience (User Personas) - Who should use this App?
 
-Network Engineers interested in Network Automation, Infrastructure as Code, etc., that need to add some custom validation to their data input process.
+!!! warning "Developer Note - Remove Me!"
+    Who is this meant for/ who is the common user of this app?
 
 ## Authors and Maintainers
 
-- John Anderson (@lampwins)
+!!! warning "Developer Note - Remove Me!"
+    Add the team and/or the main individuals maintaining this project. Include historical maintainers as well.
+
+## Nautobot Features Used
+
+!!! warning "Developer Note - Remove Me!"
+    What is shown today in the Installed Plugins page in Nautobot. What parts of Nautobot does it interact with, what does it add etc. ?
+
+### Extras
+
+!!! warning "Developer Note - Remove Me!"
+    Custom Fields - things like which CFs are created by this app?
+    Jobs - are jobs, if so, which ones, installed by this app?
