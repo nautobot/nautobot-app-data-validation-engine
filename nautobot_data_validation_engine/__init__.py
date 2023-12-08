@@ -4,10 +4,7 @@ from importlib import metadata
 
 __version__ = metadata.version(__name__)
 
-import logging
 from nautobot.extras.plugins import NautobotAppConfig
-
-logger = logging.getLogger(__name__)
 
 
 class NautobotDataValidationEngineConfig(NautobotAppConfig):

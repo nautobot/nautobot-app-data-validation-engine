@@ -1,6 +1,6 @@
 ---
 dev_addr: "127.0.0.1:8001"
-edit_uri: "edit/develop/docs"
+edit_uri: "edit/main/nautobot-plugin-data-validation-engine/docs"
 site_dir: "nautobot_data_validation_engine/static/nautobot_data_validation_engine/docs"
 site_name: "Data Validation Engine Documentation"
 site_url: "https://docs.nautobot.com/projects/data-validation/en/latest/"
@@ -14,13 +14,17 @@ theme:
     - "django"
     - "yaml"
   features:
-    - "navigation.tracking"
+    - "content.action.edit"
+    - "content.action.view"
+    - "content.code.copy"
+    - "navigation.footer"
+    - "navigation.indexes"
     - "navigation.tabs"
     - "navigation.tabs.sticky"
-    - "search.suggest"
+    - "navigation.tracking"
     - "search.highlight"
     - "search.share"
-    - "navigation.indexes"
+    - "search.suggest"
   favicon: "assets/favicon.ico"
   logo: "assets/nautobot_logo.svg"
   palette:
@@ -100,6 +104,7 @@ nav:
       - Using the App: "user/app_use_cases.md"
       - Data Compliance: "user/app_data_compliance.md"
       - Frequently Asked Questions: "user/faq.md"
+      - External Interactions: "user/external_interactions.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
       - Upgrade: "admin/upgrade.md"
@@ -116,6 +121,7 @@ nav:
       - Extending the App: "dev/extending.md"
       - Contributing to the App: "dev/contributing.md"
       - Development Environment: "dev/dev_environment.md"
+      - Architecture Decision Records: "dev/arch_decision.md"
       - Code Reference:
           - "dev/code_reference/index.md"
           - Package: "dev/code_reference/package.md"
