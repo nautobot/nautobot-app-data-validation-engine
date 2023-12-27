@@ -1,10 +1,10 @@
 ---
 dev_addr: "127.0.0.1:8001"
-edit_uri: "edit/main/nautobot-plugin-data-validation-engine/docs"
+edit_uri: "edit/main/nautobot-app-data-validation-engine/docs"
 site_dir: "nautobot_data_validation_engine/static/nautobot_data_validation_engine/docs"
 site_name: "Data Validation Engine Documentation"
 site_url: "https://docs.nautobot.com/projects/data-validation/en/latest/"
-repo_url: "https://github.com/nautobot/nautobot-plugin-data-validation-engine"
+repo_url: "https://github.com/nautobot/nautobot-app-data-validation-engine"
 copyright: "Copyright &copy; The Authors"
 theme:
   name: "material"

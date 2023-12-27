@@ -1,4 +1,4 @@
-"""Plugin navigation menu items."""
+"""App navigation menu items."""
 
 from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuImportButton, NavMenuItem, NavMenuTab
 
