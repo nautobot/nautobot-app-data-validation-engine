@@ -4,7 +4,7 @@ This document describes all new features and changes in the release `1.0`. The f
 
 ## Release Overview
 
-Initial release of the Nautobot Data Validation Engine Plugin.
+Initial release of the Nautobot Data Validation Engine App.
 
 ## [v1.0.0] - 2021-06-18
 

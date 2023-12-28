@@ -22,11 +22,11 @@ The first step is to create your desired data compliance rules following whateve
 
 There are two options for where to include these data compliance rule classes:
 1. In a remote Git repository *(recommended)*
-2. In the plugin's code
+2. In the app's code
 
 #### Writing Data Compliance Rules in a Remote Git Repository
 
-A Git repository can be configured to add the `data compliance rules` context to store `DataComplianceRule` classes in source control. The plugin looks for a folder in your repo called `custom_validators`, and any Python files within that folder containing classes that implement `DataComplianceRule` will be imported. No code within the plugin itself needs to be added, changed, or modified.
+A Git repository can be configured to add the `data compliance rules` context to store `DataComplianceRule` classes in source control. The app looks for a folder in your repo called `custom_validators`, and any Python files within that folder containing classes that implement `DataComplianceRule` will be imported. No code within the app itself needs to be added, changed, or modified.
 
 Below is a template data compliance rule class that would be stored in `custom_validators/my_data_compliance_rules.py` in a remote Git repository:
 
@@ -61,11 +61,11 @@ class DesiredClassName(DataComplianceRule):
 
 After your Git repo is configured and rule class(es) written, add the repository to Nautobot from `Extensibility -> Data Sources -> Git Repositories`. Include the remote repo URL, as well as credentials if it's not public (recommend using Nautobot Secrets for this). Also select `data compliance rules` for the 'provides' field. This will add/sync your repository and automatically find your data compliance rule classes.
 
-#### Writing Data Compliance Rules within the Plugin
+#### Writing Data Compliance Rules within the App
 
-To write data compliance rules within the plugin itself, add the classes that implement `DataComplianceRule` within `nautobot_data_validation_engine/custom_validators.py`.
+To write data compliance rules within the app itself, add the classes that implement `DataComplianceRule` within `nautobot_data_validation_engine/custom_validators.py`.
 
-Below is a template data compliance rule class in `custom_validators/custom_validators.py` with the plugin's code:
+Below is a template data compliance rule class in `custom_validators/custom_validators.py` with the app's code:
 
 ```python
 ...
