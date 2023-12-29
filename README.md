@@ -1,10 +1,10 @@
 # Data Validation Engine
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/icon-DataValidationEngine.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/icon-DataValidationEngine.png" class="logo" height="200px">
   <br>
-  <a href="https://github.com/nautobot/nautobot-plugin-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-plugin-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=develop"></a>
-  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-data-validation-engine/badge/"></a>
+  <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=develop"></a>
+  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-app-data-validation-engine/badge/"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/v/nautobot-data-validation-engine"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/dm/nautobot-data-validation-engine"></a>
   <br>
@@ -25,7 +25,7 @@ Supported rule types include:
 
 Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
 
-![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/dropdown.png)
+![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/dropdown.png)
 
 ### Screenshots
 
@@ -33,23 +33,23 @@ More screenshots can be found in the [Using the App](https://docs.nautobot.com/p
 
 **Min/Max Rules**
 
-![Min/Max List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/min-max-rules-list.png)
+![Min/Max List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/min-max-rules-list.png)
 
 **Regular Expression Rules**
 
-![Regex Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/regex-rules-list.png)
+![Regex Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/regex-rules-list.png)
 
 **Required Rules**
 
-![Required Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/required-rules-list.png)
+![Required Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/required-rules-list.png)
 
 **Unique Rules**
 
-![Unique Rules List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/unique-rules-list.png)
+![Unique Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/unique-rules-list.png)
 
 **Data Compliance**
 
-![Data Compliance Results List](https://raw.githubusercontent.com/nautobot/nautobot-plugin-data-validation-engine/develop/docs/images/data-compliance-results-list.png)
+![Data Compliance Results List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/data-compliance-results-list.png)
 
 ## Try it out!
 
@@ -69,7 +69,7 @@ Full web-based HTML documentation for this app can be found over on the [Nautobo
 
 ### Contributing to the Docs
 
-You can find all the Markdown source for the App documentation under the [docs](https://github.com/nautobot/nautobot-plugin-data-validation-engine/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient - clone the repository and edit away.
+You can find all the Markdown source for the App documentation under the [docs](https://github.com/nautobot/nautobot-app-data-validation-engine/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient - clone the repository and edit away.
 
 If you need to view the fully generated documentation site, you can build it with [mkdocs](https://www.mkdocs.org/). A container hosting the docs will be started using the invoke commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/data-validation/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). As your changes are saved, the live docs will be automatically reloaded.
 

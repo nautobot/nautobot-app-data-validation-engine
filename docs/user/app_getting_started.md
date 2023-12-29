@@ -14,3 +14,7 @@ There you can list the existing validation rules of each type, or create them (o
 
 !!! note
     The validation rules only take effect for new data entries, not for previous existing data. So, when you create a new object, for instance, an `ipam.VLAN`, that is when the existing validation rules will be enforced. Validation rules will be enforced when explicitly editing existing data.
+
+## What are the next steps?
+
+You can check out the [Use Cases](app_use_cases.md) section for more examples.

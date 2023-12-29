@@ -303,6 +303,7 @@ development/*.txt
 invoke.yml
 
 # Docs
-docs/README.md
-docs/CHANGELOG.md
 public
+/compose.yaml
+/dump.sql
+/nautobot_data_validation_engine/static/nautobot_data_validation_engine/docs

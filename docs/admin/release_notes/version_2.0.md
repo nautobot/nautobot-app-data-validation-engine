@@ -31,4 +31,4 @@ This release contains major new rule types and changes to UI & API behaviour
 - The REST API routes for regular expression and min/max rules have been changed:
     - Regular expression rules are now located at `/api/plugins/data-validation-engine/regex-rules/`
     - Min/max rules are now located at `/api/plugins/data-validation-engine/min-max-rules/`
-- The plugin's code has been refactored to align with the `cookiecutter-ntc` template
+- The app's code has been refactored to align with the `cookiecutter-ntc` template

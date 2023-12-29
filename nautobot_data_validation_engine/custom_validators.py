@@ -1,5 +1,5 @@
 """
-This is the meat of this plugin.
+This is the meat of this app.
 
 Here we dynamically generate a PluginCustomValidator class
 for each model currently registered in the extras_features
@@ -39,7 +39,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class BaseValidator(PluginCustomValidator):
-    """Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this plugin."""
+    """Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
 
     model = None
 
