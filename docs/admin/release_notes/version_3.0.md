@@ -6,6 +6,18 @@ This document describes all new features and changes in the release `3.0`. The f
 
 This release adds support for Nautobot v2.0.0.
 
+## [v3.0.2] - 2023-12-29
+
+### Added
+
+- Additional `invoke` tasks including `export`, `backup_db`, `import_db`
+
+### Changed
+
+- Updates from rebaked cookie using Drift Manager
+- Renamed `plugin` to `app` throughout code
+- Dependency updates
+
 ## [v3.0.1] - 2023-10-19
 
 ### Added
