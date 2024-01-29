@@ -181,7 +181,7 @@ class BaseValidator(PluginCustomValidator):
             ).delete()
             logger.info(f'{str(obj)} - Validation Attribute: "{field_name}" - Is now Valid')
         except DataCompliance.DoesNotExist:
-            return None
+            return
 
 
 def is_data_compliance_rule(obj):
