@@ -149,8 +149,9 @@ class BaseValidator(PluginCustomValidator):
                 compliance_class(self.context["object"]).clean()
 
         if not exclude_disabled_rules:
-            # Delete existing compliance if there is one and was invalid in report.
-            self._delete_compliance_object(obj, rule.field, logger)
+            if rule:
+                # Delete existing compliance if there is one and was invalid in report.
+                self._delete_compliance_object(obj, rule.field, logger)
 
     def compliance_result(self, message, instance=None, attribute=None, valid=True):
         """Generate an DataCompliance object based on the given parameters."""
