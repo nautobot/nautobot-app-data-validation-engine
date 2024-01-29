@@ -1,10 +1,14 @@
 """Jobs for nautobot_data_validation_engine."""
 
 from django.apps import apps as global_apps
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 from nautobot.core.celery import register_jobs
 from nautobot.extras.models import GitRepository
-from nautobot.extras.jobs import Job, MultiChoiceVar, get_task_logger
+from nautobot.extras.jobs import Job, MultiChoiceVar, get_task_logger, BooleanVar
+from nautobot.extras.plugins import CustomValidator, ValidationError
+from nautobot.extras.registry import registry
 
 from nautobot_data_validation_engine.custom_validators import get_data_compliance_rules_map, get_classes_from_git_repo
 from nautobot_data_validation_engine.models import DataCompliance
@@ -47,6 +51,10 @@ class RunRegisteredDataComplianceRules(Job):
         description="Not selecting any rules will run all rules listed.",
     )
 
+    run_existing_rules_in_report = BooleanVar(
+        label="Run existing validation rules", description="Include manually created data validation rules in report?"
+    )
+
     def run(self, *args, **kwargs):
         """Run the validate function on all given DataComplianceRule classes."""
         selected_data_compliance_rules = kwargs.get("selected_data_compliance_rules", None)
@@ -67,6 +75,55 @@ class RunRegisteredDataComplianceRules(Job):
                 ins = compliance_class(obj)
                 ins.enforce = False
                 ins.clean()
+
+        run_existing_rules_in_report = kwargs.get("run_existing_rules_in_report", False)
+        if run_existing_rules_in_report:
+            self.report_for_validation_rules()
+
+    @staticmethod
+    def report_for_validation_rules():
+        """Run existing data validation rules and add to report."""
+        query = (
+            Q(uniquevalidationrule__isnull=False)
+            | Q(regularexpressionvalidationrule__isnull=False)
+            | Q(minmaxvalidationrule__isnull=False)
+            | Q(requiredvalidationrule__isnull=False)
+        )
+
+        model_classes = [ct.model_class() for ct in ContentType.objects.filter(query).distinct()]
+
+        # Gather custom validators of existing rules
+        validator_dicts = []
+        for model_class in model_classes:
+            model_custom_validators = registry["plugin_custom_validators"][model_class._meta.label_lower]
+            # Get only DataValidationCustomValidators
+            # otherwise, we would get all validators (more than those dynamically created)
+            validator_dicts.extend(
+                [
+                    {cv: model_class}
+                    for cv in model_custom_validators
+                    if cv.__name__
+                    == f"{model_class._meta.app_label.capitalize()}{model_class._meta.model_name.capitalize()}CustomValidator"
+                ]
+            )
+
+        # Run validation on exisiting objects and add to report
+        for validator_dict in validator_dicts:
+            for validator, class_name in validator_dict.items():
+                if getattr(validator, "clean") == getattr(CustomValidator, "clean"):
+                    continue
+
+                for validated_object in class_name.objects.all():
+                    try:
+                        validator(validated_object).clean(exclude_disabled_rules=False, logger=logger)
+                    except ValidationError as error:
+                        validator.compliance_result(
+                            validator,
+                            instance=validated_object,
+                            message=error.messages[0],
+                            attribute=list(error.message_dict.keys())[0],
+                            valid=False,
+                        )
 
 
 class DeleteOrphanedDataComplianceData(Job):

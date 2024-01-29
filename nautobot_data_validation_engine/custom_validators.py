@@ -43,12 +43,14 @@ class BaseValidator(PluginCustomValidator):
 
     model = None
 
-    def clean(self):
+    def clean(self, exclude_disabled_rules=True, logger=None):
         """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
         # Regex rules
-        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model):
+        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model).filter(
+            enabled=exclude_disabled_rules
+        ):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
@@ -80,7 +82,7 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Min/Max rules
-        for rule in MinMaxValidationRule.objects.get_for_model(self.model):
+        for rule in MinMaxValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
@@ -109,13 +111,13 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Required rules
-        for rule in RequiredValidationRule.objects.get_for_model(self.model):
+        for rule in RequiredValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
             field_value = getattr(obj, rule.field)
             if field_value is None or field_value == "":
                 self.validation_error({rule.field: rule.error_message or "This field cannot be blank."})
 
         # Unique rules
-        for rule in UniqueValidationRule.objects.get_for_model(self.model):
+        for rule in UniqueValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
             field_value = getattr(obj, rule.field)
             if field_value:
                 # Exclude the current object from the count
@@ -145,6 +147,40 @@ class BaseValidator(PluginCustomValidator):
                 ):
                     continue
                 compliance_class(self.context["object"]).clean()
+
+        if rule:
+            # Delete existing compliance if there is one and was invalid in report.
+            self._delete_compliance_object(obj, rule.field, logger)
+
+    def compliance_result(self, message, instance=None, attribute=None, valid=True):
+        """Generate an DataCompliance object based on the given parameters."""
+        attribute_value = None
+        attribute_value = getattr(instance, attribute)
+        class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
+        result, _ = DataCompliance.objects.update_or_create(
+            compliance_class_name=class_name,
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,
+            validated_attribute=attribute,
+            defaults={
+                "last_validation_date": timezone.now(),
+                "validated_object_str": str(instance),
+                "validated_attribute_value": str(attribute_value) if attribute_value else "",
+                "message": message,
+                "valid": valid,
+            },
+        )
+        result.validated_save()
+
+    def _delete_compliance_object(self, obj, field_name, logger):
+        try:
+            class_name = f"{obj._meta.app_label.capitalize()}{obj._meta.model_name.capitalize()}CustomValidator"
+            DataCompliance.objects.get(
+                compliance_class_name=class_name, object_id=obj.id, validated_attribute=field_name
+            ).delete()
+            logger.info(f'{str(obj)} - Validation Attribute: "{field_name}" - Is now Valid')
+        except DataCompliance.DoesNotExist:
+            return None
 
 
 def is_data_compliance_rule(obj):
