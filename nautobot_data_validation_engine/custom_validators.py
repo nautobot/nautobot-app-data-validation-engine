@@ -148,7 +148,7 @@ class BaseValidator(PluginCustomValidator):
                     continue
                 compliance_class(self.context["object"]).clean()
 
-        if rule:
+        if not exclude_disabled_rules:
             # Delete existing compliance if there is one and was invalid in report.
             self._delete_compliance_object(obj, rule.field, logger)
 
