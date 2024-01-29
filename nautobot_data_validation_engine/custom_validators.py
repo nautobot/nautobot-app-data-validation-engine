@@ -173,15 +173,15 @@ class BaseValidator(PluginCustomValidator):
         )
         result.validated_save()
 
-    def _delete_compliance_object(self, obj, field_name, logger):
+    def _delete_compliance_object(self, obj, field_name, logger) -> None:
         try:
             class_name = f"{obj._meta.app_label.capitalize()}{obj._meta.model_name.capitalize()}CustomValidator"
             DataCompliance.objects.get(
                 compliance_class_name=class_name, object_id=obj.id, validated_attribute=field_name
             ).delete()
             logger.info(f'{str(obj)} - Validation Attribute: "{field_name}" - Is now Valid')
-        except DataCompliance.DoesNotExist as ex:
-            return ex
+        except DataCompliance.DoesNotExist:
+            return None
 
 
 def is_data_compliance_rule(obj):
