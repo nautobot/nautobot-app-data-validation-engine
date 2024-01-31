@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
 from django.utils import timezone
+from django.db.models import Q
 
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
@@ -148,16 +149,19 @@ class BaseValidator(PluginCustomValidator):
                     continue
                 compliance_class(self.context["object"]).clean()
 
-        if not exclude_disabled_rules:
-            if rule:
-                # Delete existing compliance if there is one and was invalid in report.
-                self._delete_compliance_object(obj, rule.field, logger)
-
-    def compliance_result(self, message, instance=None, attribute=None, valid=True):
+    def compliance_result(self, message=None, instance=None, attribute=None, valid=True):
         """Generate an DataCompliance object based on the given parameters."""
+        if valid:
+            DataCompliance.objects.filter(
+                object_id=instance.id,
+                content_type=ContentType.objects.get_for_model(instance),
+                compliance_class_name__endswith="CustomValidator",
+            ).delete()
+            return
         attribute_value = None
         attribute_value = getattr(instance, attribute)
         class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
+
         result, _ = DataCompliance.objects.update_or_create(
             compliance_class_name=class_name,
             content_type=ContentType.objects.get_for_model(instance),
@@ -171,18 +175,13 @@ class BaseValidator(PluginCustomValidator):
                 "valid": valid,
             },
         )
-        result.validated_save()
-
-    def _delete_compliance_object(self, obj, field_name, logger):
-        try:
-            class_name = f"{obj._meta.app_label.capitalize()}{obj._meta.model_name.capitalize()}CustomValidator"
-            DataCompliance.objects.get(
-                compliance_class_name=class_name, object_id=obj.id, validated_attribute=field_name
-            ).delete()
-            logger.info(f'{str(obj)} - Validation Attribute: "{field_name}" - Is now Valid')
-        except DataCompliance.DoesNotExist:
-            return
-
+        if result:
+            DataCompliance.objects.filter(
+                    ~Q(pk=result.pk),
+                    object_id=instance.id,
+                    content_type=ContentType.objects.get_for_model(instance),
+                    compliance_class_name__endswith="CustomValidator",
+                ).delete()
 
 def is_data_compliance_rule(obj):
     """Check to see if object is an DataComplianceRule class instance."""
