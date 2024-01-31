@@ -114,7 +114,7 @@ class RunRegisteredDataComplianceRules(Job):
 
                 for validated_object in class_name.objects.all():
                     try:
-                        validator(validated_object).clean(exclude_disabled_rules=False, logger=logger)
+                        validator(validated_object).clean(exclude_disabled_rules=False)
                         validator.compliance_result(
                             validator,
                             instance=validated_object,
