@@ -55,7 +55,7 @@ class RunRegisteredDataComplianceRules(Job):
         label="Run existing validation rules", description="Include manually created data validation rules in report?"
     )
 
-    def run(self, run_existing_rules_in_report, *args, **kwargs):
+    def run(self, *args, **kwargs):
         """Run the validate function on all given DataComplianceRule classes."""
         selected_data_compliance_rules = kwargs.get("selected_data_compliance_rules", None)
 
@@ -75,7 +75,7 @@ class RunRegisteredDataComplianceRules(Job):
                 ins = compliance_class(obj)
                 ins.enforce = False
                 ins.clean()
-
+        run_existing_rules_in_report = kwargs.get("run_existing_rules_in_report", False)
         if run_existing_rules_in_report:
             self.report_for_validation_rules()
 
