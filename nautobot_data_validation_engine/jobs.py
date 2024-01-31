@@ -38,6 +38,16 @@ def get_choices():
     return choices
 
 
+def clean_compliance_rules_results_for_instance(instance, excluded_pks):
+    """Clean compliance results."""
+    excluded_pks = excluded_pks or []
+    DataCompliance.objects.filter(
+        object_id=instance.id,
+        content_type=ContentType.objects.get_for_model(instance),
+        compliance_class_name__endswith="CustomValidator",
+    ).exclude(pk__in=excluded_pks).delete()
+
+
 class RunRegisteredDataComplianceRules(Job):
     """Run the validate function on all registered DataComplianceRule classes."""
 
@@ -106,7 +116,7 @@ class RunRegisteredDataComplianceRules(Job):
                 ]
             )
 
-        # Run validation on exisiting objects and add to report
+        # Run validation on existing objects and add to report
         for validator_dict in validator_dicts:
             for validator, class_name in validator_dict.items():
                 if getattr(validator, "clean") == getattr(CustomValidator, "clean"):
@@ -115,19 +125,16 @@ class RunRegisteredDataComplianceRules(Job):
                 for validated_object in class_name.objects.all():
                     try:
                         validator(validated_object).clean(exclude_disabled_rules=False)
-                        validator.compliance_result(
-                            validator,
-                            instance=validated_object,
-                            valid=True,
-                        )
+                        clean_compliance_rules_results_for_instance(instance=validated_object, excluded_pks=[])
                     except ValidationError as error:
-                        validator.compliance_result(
+                        result = validator.get_compliance_result(
                             validator,
                             instance=validated_object,
                             message=error.messages[0],
                             attribute=list(error.message_dict.keys())[0],
                             valid=False,
                         )
+                        clean_compliance_rules_results_for_instance(instance=validated_object, excluded_pks=[result.pk])
 
 
 class DeleteOrphanedDataComplianceData(Job):

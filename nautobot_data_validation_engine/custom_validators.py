@@ -19,7 +19,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
 from django.utils import timezone
-from django.db.models import Q
 
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
@@ -149,17 +148,9 @@ class BaseValidator(PluginCustomValidator):
                     continue
                 compliance_class(self.context["object"]).clean()
 
-    def compliance_result(self, message=None, instance=None, attribute=None, valid=True):
+    def get_compliance_result(self, message=None, instance=None, attribute=None, valid=True):
         """Generate an DataCompliance object based on the given parameters."""
-        if valid:
-            DataCompliance.objects.filter(
-                object_id=instance.id,
-                content_type=ContentType.objects.get_for_model(instance),
-                compliance_class_name__endswith="CustomValidator",
-            ).delete()
-            return
-        attribute_value = None
-        attribute_value = getattr(instance, attribute)
+        attribute_value = getattr(instance, attribute, None)
         class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
 
         result, _ = DataCompliance.objects.update_or_create(
@@ -175,13 +166,8 @@ class BaseValidator(PluginCustomValidator):
                 "valid": valid,
             },
         )
-        if result:
-            DataCompliance.objects.filter(
-                ~Q(pk=result.pk),
-                object_id=instance.id,
-                content_type=ContentType.objects.get_for_model(instance),
-                compliance_class_name__endswith="CustomValidator",
-            ).delete()
+
+        return result
 
 
 def is_data_compliance_rule(obj):
