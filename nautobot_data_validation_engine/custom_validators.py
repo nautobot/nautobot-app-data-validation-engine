@@ -47,9 +47,11 @@ class BaseValidator(PluginCustomValidator):
         """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
+        _f = [True] if exclude_disabled_rules else [True, False]
+
         # Regex rules
         for rule in RegularExpressionValidationRule.objects.get_for_model(self.model).filter(
-            enabled=exclude_disabled_rules
+            enabled__in=_f
         ):
             field_value = getattr(obj, rule.field)
 
@@ -82,7 +84,7 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Min/Max rules
-        for rule in MinMaxValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
+        for rule in MinMaxValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
@@ -111,13 +113,13 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Required rules
-        for rule in RequiredValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
+        for rule in RequiredValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
             if field_value is None or field_value == "":
                 self.validation_error({rule.field: rule.error_message or "This field cannot be blank."})
 
         # Unique rules
-        for rule in UniqueValidationRule.objects.get_for_model(self.model).filter(enabled=exclude_disabled_rules):
+        for rule in UniqueValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
             if field_value:
                 # Exclude the current object from the count
