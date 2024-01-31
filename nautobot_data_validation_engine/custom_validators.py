@@ -44,7 +44,7 @@ class BaseValidator(PluginCustomValidator):
 
     model = None
 
-    def clean(self, exclude_disabled_rules=True, logger=None):
+    def clean(self, exclude_disabled_rules=True):
         """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
