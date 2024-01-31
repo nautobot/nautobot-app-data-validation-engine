@@ -62,7 +62,7 @@ class RunRegisteredDataComplianceRules(Job):
     )
 
     run_existing_rules_in_report = BooleanVar(
-        label="Run existing validation rules", description="Include manually created data validation rules in report?"
+        label="Run built-in validation rules", description="Include created built-in data validation rules in report?"
     )
 
     def run(self, *args, **kwargs):
