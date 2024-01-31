@@ -177,11 +177,12 @@ class BaseValidator(PluginCustomValidator):
         )
         if result:
             DataCompliance.objects.filter(
-                    ~Q(pk=result.pk),
-                    object_id=instance.id,
-                    content_type=ContentType.objects.get_for_model(instance),
-                    compliance_class_name__endswith="CustomValidator",
-                ).delete()
+                ~Q(pk=result.pk),
+                object_id=instance.id,
+                content_type=ContentType.objects.get_for_model(instance),
+                compliance_class_name__endswith="CustomValidator",
+            ).delete()
+
 
 def is_data_compliance_rule(obj):
     """Check to see if object is an DataComplianceRule class instance."""
