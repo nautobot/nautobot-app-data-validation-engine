@@ -155,6 +155,15 @@ class BaseValidator(PluginCustomValidator):
         attribute_value = getattr(instance, attribute, None)
         class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
 
+        # Update `__all__` Data Compliance for given content type and object.
+        DataCompliance.objects.filter(
+            compliance_class_name=f"{instance._meta.model_name.capitalize()}DataComplianceRules",
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,
+            validated_attribute="__all__",
+            valid=True,
+        ).update(valid=False)
+
         result, _ = DataCompliance.objects.update_or_create(
             compliance_class_name=class_name,
             content_type=ContentType.objects.get_for_model(instance),
