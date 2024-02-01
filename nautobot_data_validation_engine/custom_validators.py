@@ -153,16 +153,6 @@ class BaseValidator(PluginCustomValidator):
         attribute_value = getattr(instance, attribute, None)
         class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
 
-        # Update `__all__` Data Compliance for given content type and object.
-        if not valid:
-            DataCompliance.objects.filter(
-                compliance_class_name=f"{instance._meta.model_name.capitalize()}DataComplianceRules",
-                content_type=ContentType.objects.get_for_model(instance),
-                object_id=instance.id,
-                validated_attribute="__all__",
-                valid=True,
-            ).update(valid=False)
-
         result, _ = DataCompliance.objects.update_or_create(
             compliance_class_name=class_name,
             content_type=ContentType.objects.get_for_model(instance),
@@ -260,7 +250,7 @@ class DataComplianceRule(CustomValidator):
             self.audit()
             self.mark_existing_attributes_as_valid()
             self.compliance_result(message=f"{self.context['object']} is valid")
-        except ComplianceError as ex:
+        except (ComplianceError, ValidationError) as ex:
             # create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
             try:
