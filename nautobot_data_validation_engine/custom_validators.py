@@ -265,7 +265,10 @@ class DataComplianceRule(CustomValidator):
                     self.compliance_result(message=message, valid=False)
             finally:
                 self.mark_existing_attributes_as_valid(exclude_attributes=exclude_attributes)
-                self.compliance_result(message=f"One or more {self.name} class rules for {self.context['object']} are not valid.", valid=False)
+                self.compliance_result(
+                    message=f"One or more {self.name} class rules for {self.context['object']} are not valid.",
+                    valid=False,
+                )
             if self.enforce:
                 raise ex
 
