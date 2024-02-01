@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Data Compliance feature audits any object within Nautobot according to a set of rules that you can define programmatically or using built-in rules that they user has set. Rules built-in from the Extensibility dropdown and not programatically will check for adherence to specified rules during the *creation or modification* of objects. Data Compliance will run a job that produces compliance statuses across *existing* objects (such as all pre-existing devices) while using the Data Compliance Rules code created by the user (like below) or built-in rules set by the user. 
+The Data Compliance feature audits any object within Nautobot according to a set of rules that you can define programmatically or using built-in rules that the user has set. Rules built-in from the Extensibility dropdown and not programatically will check for adherence to specified rules during the *creation or modification* of objects. Data Compliance will run a job that produces compliance statuses across *existing* objects (such as all pre-existing devices) while using the Data Compliance Rules code created by the user (like below) or built-in rules set by the user. 
 
 Using data compliance rules is ideal for implementing some kind of business logic or standardization requirement into Nautobot after data is already populated within the platform. Data Compliance will allow you to identify valid or invalid existing objects based on your specified data compliance rules. Additionally, Data Compliance enables the ability to implement more complex rules using the full power of programming logic. 
 
