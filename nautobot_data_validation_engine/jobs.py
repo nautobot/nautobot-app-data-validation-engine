@@ -49,7 +49,7 @@ def clean_compliance_rules_results_for_instance(instance, excluded_pks):
 
 
 class RunRegisteredDataComplianceRules(Job):
-    """Run the validate function on all registered DataComplianceRule classes."""
+    """Run the validate function on all registered DataComplianceRule classes and, optionally, the built-in data validation rules."""
 
     name = "Run Registered Data Compliance Rules"
     description = "Runs selected Data Compliance rule classes."
@@ -61,8 +61,8 @@ class RunRegisteredDataComplianceRules(Job):
         description="Not selecting any rules will run all rules listed.",
     )
 
-    run_existing_rules_in_report = BooleanVar(
-        label="Run built-in validation rules", description="Include created built-in data validation rules in report?"
+    run_builtin_rules_in_report = BooleanVar(
+        label="Run built-in validation rules?", description="Include created, built-in data validation rules in report."
     )
 
     def run(self, *args, **kwargs):
@@ -85,13 +85,15 @@ class RunRegisteredDataComplianceRules(Job):
                 ins = compliance_class(obj)
                 ins.enforce = False
                 ins.clean()
-        run_existing_rules_in_report = kwargs.get("run_existing_rules_in_report", False)
-        if run_existing_rules_in_report:
+
+        run_builtin_rules_in_report = kwargs.get("run_builtin_rules_in_report", False)
+        if run_builtin_rules_in_report:
+            logger.info("Running built-in data validation rules")
             self.report_for_validation_rules()
 
     @staticmethod
     def report_for_validation_rules():
-        """Run existing data validation rules and add to report."""
+        """Run built-in data validation rules and add to report."""
         query = (
             Q(uniquevalidationrule__isnull=False)
             | Q(regularexpressionvalidationrule__isnull=False)
@@ -101,7 +103,7 @@ class RunRegisteredDataComplianceRules(Job):
 
         model_classes = [ct.model_class() for ct in ContentType.objects.filter(query).distinct()]
 
-        # Gather custom validators of existing rules
+        # Gather custom validators of built-in rules
         validator_dicts = []
         for model_class in model_classes:
             model_custom_validators = registry["plugin_custom_validators"][model_class._meta.label_lower]
