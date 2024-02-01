@@ -2,9 +2,17 @@
 
 ## Overview
 
-The Data Compliance feature audits any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the *creation or modification* of objects, Data Compliance will run a job that produces compliance statuses across *existing* objects (such as all pre-existing devices). 
+The Data Compliance feature audits any object within Nautobot according to a set of rules that you can define programmatically or using built-in rules that they user has set. Rules built-in from the Extensibility dropdown and not programatically will check for adherence to specified rules during the *creation or modification* of objects. Data Compliance will run a job that produces compliance statuses across *existing* objects (such as all pre-existing devices) while using the Data Compliance Rules code created by the user (like below) or built-in rules set by the user. 
 
-This is ideal for implementing some kind of business logic or standardization requirement into Nautobot after data is already populated within the platform. Data Compliance will allow you to identify valid or invalid existing objects based on your specified data compliance rules. Additionally, Data Compliance enables the ability to implement more complex rules using the full power of programming logic. 
+Using data compliance rules is ideal for implementing some kind of business logic or standardization requirement into Nautobot after data is already populated within the platform. Data Compliance will allow you to identify valid or invalid existing objects based on your specified data compliance rules. Additionally, Data Compliance enables the ability to implement more complex rules using the full power of programming logic. 
+
+Unlike the data compliance rules when running the job with the 'Run built-in validation rules` option it will run a report using the built-in rules that were created by the user. When this option is selected every rule that was built will be ran against the objects that were assigned to that rule, no matter if the rule is **enabled** or **disabled**. This allows the user to bring in data to Nautobot using an application such as [Single Source of Truth](https://github.com/nautobot/nautobot-app-ssot/) and not error due to the built-in rule being enabled. Users can then run the report and see if there is standards not being followed coming from the source.
+
+**Note:** `DataCompliance` objects that are created by the job when using `Run built-in validation rules` option will not update or re-validated until the job is ran once again.
+
+For example if the user fixes the object in question and navigates to the `Data Compliance` tab, the object will still show invalid. This will stay until the job is ran again with the `Run built-in validation rules` option.
+
+---
 
 ### `DataComplianceRule` Class
 
