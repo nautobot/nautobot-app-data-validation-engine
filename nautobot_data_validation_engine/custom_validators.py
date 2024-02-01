@@ -250,7 +250,7 @@ class DataComplianceRule(CustomValidator):
             self.audit()
             self.mark_existing_attributes_as_valid()
             self.compliance_result(message=f"{self.context['object']} is valid")
-        except (ComplianceError, ValidationError) as ex:
+        except ComplianceError as ex:
             # create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
             try:
