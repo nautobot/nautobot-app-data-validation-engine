@@ -50,9 +50,7 @@ class BaseValidator(PluginCustomValidator):
         _f = [True] if exclude_disabled_rules else [True, False]
 
         # Regex rules
-        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model).filter(
-            enabled__in=_f
-        ):
+        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
