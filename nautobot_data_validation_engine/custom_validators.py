@@ -242,14 +242,14 @@ class DataComplianceRule(CustomValidator):
             .values_list("validated_attribute", flat=True)
         )
         for attribute in attributes:
-            self.compliance_result(message=f"{attribute} is valid.", attribute=attribute)
+            self.compliance_result(message=f"{attribute.capitalize()} is valid.", attribute=attribute)
 
     def clean(self):
         """Override the clean method to run the audit function."""
         try:
             self.audit()
             self.mark_existing_attributes_as_valid()
-            self.compliance_result(message=f"{self.context['object']} is valid")
+            self.compliance_result(message=f"All {self.name} class rules for {self.context['object']} are valid.")
         except ComplianceError as ex:
             # create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
@@ -265,7 +265,7 @@ class DataComplianceRule(CustomValidator):
                     self.compliance_result(message=message, valid=False)
             finally:
                 self.mark_existing_attributes_as_valid(exclude_attributes=exclude_attributes)
-                self.compliance_result(message=f"{self.context['object']} is not valid", valid=False)
+                self.compliance_result(message=f"One or more {self.name} class rules for {self.context['object']} are not valid.", valid=False)
             if self.enforce:
                 raise ex
 
