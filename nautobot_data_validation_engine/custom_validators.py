@@ -149,7 +149,7 @@ class BaseValidator(PluginCustomValidator):
                 compliance_class(self.context["object"]).clean()
 
     def get_compliance_result(self, message=None, instance=None, attribute=None, valid=True):
-        """Generate an DataCompliance object based on the given parameters."""
+        """Generate a DataCompliance object based on the given parameters."""
         attribute_value = getattr(instance, attribute, None)
         class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
 
@@ -171,7 +171,7 @@ class BaseValidator(PluginCustomValidator):
 
 
 def is_data_compliance_rule(obj):
-    """Check to see if object is an DataComplianceRule class instance."""
+    """Check to see if object is a DataComplianceRule class instance."""
     return inspect.isclass(obj) and issubclass(obj, DataComplianceRule) and obj is not DataComplianceRule
 
 
@@ -201,7 +201,7 @@ def get_classes_from_git_repo(repo: GitRepository):
 
 
 class ComplianceError(ValidationError):
-    """A compliance error is raised only when an object fails an compliance check."""
+    """A compliance error is raised only when an object fails a compliance check."""
 
 
 class DataComplianceRule(CustomValidator):
@@ -219,7 +219,7 @@ class DataComplianceRule(CustomValidator):
         self.result_date = timezone.now()
 
     def audit(self):
-        """Not implemented.  Should raise an ComplianceError if an attribute is found to be invalid."""
+        """Not implemented. Should raise a ComplianceError if an attribute is found to be invalid."""
         raise NotImplementedError
 
     def mark_existing_attributes_as_valid(self, exclude_attributes=None):
@@ -251,13 +251,13 @@ class DataComplianceRule(CustomValidator):
             self.mark_existing_attributes_as_valid()
             self.compliance_result(message=f"All {self.name} class rules for {self.context['object']} are valid.")
         except ComplianceError as ex:
-            # create a list of attributes that had ComplianceErrors raised to exclude from later function call
+            # Create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
             try:
                 for attribute, messages in ex.message_dict.items():
-                    # add attribute to excluded list
+                    # Add attribute to excluded list
                     exclude_attributes.append(attribute)
-                    # create/update DataCompliance object for the given attribute
+                    # Create/update DataCompliance object for the given attribute
                     for message in messages:
                         self.compliance_result(message=message, attribute=attribute, valid=False)
             except AttributeError:
@@ -278,7 +278,7 @@ class DataComplianceRule(CustomValidator):
         raise ComplianceError(message)
 
     def compliance_result(self, message, attribute=None, valid=True):
-        """Generate an DataCompliance object based on the given parameters."""
+        """Generate a DataCompliance object based on the given parameters."""
         instance = self.context["object"]
         attribute_value = None
         if attribute:
