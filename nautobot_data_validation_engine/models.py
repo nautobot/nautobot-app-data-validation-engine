@@ -32,7 +32,7 @@ class ValidationRuleManager(RestrictedQuerySet):
         """Given a content type string (<app_label>.<model>), return all instances that are enabled for that model."""
         app_label, model = content_type.split(".")
 
-        return self.filter(enabled=True, content_type__app_label=app_label, content_type__model=model)
+        return self.filter(content_type__app_label=app_label, content_type__model=model)
 
 
 class ValidationRule(PrimaryModel):
