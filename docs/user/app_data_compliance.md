@@ -8,9 +8,9 @@ Using data compliance rules is ideal for implementing some kind of business logi
 
 Unlike the data compliance rules when running the job with the 'Run built-in validation rules` option it will run a report using the built-in rules that were created by the user. When this option is selected every rule that was built will be ran against the objects that were assigned to that rule, no matter if the rule is **enabled** or **disabled**. This allows the user to bring in data to Nautobot using an application such as [Single Source of Truth](https://github.com/nautobot/nautobot-app-ssot/) and not error due to the built-in rule being enabled. Users can then run the report and see if there is standards not being followed coming from the source.
 
-**Note:** `DataCompliance` objects that are created by the job when using `Run built-in validation rules` option will not update or re-validated until the job is ran once again.
-
-For example if the user fixes the object in question and navigates to the `Data Compliance` tab, the object will still show invalid. This will stay until the job is ran again with the `Run built-in validation rules` option.
+> **Note:** `DataCompliance` objects that are created by the job when using `Run built-in validation rules` option will not update or re-validated until the job is ran once again.
+> 
+> For example if the user fixes the object in question and navigates to the `Data Compliance` tab, the object will still show invalid. This will stay until the job is ran again with the `Run built-in validation rules` option.
 
 ---
 
