@@ -1,43 +1,58 @@
 # Data Validation Engine
 
-<!--
-Developer Note - Remove Me!
-
-The README will have certain links/images broken until the PR is merged into `develop`. Update the GitHub links with whichever branch you're using (main etc.) if different.
-
-The logo of the project is a placeholder (docs/images/icon-nautobot-data-validation-engine.png) - please replace it with your app icon, making sure it's at least 200x200px and has a transparent background!
-
-To avoid extra work and temporary links, make sure that publishing docs (or merging a PR) is done at the same time as setting up the docs site on RTD, then test everything.
--->
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/icon-nautobot-data-validation-engine.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/icon-DataValidationEngine.png" class="logo" height="200px">
   <br>
-  <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-app-data-validation-engine/badge/"></a>
+  <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=develop"></a>
+  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-data-validation-engine/badge/"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/v/nautobot-data-validation-engine"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/dm/nautobot-data-validation-engine"></a>
   <br>
-  An <a href="https://www.networktocode.com/nautobot/apps/">App</a> for <a href="https://nautobot.com/">Nautobot</a>.
+  An App for <a href="https://github.com/nautobot/nautobot">Nautobot</a>.
 </p>
 
 ## Overview
 
-> Developer Note: Add a long (2-3 paragraphs) description of what the App does, what problems it solves, what functionality it adds to Nautobot, what external systems it works with etc.
+An app for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build custom data validation rules for Source of Truth data.
+
+The Data Validation Engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
+
+Supported rule types include:
+
+- Regular expression
+- Min/max value
+- Required fields
+- Unique values
+
+Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
+
+![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/dropdown.png)
 
 ### Screenshots
 
-> Developer Note: Add any representative screenshots of the App in action. These images should also be added to the `docs/user/app_use_cases.md` section.
-
-> Developer Note: Place the files in the `docs/images/` folder and link them using only full URLs from GitHub, for example: `![Overview](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/app-overview.png)`. This absolute static linking is required to ensure the README renders properly in GitHub, the docs site, and any other external sites like PyPI.
-
 More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the app's added functionality:
 
-![](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/placeholder.png)
+**Min/Max Rules**
+
+![Min/Max List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/min-max-rules-list.png)
+
+**Regular Expression Rules**
+
+![Regex Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/regex-rules-list.png)
+
+**Required Rules**
+
+![Required Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/required-rules-list.png)
+
+**Unique Rules**
+
+![Unique Rules List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/unique-rules-list.png)
+
+**Data Compliance**
+
+![Data Compliance Results List](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/data-compliance-results-list.png)
 
 ## Try it out!
-
-> Developer Note: Only keep this section if appropriate. Update link to correct sandbox.
 
 This App is installed in the Nautobot Community Sandbox found over at [demo.nautobot.com](https://demo.nautobot.com/)!
 
@@ -45,19 +60,19 @@ This App is installed in the Nautobot Community Sandbox found over at [demo.naut
 
 ## Documentation
 
-Full documentation for this App can be found over on the [Nautobot Docs](https://docs.nautobot.com) website:
+Full web-based HTML documentation for this app can be found over on the [Nautobot Docs](https://docs.nautobot.com) website:
 
-- [User Guide](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_overview/) - Overview, Using the App, Getting Started.
+- [User Guide](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_overview/) - Overview, Getting Started, Using the App.
 - [Administrator Guide](https://docs.nautobot.com/projects/data-validation/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the App.
 - [Developer Guide](https://docs.nautobot.com/projects/data-validation/en/latest/dev/contributing/) - Extending the App, Code Reference, Contribution Guide.
 - [Release Notes / Changelog](https://docs.nautobot.com/projects/data-validation/en/latest/admin/release_notes/).
 - [Frequently Asked Questions](https://docs.nautobot.com/projects/data-validation/en/latest/user/faq/).
 
-### Contributing to the Documentation
+### Contributing to the Docs
 
-You can find all the Markdown source for the App documentation under the [`docs`](https://github.com/nautobot/nautobot-app-data-validation-engine/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient: clone the repository and edit away.
+You can find all the Markdown source for the App documentation under the [docs](https://github.com/nautobot/nautobot-app-data-validation-engine/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient - clone the repository and edit away.
 
-If you need to view the fully-generated documentation site, you can build it with [MkDocs](https://www.mkdocs.org/). A container hosting the documentation can be started using the `invoke` commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/data-validation/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). Using this container, as your changes to the documentation are saved, they will be automatically rebuilt and any pages currently being viewed will be reloaded in your browser.
+If you need to view the fully generated documentation site, you can build it with [mkdocs](https://www.mkdocs.org/). A container hosting the docs will be started using the invoke commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/data-validation/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). As your changes are saved, the live docs will be automatically reloaded.
 
 Any PRs with fixes or improvements are very welcome!
 
