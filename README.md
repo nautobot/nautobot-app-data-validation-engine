@@ -4,7 +4,7 @@
   <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/icon-DataValidationEngine.png" class="logo" height="200px">
   <br>
   <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=develop"></a>
-  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-app-data-validation-engine/badge/"></a>
+  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-data-validation-engine/badge/"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/v/nautobot-data-validation-engine"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/dm/nautobot-data-validation-engine"></a>
   <br>
@@ -18,12 +18,13 @@ An app for [Nautobot](https://github.com/nautobot/nautobot) with a UI to build c
 The Data Validation Engine app offers a set of user definable rules which are used to enforce business constraints on the data in Nautobot. These rules are tied to particular models and each rule is meant to enforce one aspect of a business use case.
 
 Supported rule types include:
+
 - Regular expression
 - Min/max value
 - Required fields
 - Unique values
 
-Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
+Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot ad-hoc according to a set of rules that you can define programmatically or from the built-in data validation rules. Rather than only checking for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
 
 ![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/dropdown.png)
 

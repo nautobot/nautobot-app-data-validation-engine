@@ -1,19 +1,19 @@
 {
     "cookiecutter": {
-        "codeowner_github_usernames": "@smith-ntc",
+        "codeowner_github_usernames": "@nautobot/plugin-data-validation",
         "full_name": "Network to Code, LLC",
         "email": "info@networktocode.com",
         "github_org": "nautobot",
-        "plugin_name": "nautobot_data_validation_engine",
+        "app_name": "nautobot_data_validation_engine",
         "verbose_name": "Data Validation Engine",
-        "plugin_slug": "nautobot-data-validation-engine",
-        "project_slug": "nautobot-plugin-data-validation-engine",
-        "repo_url": "https://github.com/nautobot/nautobot-plugin-data-validation-engine",
+        "app_slug": "nautobot-data-validation-engine",
+        "project_slug": "nautobot-app-data-validation-engine",
+        "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
         "base_url": "nautobot-data-validation-engine",
         "min_nautobot_version": "2.0.0",
         "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
-        "project_short_description": "Data Validation Engine",
+        "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
         "model_class_name": "None",
         "open_source_license": "Apache-2.0",
         "docs_base_url": "https://docs.nautobot.com",
@@ -21,7 +21,7 @@
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "develop",
+            "template_ref": "nautobot-app-v2.1.0",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
             "pull_request_strategy": "create",
@@ -29,7 +29,7 @@
                 "black"
             ],
             "draft": true,
-            "baked_commit_ref": "e51f942ab4993a887ecf2f726d877a67f181ce98"
+            "baked_commit_ref": "4266ff3e113f3be6f0248ce5a4ad3d790926124e"
         }
     }
 }

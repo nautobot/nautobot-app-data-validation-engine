@@ -43,12 +43,14 @@ class BaseValidator(PluginCustomValidator):
 
     model = None
 
-    def clean(self):
+    def clean(self, exclude_disabled_rules=True):
         """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
+        _f = [True] if exclude_disabled_rules else [True, False]
+
         # Regex rules
-        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model):
+        for rule in RegularExpressionValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
@@ -80,7 +82,7 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Min/Max rules
-        for rule in MinMaxValidationRule.objects.get_for_model(self.model):
+        for rule in MinMaxValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
 
             if field_value is None:
@@ -109,13 +111,13 @@ class BaseValidator(PluginCustomValidator):
                 )
 
         # Required rules
-        for rule in RequiredValidationRule.objects.get_for_model(self.model):
+        for rule in RequiredValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
             if field_value is None or field_value == "":
                 self.validation_error({rule.field: rule.error_message or "This field cannot be blank."})
 
         # Unique rules
-        for rule in UniqueValidationRule.objects.get_for_model(self.model):
+        for rule in UniqueValidationRule.objects.get_for_model(self.model).filter(enabled__in=_f):
             field_value = getattr(obj, rule.field)
             if field_value:
                 # Exclude the current object from the count
@@ -146,9 +148,30 @@ class BaseValidator(PluginCustomValidator):
                     continue
                 compliance_class(self.context["object"]).clean()
 
+    def get_compliance_result(self, message=None, instance=None, attribute=None, valid=True):
+        """Generate a DataCompliance object based on the given parameters."""
+        attribute_value = getattr(instance, attribute, None)
+        class_name = f"{instance._meta.app_label.capitalize()}{instance._meta.model_name.capitalize()}CustomValidator"
+
+        result, _ = DataCompliance.objects.update_or_create(
+            compliance_class_name=class_name,
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,
+            validated_attribute=attribute,
+            defaults={
+                "last_validation_date": timezone.now(),
+                "validated_object_str": str(instance),
+                "validated_attribute_value": str(attribute_value) if attribute_value else "",
+                "message": message,
+                "valid": valid,
+            },
+        )
+
+        return result
+
 
 def is_data_compliance_rule(obj):
-    """Check to see if object is an DataComplianceRule class instance."""
+    """Check to see if object is a DataComplianceRule class instance."""
     return inspect.isclass(obj) and issubclass(obj, DataComplianceRule) and obj is not DataComplianceRule
 
 
@@ -178,7 +201,7 @@ def get_classes_from_git_repo(repo: GitRepository):
 
 
 class ComplianceError(ValidationError):
-    """A compliance error is raised only when an object fails an compliance check."""
+    """A compliance error is raised only when an object fails a compliance check."""
 
 
 class DataComplianceRule(CustomValidator):
@@ -196,7 +219,7 @@ class DataComplianceRule(CustomValidator):
         self.result_date = timezone.now()
 
     def audit(self):
-        """Not implemented.  Should raise an ComplianceError if an attribute is found to be invalid."""
+        """Not implemented. Should raise a ComplianceError if an attribute is found to be invalid."""
         raise NotImplementedError
 
     def mark_existing_attributes_as_valid(self, exclude_attributes=None):
@@ -219,22 +242,22 @@ class DataComplianceRule(CustomValidator):
             .values_list("validated_attribute", flat=True)
         )
         for attribute in attributes:
-            self.compliance_result(message=f"{attribute} is valid.", attribute=attribute)
+            self.compliance_result(message=f"{attribute.capitalize()} is valid.", attribute=attribute)
 
     def clean(self):
         """Override the clean method to run the audit function."""
         try:
             self.audit()
             self.mark_existing_attributes_as_valid()
-            self.compliance_result(message=f"{self.context['object']} is valid")
+            self.compliance_result(message=f"All {self.name} class rules for {self.context['object']} are valid.")
         except ComplianceError as ex:
-            # create a list of attributes that had ComplianceErrors raised to exclude from later function call
+            # Create a list of attributes that had ComplianceErrors raised to exclude from later function call
             exclude_attributes = []
             try:
                 for attribute, messages in ex.message_dict.items():
-                    # add attribute to excluded list
+                    # Add attribute to excluded list
                     exclude_attributes.append(attribute)
-                    # create/update DataCompliance object for the given attribute
+                    # Create/update DataCompliance object for the given attribute
                     for message in messages:
                         self.compliance_result(message=message, attribute=attribute, valid=False)
             except AttributeError:
@@ -242,7 +265,10 @@ class DataComplianceRule(CustomValidator):
                     self.compliance_result(message=message, valid=False)
             finally:
                 self.mark_existing_attributes_as_valid(exclude_attributes=exclude_attributes)
-                self.compliance_result(message=f"{self.context['object']} is not valid", valid=False)
+                self.compliance_result(
+                    message=f"One or more {self.name} class rules for {self.context['object']} are not valid.",
+                    valid=False,
+                )
             if self.enforce:
                 raise ex
 
@@ -252,7 +278,7 @@ class DataComplianceRule(CustomValidator):
         raise ComplianceError(message)
 
     def compliance_result(self, message, attribute=None, valid=True):
-        """Generate an DataCompliance object based on the given parameters."""
+        """Generate a DataCompliance object based on the given parameters."""
         instance = self.context["object"]
         attribute_value = None
         if attribute:
