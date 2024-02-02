@@ -24,7 +24,7 @@ Supported rule types include:
 - Required fields
 - Unique values
 
-Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot according to a set of rules that you can define programmatically. Unlike the other rule types within the Data Validation Engine app that only check for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
+Another feature within the app called [Data Compliance](https://docs.nautobot.com/projects/data-validation/en/latest/user/app_data_compliance/) can audit any object within Nautobot ad-hoc according to a set of rules that you can define programmatically or from the built-in data validation rules. Rather than only checking for adherence to specified rules during the creation or modification of objects, Data Compliance will run a job that produces compliance statuses across all objects including pre-existing ones (such as all existing devices).
 
 ![Dropdown](https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/dropdown.png)
 
