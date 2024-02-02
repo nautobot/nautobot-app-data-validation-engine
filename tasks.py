@@ -23,7 +23,8 @@ from invoke.tasks import task as invoke_task
 def is_truthy(arg):
     """Convert "truthy" strings into Booleans.
 
-    Examples:
+    Examples
+    --------
         >>> is_truthy('yes')
         True
     Args:
@@ -77,7 +78,10 @@ def _await_healthy_service(context, service):
 def _await_healthy_container(context, container_id):
     while True:
         result = context.run(
-            "docker inspect --format='{{.State.Health.Status}}' " + container_id, pty=False, echo=False, hide=True
+            "docker inspect --format='{{.State.Health.Status}}' " + container_id,
+            pty=False,
+            echo=False,
+            hide=True,
         )
         if result.stdout.strip() == "healthy":
             break
@@ -108,6 +112,7 @@ def docker_compose(context, command, **kwargs):
     """Helper function for running a specific docker compose command with all appropriate parameters and environment.
 
     Args:
+    ----
         context (obj): Used to run specific commands
         command (str): Command string to append to the "docker compose ..." command, such as "build", "up", etc.
         **kwargs: Passed through to the context.run() call.
@@ -234,11 +239,46 @@ def stop(context, service=""):
     docker_compose(context, "stop" if service else "down --remove-orphans", service=service)
 
 
-@task
-def destroy(context):
+@task(
+    aliases=("down",),
+    help={
+        "volumes": "Remove Docker compose volumes (default: True)",
+        "import-db-file": "Import database from `import-db-file` file into the fresh environment (default: empty)",
+    },
+)
+def destroy(context, volumes=True, import_db_file=""):
     """Destroy all containers and volumes."""
     print("Destroying Nautobot...")
-    docker_compose(context, "down --remove-orphans --volumes")
+    docker_compose(context, f"down --remove-orphans {'--volumes' if volumes else ''}")
+
+    if not import_db_file:
+        return
+
+    if not volumes:
+        raise ValueError("Cannot specify `--no-volumes` and `--import-db-file` arguments at the same time.")
+
+    print(f"Importing database file: {import_db_file}...")
+
+    input_path = Path(import_db_file).absolute()
+    if not input_path.is_file():
+        raise ValueError(f"File not found: {input_path}")
+
+    command = [
+        "run",
+        "--rm",
+        "--detach",
+        f"--volume='{input_path}:/docker-entrypoint-initdb.d/dump.sql'",
+        "--",
+        "db",
+    ]
+
+    container_id = docker_compose(context, " ".join(command), pty=False, echo=False, hide=True).stdout.strip()
+    _await_healthy_container(context, container_id)
+    print("Stopping database container...")
+    context.run(f"docker stop {container_id}", pty=False, echo=False, hide=True)
+
+    print("Database import complete, you can start Nautobot with the following command:")
+    print("invoke start")
 
 
 @task
@@ -447,7 +487,7 @@ def dbshell(context, db_name="", input_file="", output_file="", query=""):
     }
 )
 def import_db(context, db_name="", input_file="dump.sql"):
-    """Stop Nautobot containers and replace the current database with the dump into the running `db` container."""
+    """Stop Nautobot containers and replace the current database with the dump into `db` container."""
     docker_compose(context, "stop -- nautobot worker beat")
     start(context, "db")
     _await_healthy_service(context, "db")
@@ -495,52 +535,13 @@ def import_db(context, db_name="", input_file="dump.sql"):
 
 @task(
     help={
-        "db-name": "Database name to create (default: Nautobot database)",
-        "input-file": "SQL dump file to replace the existing database with. This can be generated using `invoke backup-db` (default: `dump.sql`).",
-    }
-)
-def destroy_and_import_db(context, db_name="", input_file="dump.sql"):
-    """Destroy all containers and volumes, then import database from `input_file` file."""
-    destroy(context)
-
-    input_path = Path(input_file).absolute()
-
-    command = [
-        "run",
-        "--rm",
-        "--detach",
-        f"--volume='{input_path}:/docker-entrypoint-initdb.d/dump.sql'",
-    ]
-
-    if db_name:
-        if _is_compose_included(context, "mysql"):
-            command += [f"--env=MYSQL_DATABASE={db_name}"]
-        elif _is_compose_included(context, "postgres"):
-            command += [f"--env=POSTGRES_DB={db_name}"]
-        else:
-            raise ValueError("Unsupported database backend.")
-
-    command += ["-- db"]
-
-    print("Importing database...")
-    container_id = docker_compose(context, " ".join(command), pty=False, echo=False, hide=True).stdout.strip()
-    _await_healthy_container(context, container_id)
-    print("Stopping database container...")
-    context.run(f"docker stop {container_id}", pty=False, echo=False, hide=True)
-
-    print("Database import complete, you can start Nautobot with the following command:")
-    print("invoke start")
-
-
-@task(
-    help={
         "db-name": "Database name to backup (default: Nautobot database)",
         "output-file": "Ouput file, overwrite if exists (default: `dump.sql`)",
         "readable": "Flag to dump database data in more readable format (default: `True`)",
     }
 )
 def backup_db(context, db_name="", output_file="dump.sql", readable=True):
-    """Dump database into `output_file` file from running `db` container."""
+    """Dump database into `output_file` file from `db` container."""
     start(context, "db")
     _await_healthy_service(context, "db")
 
@@ -613,6 +614,19 @@ def help_task(context):
         context.run(f"invoke {task_name} --help")
 
 
+@task(
+    help={
+        "version": "Version of Data Validation Engine to generate the release notes for.",
+    }
+)
+def generate_release_notes(context, version=""):
+    """Generate Release Notes using Towncrier."""
+    command = "env DJANGO_SETTINGS_MODULE=nautobot.core.settings towncrier build"
+    if version:
+        command += f" --version {version}"
+    run_command(context, command)
+
+
 # ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
@@ -656,12 +670,34 @@ def pylint(context):
     run_command(context, command)
 
 
-@task
-def pydocstyle(context):
-    """Run pydocstyle to validate docstring formatting adheres to NTC defined standards."""
-    # We exclude the /migrations/ directory since it is autogenerated code
-    command = "pydocstyle ."
-    run_command(context, command)
+@task(aliases=("a",))
+def autoformat(context):
+    """Run code autoformatting."""
+    black(context, autoformat=True)
+    ruff(context, action="both", fix=True)
+
+
+@task(
+    help={
+        "action": "One of 'lint', 'format', or 'both'",
+        "fix": "Automatically fix selected action. May not be able to fix all.",
+        "output_format": "see https://docs.astral.sh/ruff/settings/#output-format",
+    },
+)
+def ruff(context, action="lint", fix=False, output_format="text"):
+    """Run ruff to perform code formatting and/or linting."""
+    if action != "lint":
+        command = "ruff format"
+        if not fix:
+            command += " --check"
+        command += " ."
+        run_command(context, command)
+    if action != "format":
+        command = "ruff check"
+        if fix:
+            command += " --fix"
+        command += f" --output-format {output_format} ."
+        run_command(context, command)
 
 
 @task
@@ -676,6 +712,7 @@ def yamllint(context):
     """Run yamllint to validate formatting adheres to NTC defined YAML standards.
 
     Args:
+    ----
         context (obj): Used to run specific commands
     """
     command = "yamllint . --format standard"
@@ -750,12 +787,12 @@ def tests(context, failfast=False, keepdb=False, lint_only=False):
     # Sorted loosely from fastest to slowest
     print("Running black...")
     black(context)
+    print("Running ruff...")
+    ruff(context)
     print("Running flake8...")
     flake8(context)
     print("Running bandit...")
     bandit(context)
-    print("Running pydocstyle...")
-    pydocstyle(context)
     print("Running yamllint...")
     yamllint(context)
     print("Running poetry check...")
