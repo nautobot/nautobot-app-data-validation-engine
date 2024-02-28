@@ -1,0 +1,1 @@
+Updated `cryptography` dependency to 42.0.4 due to CVE-2024-26130 and CVE-2024-0727.
