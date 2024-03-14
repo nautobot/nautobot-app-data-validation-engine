@@ -9,7 +9,7 @@
         "app_slug": "nautobot-data-validation-engine",
         "project_slug": "nautobot-app-data-validation-engine",
         "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
-        "base_url": "nautobot-data-validation-engine",
+        "base_url": "data-validation-engine",
         "min_nautobot_version": "2.0.0",
         "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
@@ -21,7 +21,7 @@
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "nautobot-app-v2.1.0",
+            "template_ref": "refs/tags/nautobot-app-v2.2.0",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
             "pull_request_strategy": "create",
@@ -29,7 +29,7 @@
                 "black"
             ],
             "draft": true,
-            "baked_commit_ref": "4266ff3e113f3be6f0248ce5a4ad3d790926124e"
+            "baked_commit_ref": "41f6e7d8df48559608175c976c9cf0726c4eb6f7"
         }
     }
 }
