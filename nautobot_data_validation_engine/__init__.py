@@ -15,7 +15,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     version = __version__
     author = "Network to Code, LLC"
     description = "Provides UI to build custom data validation rules for data in Nautobot."
-    base_url = "data-validation-engine"
+    base_url = "nautobot-data-validation-engine"
     required_settings = []
     min_version = "2.0.0"
     max_version = "2.9999"
