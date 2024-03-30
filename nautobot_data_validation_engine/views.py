@@ -2,6 +2,8 @@
 
 from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
+from django.template import TemplateDoesNotExist
+from django.template.loader import get_template
 from django_tables2 import RequestConfig
 from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.core.views.generic import ObjectView
@@ -130,6 +132,16 @@ class DataComplianceObjectView(ObjectView):
         )
         compliance_table = tables.DataComplianceTableTab(compliance_objects)
 
+        base_template = f"{instance._meta.app_label}/{instance._meta.model_name}.html"
+        try:
+            get_template(base_template)
+        except TemplateDoesNotExist:
+            base_template = f"{instance._meta.app_label}/{instance._meta.model_name}_retrieve.html"
+            try:
+                get_template(base_template)
+            except TemplateDoesNotExist:
+                base_template = "generic/object_retrieve.html"
+
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
         RequestConfig(request, paginate).configure(compliance_table)
-        return {"active_tab": request.GET["tab"], "table": compliance_table}
+        return {"active_tab": request.GET["tab"], "table": compliance_table, "base_template": base_template}

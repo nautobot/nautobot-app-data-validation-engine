@@ -23,9 +23,9 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         filter_predicates={
             "name": "icontains",
             "error_message": "icontains",
-            "content_type__app_label": "equals",
-            "content_type__model": "equals",
-            "field": "equals",
+            "content_type__app_label": "iexact",
+            "content_type__model": "iexact",
+            "field": "iexact",
             "regular_expression": "icontains",
         }
     )
@@ -47,9 +47,9 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
         filter_predicates={
             "name": "icontains",
             "error_message": "icontains",
-            "content_type__app_label": "equals",
-            "content_type__model": "equals",
-            "field": "equals",
+            "content_type__app_label": "iexact",
+            "content_type__model": "iexact",
+            "field": "iexact",
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
@@ -70,9 +70,9 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
         filter_predicates={
             "name": "icontains",
             "error_message": "icontains",
-            "content_type__app_label": "equals",
-            "content_type__model": "equals",
-            "field": "equals",
+            "content_type__app_label": "iexact",
+            "content_type__model": "iexact",
+            "field": "iexact",
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
@@ -95,7 +95,7 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
             "error_message": "icontains",
             "content_type__app_label": "icontains",
             "content_type__model": "icontains",
-            "field": "equals",
+            "field": "iexact",
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
