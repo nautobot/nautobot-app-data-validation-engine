@@ -8,6 +8,7 @@ query registry 'custom_validators'.
 A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
+
 import re
 import logging
 import inspect

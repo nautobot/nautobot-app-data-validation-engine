@@ -1,6 +1,7 @@
 """
 Filterset test cases
 """
+
 from django.contrib.contenttypes.models import ContentType
 
 from nautobot.core.testing.filters import FilterTestCases

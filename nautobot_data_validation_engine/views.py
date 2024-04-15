@@ -12,6 +12,7 @@ from nautobot.apps.views import (
     ObjectBulkDestroyViewMixin,
 )
 from nautobot.core.views.paginator import EnhancedPaginator, get_paginate_count
+from nautobot.extras.utils import get_base_template
 
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
@@ -129,7 +130,8 @@ class DataComplianceObjectView(ObjectView):
             content_type=ContentType.objects.get_for_model(instance), object_id=instance.id
         )
         compliance_table = tables.DataComplianceTableTab(compliance_objects)
+        base_template = get_base_template(None, instance)
 
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
         RequestConfig(request, paginate).configure(compliance_table)
-        return {"active_tab": request.GET["tab"], "table": compliance_table}
+        return {"active_tab": request.GET["tab"], "table": compliance_table, "base_template": base_template}

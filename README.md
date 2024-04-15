@@ -3,8 +3,8 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/nautobot/nautobot-app-data-validation-engine/develop/docs/images/icon-DataValidationEngine.png" class="logo" height="200px">
   <br>
-  <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=develop"></a>
-  <a href="https://docs.nautobot.com/projects/data-validation/en/latest"><img src="https://readthedocs.org/projects/nautobot-plugin-data-validation-engine/badge/"></a>
+  <a href="https://github.com/nautobot/nautobot-app-data-validation-engine/actions"><img src="https://github.com/nautobot/nautobot-app-data-validation-engine/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://docs.nautobot.com/projects/data-validation/en/latest/"><img src="https://readthedocs.org/projects/nautobot-plugin-data-validation-engine/badge/"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/v/nautobot-data-validation-engine"></a>
   <a href="https://pypi.org/project/nautobot-data-validation-engine/"><img src="https://img.shields.io/pypi/dm/nautobot-data-validation-engine"></a>
   <br>
