@@ -6,6 +6,25 @@ This document describes all new features and changes in the release `3.1`. The f
 
 This release adds additional functionality to the Data Compliance feature with the ability to now include built-in data validation rules.
 
+## [v3.1.1 (2024-04-15)](https://github.com/nautobot/nautobot-app-data-validation-engine/releases/tag/v3.1.1)
+
+### Security
+
+- [#144](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/144) - Updated `cryptography` dependency to 42.0.0 due to CVE-2023-50782.
+- [#145](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/145) - Updated `django` dependency to `3.2.24` due to CVE-2024-24680.
+- [#148](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/148) - Updated `cryptography` dependency to 42.0.4 due to CVE-2024-26130 and CVE-2024-0727.
+- [#153](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/153) - Updated `django` dependency to `3.2.25` due to CVE-2024-27351.
+- [#154](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/154) - Updated `black` dependency to `24.3.0` due to CVE-2024-21503.
+- [#157](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/157) - Updated `idna` dependency to `3.7` due to CVE-2024-3651.
+
+### Fixed
+
+- [#155](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/155) - Fixed issues where going to "Data Compliance" tab could potentially hide other tabs.
+
+### Housekeeping
+
+- [#150](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/150), [#152](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/152) - Re-baked from the latest template.
+
 ## v3.1.0 (2024-02-02)
 
 ### Added
