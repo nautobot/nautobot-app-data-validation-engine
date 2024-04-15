@@ -1,0 +1,1 @@
+Updated `idna` dependency to `3.7` due to CVE-2024-3651.
