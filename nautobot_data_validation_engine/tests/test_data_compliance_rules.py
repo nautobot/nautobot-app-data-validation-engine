@@ -1,4 +1,5 @@
 """DataComplianceRule test cases."""
+
 from django.test import TestCase
 from nautobot.dcim.models import Location, LocationType
 from nautobot.extras.models import Status

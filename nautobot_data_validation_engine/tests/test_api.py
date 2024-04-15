@@ -1,6 +1,7 @@
 """
 API test cases
 """
+
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
