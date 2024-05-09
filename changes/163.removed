@@ -1,0 +1,1 @@
+Removed authentication/password command from MySQL Docker Compose.
