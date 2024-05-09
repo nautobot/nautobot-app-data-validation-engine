@@ -5,8 +5,7 @@ from nautobot.core.api.routers import OrderedDefaultRouter
 from nautobot_data_validation_engine.api import views
 
 
-router = OrderedDefaultRouter()
-router.APIRootView = views.DataValidationEngineRootView
+router = OrderedDefaultRouter(view_name="Data Validation Engine")
 
 # Regular expression rules
 router.register("regex-rules", views.RegularExpressionValidationRuleViewSet)
