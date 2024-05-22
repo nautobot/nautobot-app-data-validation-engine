@@ -3558,4 +3558,4 @@ all = []
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "c0dc3f6ac3d1ae4ff826baff6068d5186b5be203c59e207275f369f2f0b4e9b4"
+content-hash = "03c53e7f6dcbb4db3e264dc7aa78357de82b7cc22969d39958295ea8c6703b5a"
