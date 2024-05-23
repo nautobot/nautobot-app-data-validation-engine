@@ -111,6 +111,8 @@ The job can be used to run the `audit` method for any number of registered `Data
 
 To also have the job generate compliance results for existing, user-created built-in validation rules, select the `Run built-in validation rules?` option. When this option is checked, every data validation rule that was created will be run against the objects that are assigned to that rule, no matter if the rule is currently **enabled** or **disabled**. This allows the user to bring in data to Nautobot using an application such as [Single Source of Truth](https://github.com/nautobot/nautobot-app-ssot/) without being prevented by errors due to the built-in rule(s) being enabled and enforcing validation. Users can then run this job to see if there are any standards/rules not being followed that are coming from the imported source data.
 
+![RunRegisteredDataComplianceRules Job](../images/data-compliance-run-registered-data-compliance-rules-job.png)
+
 ### Step 3. Viewing Data Compliance Results
 
 All data compliance result objects can be found on the navigation bar under `Extensibility -> Data Validation Engine -> Data Compliance`. This view lists all available data compliance results produced from the `RunRegisteredDataComplianceRules` job. You can add filters such as showing only invalid objects or only ones from a specific compliance rule class.
@@ -121,9 +123,9 @@ Additionally, the `nautobot_data_validation_engine` app automatically creates te
 
 ## Example
 
-Two data compliance rules will be created within a remote Git repository called `dve-datacompliance-demo` that check devices for the following:
-- audit_device_name_chars - will mark a device invalid if the device name contains any special characters other than a dash (-), underscore (_), or period (.)
-- audit_device_rack - will mark a device invalid if it is not assigned a rack
+Two data compliance rules will be created using two separate `DataComplianceRule` classes within a remote Git repository called `dve-datacompliance-demo` that check devices for the following:
+- `audit_device_name_chars` in `DeviceDataComplianceRules` - will mark a device invalid if the device name contains any special characters other than a dash (-), underscore (_), or period (.)
+- `audit_device_rack` in `RackDeviceComplianceRules` - will mark a device invalid if it is not assigned a rack
 
 `custom_validators/data_compliance_rules.py`:
 ```python
@@ -139,6 +141,20 @@ class DeviceDataComplianceRules(DataComplianceRule):
         if not re.match("^[a-zA-Z0-9\-_.]+$", self.context["object"].name):
             raise ComplianceError({"name": "Device name contains unallowed special characters."})
     
+    def audit(self):
+        messages = {}
+        for fn in [self.audit_device_name_chars]:
+            try:
+                fn()
+            except ComplianceError as ex:
+                messages.update(ex.message_dict)
+        if messages:
+            raise ComplianceError(messages)
+
+class RackDeviceComplianceRules(DataComplianceRule):
+    model = "dcim.device"
+    enforce = False
+    
     # Checks if a device is not assigned to a rack
     def audit_device_rack(self):
         if not self.context["object"].rack:
@@ -146,7 +162,7 @@ class DeviceDataComplianceRules(DataComplianceRule):
     
     def audit(self):
         messages = {}
-        for fn in [self.audit_device_name_chars, self.audit_device_rack]:
+        for fn in [self.audit_device_rack]:
             try:
                 fn()
             except ComplianceError as ex:
@@ -155,13 +171,13 @@ class DeviceDataComplianceRules(DataComplianceRule):
             raise ComplianceError(messages)
 ```
 
-After running the `RunRegisteredDataComplianceRules` job, the audit results from Data Compliance are shown:
+After syncing this repository as a Nautobot Git Repository and running the `RunRegisteredDataComplianceRules` job, the audit results from Data Compliance are shown:
 
-![Data Compliance Results](../images/data-compliance-results.png)
+![Data Compliance Results](../images/data-compliance-results-list.png)
 
 Filtering on devices that are out of compliance:
 
-![Data Compliance Filtered Results](../images/data-compliance-filtered-results.png)
+![Data Compliance Filtered Results](../images/data-compliance-filtered-results-list.png)
 
 Drilling down on a specific device's Data Compliance tab:
 
