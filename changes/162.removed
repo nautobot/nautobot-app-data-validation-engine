@@ -1,1 +1,2 @@
 Removed `DataValidationEngineRootView` class and `APIRootView` override.
+Removed `version` from docker-compose files.
