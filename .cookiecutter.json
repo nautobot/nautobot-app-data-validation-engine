@@ -10,7 +10,7 @@
         "project_slug": "nautobot-app-data-validation-engine",
         "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
         "base_url": "data-validation-engine",
-        "min_nautobot_version": "2.0.0",
+        "min_nautobot_version": "2.1.9",
         "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
         "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
@@ -21,7 +21,7 @@
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "refs/tags/nautobot-app-v2.2.1",
+            "template_ref": "refs/tags/nautobot-app-v2.3.0",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
             "pull_request_strategy": "create",

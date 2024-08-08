@@ -1,7 +1,7 @@
 ---
 nautobot_data_validation_engine:
   project_name: "nautobot-data-validation-engine"
-  nautobot_ver: "2.0.0"
+  nautobot_ver: "2.1.9"
   local: false
   python_ver: "3.11"
   compose_dir: "development"
