@@ -5,7 +5,7 @@ about: Propose a new feature or enhancement
 ---
 
 ### Environment
-* Nautobot version:  <!-- Example: 2.0.0 -->
+* Nautobot version:  <!-- Example: 2.1.9 -->
 * nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
 
 <!--

@@ -15,8 +15,10 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     verbose_name = "Data Validation Engine"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Provides UI to build custom data validation rules for data in Nautobot."
-    base_url = "nautobot-data-validation-engine"
+    description = (
+        "Provides UI to build custom data validation rules for data in Nautobot."
+    )
+    base_url = "data-validation-engine"
     required_settings = []
     min_version = "2.1.9"
     max_version = "2.9999"

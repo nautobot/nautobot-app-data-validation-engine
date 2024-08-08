@@ -1,19 +1,13 @@
-"""
-API test cases
-"""
+"""Unit tests for nautobot_data_validation_engine."""
 
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
+from django.test import TestCase
 from django.urls import reverse
+from nautobot.users.models import Token
+from rest_framework import status
+from rest_framework.test import APIClient
 
-from nautobot.dcim.models import Location, PowerFeed, Platform, Manufacturer
-from nautobot.core.testing import APITestCase, APIViewTestCases
-
-from nautobot_data_validation_engine.models import (
-    MinMaxValidationRule,
-    RegularExpressionValidationRule,
-    RequiredValidationRule,
-    UniqueValidationRule,
-)
+User = get_user_model()
 
 
 class AppTest(APITestCase):
