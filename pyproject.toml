@@ -32,7 +32,6 @@ python = ">=3.8,<3.12"
 nautobot = "^2.1.9"
 
 [tool.poetry.group.dev.dependencies]
-bandit = "*"
 coverage = "*"
 django-debug-toolbar = "*"
 invoke = "*"
@@ -72,7 +71,10 @@ no-docstring-rgx="^(_|test_|Meta$)"
 
 [tool.pylint.messages_control]
 disable = """,
-    line-too-long
+    duplicate-code,
+    line-too-long,
+    too-few-public-methods,
+    too-many-ancestors
 """
 
 [tool.pylint.miscellaneous]
@@ -95,7 +97,6 @@ target-version = "py38"
 select = [
     "D",  # pydocstyle
     "F", "E", "W",  # flake8
-    "PL",  # pylint
     "S",  # bandit
     "I",  # isort
 ]

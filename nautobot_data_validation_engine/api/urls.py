@@ -4,7 +4,6 @@ from nautobot.core.api.routers import OrderedDefaultRouter
 
 from nautobot_data_validation_engine.api import views
 
-
 router = OrderedDefaultRouter(view_name="Data Validation Engine")
 
 # Regular expression rules

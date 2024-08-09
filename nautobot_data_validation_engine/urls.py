@@ -1,12 +1,10 @@
 """Django url patterns."""
 
 from django.urls import path
-
 from nautobot.core.views.routers import NautobotUIViewSetRouter
 from nautobot.extras.views import ObjectChangeLogView, ObjectNotesView
 
-from nautobot_data_validation_engine import views, models
-
+from nautobot_data_validation_engine import models, views
 
 router = NautobotUIViewSetRouter()
 router.register("data-compliance", views.DataComplianceListView)

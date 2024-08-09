@@ -2,17 +2,16 @@
 
 import django_filters as filters
 from django.db import models
-
 from nautobot.apps.filters import NautobotFilterSet
 from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
-    DataCompliance,
 )
 
 
@@ -30,7 +29,8 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
+        choices=FeatureQuery("custom_validators").get_choices,
+        conjoined=False,  # Make this an OR with multi-values
     )
 
     class Meta:
@@ -53,7 +53,8 @@ class MinMaxValidationRuleFilterSet(NautobotFilterSet):
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
+        choices=FeatureQuery("custom_validators").get_choices,
+        conjoined=False,  # Make this an OR with multi-values
     )
 
     class Meta:
@@ -76,7 +77,8 @@ class RequiredValidationRuleFilterSet(NautobotFilterSet):
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
+        choices=FeatureQuery("custom_validators").get_choices,
+        conjoined=False,  # Make this an OR with multi-values
     )
 
     class Meta:
@@ -99,7 +101,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
         }
     )
     content_type = ContentTypeMultipleChoiceFilter(
-        choices=FeatureQuery("custom_validators").get_choices, conjoined=False  # Make this an OR with multi-values
+        choices=FeatureQuery("custom_validators").get_choices,
+        conjoined=False,  # Make this an OR with multi-values
     )
 
     class Meta:

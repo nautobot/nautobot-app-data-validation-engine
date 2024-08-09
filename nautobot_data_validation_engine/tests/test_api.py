@@ -1,13 +1,16 @@
 """Unit tests for nautobot_data_validation_engine."""
 
-from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-from nautobot.users.models import Token
-from rest_framework import status
-from rest_framework.test import APIClient
+from nautobot.core.testing import APITestCase, APIViewTestCases
+from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed
 
-User = get_user_model()
+from nautobot_data_validation_engine.models import (
+    MinMaxValidationRule,
+    RegularExpressionValidationRule,
+    RequiredValidationRule,
+    UniqueValidationRule,
+)
 
 
 class AppTest(APITestCase):
@@ -20,7 +23,7 @@ class AppTest(APITestCase):
         Test the root view
         """
         url = reverse("plugins-api:nautobot_data_validation_engine-api:api-root")
-        response = self.client.get("{}?format=api".format(url), **self.header)
+        response = self.client.get(f"{url}?format=api", **self.header)
 
         self.assertEqual(response.status_code, 200)
 

@@ -2,15 +2,14 @@
 
 import re
 
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
-
 from nautobot.core.models.generics import PrimaryModel
-from nautobot.extras.utils import FeatureQuery, extras_features
 from nautobot.core.models.querysets import RestrictedQuerySet
+from nautobot.extras.utils import FeatureQuery, extras_features
 
 
 def validate_regex(value):
@@ -21,8 +20,8 @@ def validate_regex(value):
     """
     try:
         re.compile(value)
-    except re.error:
-        raise ValidationError(f"{value} is not a valid regular expression.")
+    except re.error as e:
+        raise ValidationError(f"{value} is not a valid regular expression.") from e
 
 
 class ValidationRuleManager(RestrictedQuerySet):
