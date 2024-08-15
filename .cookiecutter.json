@@ -9,7 +9,7 @@
         "app_slug": "nautobot-data-validation-engine",
         "project_slug": "nautobot-app-data-validation-engine",
         "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
-        "base_url": "data-validation-engine",
+        "base_url": "nautobot-data-validation-engine",
         "min_nautobot_version": "2.1.9",
         "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
