@@ -6,7 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
-
 from nautobot.dcim.models import Cable, Device, Location, PowerFeed
 from nautobot.extras.models import Job
 

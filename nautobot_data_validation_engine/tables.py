@@ -1,8 +1,7 @@
 """Django tables."""
 
 import django_tables2 as tables
-from django.utils.safestring import mark_safe
-
+from django.utils.html import format_html
 from nautobot.core.tables import BaseTable, TagColumn, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
@@ -12,7 +11,6 @@ from nautobot_data_validation_engine.models import (
     RequiredValidationRule,
     UniqueValidationRule,
 )
-
 
 #
 # RegularExpressionValidationRules
@@ -177,9 +175,7 @@ class ValidatedAttributeColumn(tables.Column):
         if hasattr(record.validated_object, value) and hasattr(
             getattr(record.validated_object, value), "get_absolute_url"
         ):
-            return mark_safe(
-                f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>'
-            )  # nosec B703, B308
+            return format_html('<a href="{}">{}</a>', getattr(record.validated_object, value).get_absolute_url(), value)
         return value
 
 

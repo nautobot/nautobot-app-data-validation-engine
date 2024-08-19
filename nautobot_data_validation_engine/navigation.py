@@ -2,7 +2,6 @@
 
 from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuImportButton, NavMenuItem, NavMenuTab
 
-
 menu_items = (
     NavMenuTab(
         name="Extensibility",

@@ -5,7 +5,7 @@ about: Report a reproducible bug in the current release of nautobot-data-validat
 
 ### Environment
 * Python version:  <!-- Example: 3.11.4 -->
-* Nautobot version:  <!-- Example: 2.0.0 -->
+* Nautobot version:  <!-- Example: 2.1.9 -->
 * nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->

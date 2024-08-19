@@ -1,12 +1,9 @@
-"""
-API test cases
-"""
+"""Unit tests for nautobot_data_validation_engine."""
 
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-
-from nautobot.dcim.models import Location, PowerFeed, Platform, Manufacturer
 from nautobot.core.testing import APITestCase, APIViewTestCases
+from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
@@ -26,7 +23,7 @@ class AppTest(APITestCase):
         Test the root view
         """
         url = reverse("plugins-api:nautobot_data_validation_engine-api:api-root")
-        response = self.client.get("{}?format=api".format(url), **self.header)
+        response = self.client.get(f"{url}?format=api", **self.header)
 
         self.assertEqual(response.status_code, 200)
 

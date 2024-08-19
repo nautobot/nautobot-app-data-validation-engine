@@ -2,7 +2,6 @@
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-
 from nautobot.core.forms import (
     BootstrapMixin,
     BulkEditNullBooleanSelect,
@@ -29,7 +28,6 @@ from nautobot_data_validation_engine.models import (
     RequiredValidationRule,
     UniqueValidationRule,
 )
-
 
 #
 # RegularExpressionValidationRules

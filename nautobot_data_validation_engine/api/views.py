@@ -2,8 +2,8 @@
 
 from nautobot.extras.api.views import NautobotModelViewSet
 
+from nautobot_data_validation_engine import filters, models
 from nautobot_data_validation_engine.api import serializers
-from nautobot_data_validation_engine import models, filters
 
 
 class RegularExpressionValidationRuleViewSet(NautobotModelViewSet):

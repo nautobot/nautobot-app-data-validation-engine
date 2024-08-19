@@ -9,23 +9,22 @@ A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
 
-import re
-import logging
 import inspect
+import logging
 import pkgutil
+import re
 import sys
-
 from typing import Optional
+
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
 from django.utils import timezone
-
+from nautobot.core.utils.data import render_jinja2
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
 from nautobot.extras.plugins import CustomValidator, PluginCustomValidator
 from nautobot.extras.registry import registry
-from nautobot.core.utils.data import render_jinja2
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,
@@ -44,7 +43,7 @@ class BaseValidator(PluginCustomValidator):
 
     model = None
 
-    def clean(self, exclude_disabled_rules=True):
+    def clean(self, exclude_disabled_rules=True):  # pylint: disable=too-many-branches
         """The clean method executes the actual rule enforcement logic for each model."""
         obj = self.context["object"]
 
@@ -63,9 +62,10 @@ class BaseValidator(PluginCustomValidator):
                 try:
                     regular_expression = render_jinja2(rule.regular_expression, self.context)
                     validate_regex(regular_expression)
-                except Exception:
+                # TODO: Switch to a less broad exception.
+                except Exception:  # pylint: disable=broad-exception-caught
                     LOGGER.exception(
-                        f"There was an error rendering the regular expression in the data validation rule '{rule}' and a ValidationError was raised!"
+                        "There was an error rendering the regular expression in the data validation rule '%s' and a ValidationError was raised!", rule
                     )
                     self.validation_error(
                         {
@@ -123,7 +123,7 @@ class BaseValidator(PluginCustomValidator):
             if field_value:
                 # Exclude the current object from the count
                 count_excluding_current = (
-                    obj.__class__._default_manager.filter(**{rule.field: field_value}).exclude(pk=obj.pk).count()
+                    obj.__class__._default_manager.filter(**{rule.field: field_value}).exclude(pk=obj.pk).count()  # pylint: disable=protected-access
                 )
 
                 if count_excluding_current >= rule.max_instances:
