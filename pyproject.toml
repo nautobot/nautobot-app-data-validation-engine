@@ -74,6 +74,7 @@ no-docstring-rgx = "^(_|test_|Meta$)"
 [tool.pylint.messages_control]
 disable = """,
     duplicate-code,
+    invalid-name,
     line-too-long,
     too-few-public-methods,
     too-many-ancestors
@@ -99,7 +100,6 @@ target-version = "py38"
 select = [
     "D",  # pydocstyle
     "F", "E", "W",  # flake8
-    "PL", # pylint
     "S",  # bandit
     "I",  # isort
 ]

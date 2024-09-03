@@ -161,4 +161,4 @@ class DataComplianceFilterSet(NautobotFilterSet):
         """Meta class for DataComplianceFilterSet."""
 
         model = DataCompliance
-        fields = ["compliance_class_name", "validated_attribute", "content_type", "valid"]
+        fields = "__all__"
