@@ -47,16 +47,7 @@ class RegularExpressionValidationRuleForm(NautobotModelForm):
         """Form metadata for the RegularExpressionValidationRule model."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "regular_expression",
-            "context_processing",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class RegularExpressionValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -127,7 +118,7 @@ class MinMaxValidationRuleForm(NautobotModelForm):
         """Form metadata for the MinMaxValidationRule model."""
 
         model = MinMaxValidationRule
-        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message", "tags"]
+        fields = "__all__"
 
 
 class MinMaxValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -186,14 +177,7 @@ class RequiredValidationRuleForm(NautobotModelForm):
         """Form metadata for the RequiredValidationRule model."""
 
         model = RequiredValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class RequiredValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -257,15 +241,7 @@ class UniqueValidationRuleForm(NautobotModelForm):
         """Form metadata for the UniqueValidationRule model."""
 
         model = UniqueValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "max_instances",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class UniqueValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):

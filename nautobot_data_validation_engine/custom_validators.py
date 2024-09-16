@@ -65,7 +65,8 @@ class BaseValidator(PluginCustomValidator):
                 # TODO: Switch to a less broad exception.
                 except Exception:  # pylint: disable=broad-exception-caught
                     LOGGER.exception(
-                        "There was an error rendering the regular expression in the data validation rule '%s' and a ValidationError was raised!", rule
+                        "There was an error rendering the regular expression in the data validation rule '%s' and a ValidationError was raised!",
+                        rule,
                     )
                     self.validation_error(
                         {

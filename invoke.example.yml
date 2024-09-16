@@ -1,12 +1,15 @@
 ---
 nautobot_data_validation_engine:
-  project_name: "nautobot-data-validation-engine"
   nautobot_ver: "2.1.9"
-  local: false
   python_ver: "3.11"
-  compose_dir: "development"
-  compose_files:
-    - "docker-compose.base.yml"
-    - "docker-compose.redis.yml"
-    - "docker-compose.postgres.yml"
-    - "docker-compose.dev.yml"
+  # local: false
+  # compose_dir: "/full/path/to/nautobot-app-data-validation-engine/development"
+
+# The following is an example of using MySQL as the database backend
+# ---
+# nautobot_data_validation_engine:
+#   compose_files:
+#     - "docker-compose.base.yml"
+#     - "docker-compose.redis.yml"
+#     - "docker-compose.mysql.yml"
+#     - "docker-compose.dev.yml"
