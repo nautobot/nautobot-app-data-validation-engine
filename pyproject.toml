@@ -60,7 +60,8 @@ mkdocstrings-python = "1.2.0"
 griffe = "0.31.0"
 
 [tool.poetry.extras]
-nautobot = ["nautobot"]
+all = [
+]
 
 [tool.black]
 line-length = 120
