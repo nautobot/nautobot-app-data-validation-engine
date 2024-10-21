@@ -8,6 +8,15 @@ readme = "README.md"
 homepage = "https://github.com/nautobot/nautobot-plugin-data-validation-engine"
 repository = "https://github.com/nautobot/nautobot-plugin-data-validation-engine"
 keywords = ["nautobot", "nautobot-plugin", "data", "validation", "django"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 include = [
     "LICENSE",
     "README.md",
@@ -19,7 +28,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
 # Used for local development
-nautobot = { version = "^1.6.0", optional = true }
+nautobot = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
@@ -40,17 +49,19 @@ Markdown = "*"
 toml = "*"
 requests = "^2.31.0"
 # Rendering docs to HTML
-mkdocs = "1.4.3"
+mkdocs = "1.5.3"
 # Material for MkDocs theme
 mkdocs-material = "9.1.18"
 # Render custom markdown for version added/changed/remove notes
-mkdocs-version-annotations = "1.0.0"
+markdown-version-annotations = "1.0.1"
 # Automatic documentation from sources, for MkDocs
 mkdocstrings = "0.22.0"
-mkdocstrings-python = "1.3.0"
+mkdocstrings-python = "1.2.0"
+griffe = "0.31.0"
 
 [tool.poetry.extras]
-nautobot = ["nautobot"]
+all = [
+]
 
 [tool.black]
 line-length = 120
