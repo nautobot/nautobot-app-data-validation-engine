@@ -7,6 +7,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
+
+try:
+    from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+except ImportError:
+    CHARFIELD_MAX_LENGTH = 255
 from nautobot.core.models.generics import PrimaryModel
 from nautobot.core.models.querysets import RestrictedQuerySet
 from nautobot.extras.utils import FeatureQuery, extras_features
@@ -318,14 +323,14 @@ class UniqueValidationRule(ValidationRule):
 class DataCompliance(PrimaryModel):
     """Model to represent the results of an audit method."""
 
-    compliance_class_name = models.CharField(max_length=100, blank=False, null=False)
+    compliance_class_name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=False, null=False)
     last_validation_date = models.DateTimeField(blank=False, null=False, auto_now=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, blank=False, null=False)
-    object_id = models.CharField(max_length=200, blank=False, null=False)
+    object_id = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=False, null=False)
     validated_object = GenericForeignKey("content_type", "object_id")
-    validated_object_str = models.CharField(max_length=200, blank=True, default="")
-    validated_attribute = models.CharField(max_length=100, blank=True, default="")
-    validated_attribute_value = models.CharField(max_length=200, blank=True, default="")
+    validated_object_str = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=True, default="")
+    validated_attribute = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=True, default="")
+    validated_attribute_value = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=True, default="")
     valid = models.BooleanField(blank=False, null=False)
     message = models.TextField(blank=True, default="")
 

@@ -2,6 +2,11 @@
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
+
+try:
+    from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+except ImportError:
+    CHARFIELD_MAX_LENGTH = 255
 from nautobot.core.forms import (
     BootstrapMixin,
     BulkEditNullBooleanSelect,
@@ -9,6 +14,7 @@ from nautobot.core.forms import (
     DynamicModelChoiceField,
     DynamicModelMultipleChoiceField,
     MultipleContentTypeField,
+    MultiValueCharField,
     StaticSelect2,
     TagFilterField,
 )
@@ -297,8 +303,8 @@ class DataComplianceFilterForm(BootstrapMixin, forms.Form):
     """Form for DataCompliance instances."""
 
     model = DataCompliance
-    compliance_class_name = forms.CharField(max_length=20, required=False)
-    validated_attribute = forms.CharField(max_length=20, required=False)
+    compliance_class_name = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
+    validated_attribute = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
     content_type = MultipleContentTypeField(
         feature=None,
