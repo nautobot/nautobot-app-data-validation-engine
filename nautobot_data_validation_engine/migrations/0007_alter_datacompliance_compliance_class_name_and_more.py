@@ -4,35 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('nautobot_data_validation_engine', '0006_add_field_defaults'),
+        ("nautobot_data_validation_engine", "0006_add_field_defaults"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='datacompliance',
-            name='compliance_class_name',
+            model_name="datacompliance",
+            name="compliance_class_name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='datacompliance',
-            name='object_id',
+            model_name="datacompliance",
+            name="object_id",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='datacompliance',
-            name='validated_attribute',
-            field=models.CharField(blank=True, default='', max_length=255),
+            model_name="datacompliance",
+            name="validated_attribute",
+            field=models.CharField(blank=True, default="", max_length=255),
         ),
         migrations.AlterField(
-            model_name='datacompliance',
-            name='validated_attribute_value',
-            field=models.CharField(blank=True, default='', max_length=255),
+            model_name="datacompliance",
+            name="validated_attribute_value",
+            field=models.CharField(blank=True, default="", max_length=255),
         ),
         migrations.AlterField(
-            model_name='datacompliance',
-            name='validated_object_str',
-            field=models.CharField(blank=True, default='', max_length=255),
+            model_name="datacompliance",
+            name="validated_object_str",
+            field=models.CharField(blank=True, default="", max_length=255),
         ),
     ]
