@@ -7,7 +7,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
-from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+try:
+    from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+except ImportError:
+    CHARFIELD_MAX_LENGTH = 255
 from nautobot.core.models.generics import PrimaryModel
 from nautobot.core.models.querysets import RestrictedQuerySet
 from nautobot.extras.utils import FeatureQuery, extras_features
