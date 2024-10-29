@@ -300,7 +300,7 @@ class DataComplianceFilterForm(BootstrapMixin, forms.Form):
 
     model = DataCompliance
     compliance_class_name = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
-    validated_attribute = forms.CharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
+    validated_attribute = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
     content_type = MultipleContentTypeField(
         feature=None,
