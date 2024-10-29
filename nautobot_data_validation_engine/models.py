@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
+
 try:
     from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
 except ImportError:

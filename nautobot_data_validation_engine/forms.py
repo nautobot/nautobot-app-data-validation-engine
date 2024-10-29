@@ -2,6 +2,7 @@
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
+
 try:
     from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
 except ImportError:
