@@ -1,2 +1,0 @@
-Updated minimum Nautobot version to `2.1.9`.
-Disabled specific `nb-use-fields-all` and `nb-sub-class-name` pylint rules in `tables.py`.
