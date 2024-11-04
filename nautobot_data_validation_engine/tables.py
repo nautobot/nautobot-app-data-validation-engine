@@ -1,8 +1,7 @@
 """Django tables."""
 
 import django_tables2 as tables
-from django.utils.safestring import mark_safe
-
+from django.utils.html import format_html
 from nautobot.core.tables import BaseTable, TagColumn, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
@@ -12,7 +11,6 @@ from nautobot_data_validation_engine.models import (
     RequiredValidationRule,
     UniqueValidationRule,
 )
-
 
 #
 # RegularExpressionValidationRules
@@ -30,7 +28,7 @@ class RegularExpressionValidationRuleTable(BaseTable):
         """Table metadata for the RegularExpressionValidationRule model."""
 
         model = RegularExpressionValidationRule
-        fields = (
+        fields = (  # pylint: disable=nb-use-fields-all
             "pk",
             "name",
             "enabled",
@@ -69,7 +67,7 @@ class MinMaxValidationRuleTable(BaseTable):
         """Table metadata for the MinMaxValidationRuleTable model."""
 
         model = MinMaxValidationRule
-        fields = (
+        fields = (  # pylint: disable=nb-use-fields-all
             "pk",
             "name",
             "enabled",
@@ -108,7 +106,7 @@ class RequiredValidationRuleTable(BaseTable):
         """Table metadata for the RequiredValidationRuleTable model."""
 
         model = RequiredValidationRule
-        fields = (
+        fields = (  # pylint: disable=nb-use-fields-all
             "pk",
             "name",
             "enabled",
@@ -143,7 +141,7 @@ class UniqueValidationRuleTable(BaseTable):
         """Table metadata for the UniqueValidationRuleTable model."""
 
         model = UniqueValidationRule
-        fields = (
+        fields = (  # pylint: disable=nb-use-fields-all
             "pk",
             "name",
             "enabled",
@@ -177,9 +175,7 @@ class ValidatedAttributeColumn(tables.Column):
         if hasattr(record.validated_object, value) and hasattr(
             getattr(record.validated_object, value), "get_absolute_url"
         ):
-            return mark_safe(
-                f'<a href="{getattr(record.validated_object, value).get_absolute_url()}">{value}</a>'
-            )  # nosec B703, B308
+            return format_html('<a href="{}">{}</a>', getattr(record.validated_object, value).get_absolute_url(), value)
         return value
 
 
@@ -200,7 +196,7 @@ class DataComplianceTable(BaseTable):
         """Meta class for DataComplianceTable."""
 
         model = DataCompliance
-        fields = [
+        fields = [  # pylint: disable=nb-use-fields-all
             "pk",
             "id",
             "content_type",
@@ -226,7 +222,7 @@ class DataComplianceTable(BaseTable):
         ]
 
 
-class DataComplianceTableTab(BaseTable):
+class DataComplianceTableTab(BaseTable):  # pylint: disable=nb-sub-class-name
     """Base table for viewing the DataCompliance related to a single object."""
 
     validated_attribute = ValidatedAttributeColumn()
@@ -236,7 +232,7 @@ class DataComplianceTableTab(BaseTable):
 
         model = DataCompliance
         order_by = ("compliance_class_name", "validated_attribute")
-        fields = [
+        fields = [  # pylint: disable=nb-use-fields-all
             "content_type",
             "compliance_class_name",
             "last_validation_date",

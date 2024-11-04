@@ -1,19 +1,9 @@
 """API views."""
 
-from rest_framework.routers import APIRootView
-
 from nautobot.extras.api.views import NautobotModelViewSet
 
+from nautobot_data_validation_engine import filters, models
 from nautobot_data_validation_engine.api import serializers
-from nautobot_data_validation_engine import models, filters
-
-
-class DataValidationEngineRootView(APIRootView):
-    """Data Validation Engine API root view."""
-
-    def get_view_name(self):
-        """Get the name of the view."""
-        return "Data Validation Engine"
 
 
 class RegularExpressionValidationRuleViewSet(NautobotModelViewSet):

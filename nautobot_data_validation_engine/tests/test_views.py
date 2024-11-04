@@ -2,14 +2,13 @@
 
 from unittest import skipIf
 from unittest.mock import MagicMock, patch
-from packaging import version
 
 from django.contrib.contenttypes.models import ContentType
 from django.http.request import QueryDict
-
 from nautobot.core.testing import TestCase, ViewTestCases
 from nautobot.dcim.models import Device, Location, LocationType, PowerFeed
 from nautobot.extras.models import Status
+from packaging import version
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,

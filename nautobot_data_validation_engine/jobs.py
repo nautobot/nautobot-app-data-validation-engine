@@ -3,14 +3,13 @@
 from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
-
 from nautobot.core.celery import register_jobs
+from nautobot.extras.jobs import BooleanVar, Job, MultiChoiceVar, get_task_logger
 from nautobot.extras.models import GitRepository
-from nautobot.extras.jobs import Job, MultiChoiceVar, get_task_logger, BooleanVar
 from nautobot.extras.plugins import CustomValidator, ValidationError
 from nautobot.extras.registry import registry
 
-from nautobot_data_validation_engine.custom_validators import get_data_compliance_rules_map, get_classes_from_git_repo
+from nautobot_data_validation_engine.custom_validators import get_classes_from_git_repo, get_data_compliance_rules_map
 from nautobot_data_validation_engine.models import DataCompliance
 
 logger = get_task_logger(__name__)
@@ -152,10 +151,10 @@ class DeleteOrphanedDataComplianceData(Job):
         number_deleted = 0
         for obj in DataCompliance.objects.all():
             if obj.validated_object is None:
-                logger.info(f"Deleting {obj}.")
+                logger.info("Deleting %s.", obj)
                 obj.delete()
                 number_deleted += 1
-        logger.info(f"Deleted {number_deleted} orphaned DataCompliance objects.")
+        logger.info("Deleted %s orphaned DataCompliance objects.", number_deleted)
 
 
 jobs = (

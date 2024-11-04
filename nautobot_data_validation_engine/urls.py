@@ -1,12 +1,12 @@
 """Django url patterns."""
 
+from django.templatetags.static import static
 from django.urls import path
-
+from django.views.generic import RedirectView
 from nautobot.core.views.routers import NautobotUIViewSetRouter
 from nautobot.extras.views import ObjectChangeLogView, ObjectNotesView
 
-from nautobot_data_validation_engine import views, models
-
+from nautobot_data_validation_engine import models, views
 
 router = NautobotUIViewSetRouter()
 router.register("data-compliance", views.DataComplianceListView)
@@ -81,4 +81,5 @@ urlpatterns = [
         name="uniquevalidationrule_notes",
         kwargs={"model": models.UniqueValidationRule},
     ),
+    path("docs/", RedirectView.as_view(url=static("nautobot_data_validation_engine/docs/index.html")), name="docs"),
 ] + router.urls

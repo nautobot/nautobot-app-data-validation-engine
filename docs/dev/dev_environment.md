@@ -13,7 +13,7 @@ This is a quick reference guide if you're already familiar with the development 
 
 The [Invoke](http://www.pyinvoke.org/) library is used to provide some helper commands based on the environment. There are a few configuration parameters which can be passed to Invoke to override the default configuration:
 
-- `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 2.0.0)
+- `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 2.1.9)
 - `project_name`: the default docker compose project name (default: `nautobot-data-validation-engine`)
 - `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.11)
 - `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
@@ -123,10 +123,7 @@ Each command can be executed with `invoke <command>`. All commands support the a
 #### Testing
 
 ```
-  bandit           Run bandit to validate basic static code security analysis.
-  black            Run black to check that Python files adhere to its style standards.
-  flake8           Run flake8 to check that Python files adhere to its style standards.
-  ruff             Run ruff to validate docstring formatting adheres to NTC defined standards.
+  ruff             Run ruff to perform code formatting and/or linting.
   pylint           Run pylint code analysis.
   tests            Run all tests for this app.
   unittest         Run Django unit tests for the app.
@@ -180,7 +177,7 @@ The first thing you need to do is build the necessary Docker image for Nautobot 
 #14 exporting layers
 #14 exporting layers 1.2s done
 #14 writing image sha256:2d524bc1665327faa0d34001b0a9d2ccf450612bf8feeb969312e96a2d3e3503 done
-#14 naming to docker.io/nautobot-data-validation-engine/nautobot:2.0.0-py3.11 done
+#14 naming to docker.io/nautobot-data-validation-engine/nautobot:2.1.9-py3.11 done
 ```
 
 ### Invoke - Starting the Development Environment
@@ -211,9 +208,9 @@ This will start all of the Docker containers used for hosting Nautobot. You shou
 ```bash
 ➜ docker ps
 ****CONTAINER ID   IMAGE                            COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-ee90fbfabd77   nautobot-data-validation-engine/nautobot:2.0.0-py3.11  "nautobot-server rqw…"   16 seconds ago   Up 13 seconds                                               nautobot_data_validation_engine_worker_1
-b8adb781d013   nautobot-data-validation-engine/nautobot:2.0.0-py3.11  "/docker-entrypoint.…"   20 seconds ago   Up 15 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   nautobot_data_validation_engine_nautobot_1
-d64ebd60675d   nautobot-data-validation-engine/nautobot:2.0.0-py3.11  "mkdocs serve -v -a …"   25 seconds ago   Up 18 seconds   0.0.0.0:8001->8080/tcp, :::8001->8080/tcp   nautobot_data_validation_engine_docs_1
+ee90fbfabd77   nautobot-data-validation-engine/nautobot:2.1.9-py3.11  "nautobot-server rqw…"   16 seconds ago   Up 13 seconds                                               nautobot_data_validation_engine_worker_1
+b8adb781d013   nautobot-data-validation-engine/nautobot:2.1.9-py3.11  "/docker-entrypoint.…"   20 seconds ago   Up 15 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   nautobot_data_validation_engine_nautobot_1
+d64ebd60675d   nautobot-data-validation-engine/nautobot:2.1.9-py3.11  "mkdocs serve -v -a …"   25 seconds ago   Up 18 seconds   0.0.0.0:8001->8080/tcp, :::8001->8080/tcp   nautobot_data_validation_engine_docs_1
 e72d63129b36   postgres:13-alpine               "docker-entrypoint.s…"   25 seconds ago   Up 19 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   nautobot_data_validation_engine_postgres_1
 96c6ff66997c   redis:6-alpine                   "docker-entrypoint.s…"   25 seconds ago   Up 21 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   nautobot_data_validation_engine_redis_1
 ```
@@ -411,7 +408,7 @@ namespace.configure(
     {
         "nautobot_data_validation_engine": {
             ...
-            "nautobot_ver": "2.0.0",
+            "nautobot_ver": "2.1.9",
 	    ...
         }
     }
@@ -454,7 +451,7 @@ This is the same as running:
 
 ### Tests
 
-To run tests against your code, you can run all of the tests that TravisCI runs against any new PR with:
+To run tests against your code, you can run all of the tests that the CI runs against any new PR with:
 
 ```bash
 ➜ invoke tests
@@ -464,9 +461,6 @@ To run an individual test, you can run any or all of the following:
 
 ```bash
 ➜ invoke unittest
-➜ invoke bandit
-➜ invoke black
-➜ invoke flake8
 ➜ invoke ruff
 ➜ invoke pylint
 ```

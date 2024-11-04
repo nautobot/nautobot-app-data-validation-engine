@@ -3,15 +3,15 @@
 from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
-from nautobot.core.views.viewsets import NautobotUIViewSet
-from nautobot.core.views.generic import ObjectView
 from nautobot.apps.views import (
-    ObjectListViewMixin,
-    ObjectDetailViewMixin,
-    ObjectDestroyViewMixin,
     ObjectBulkDestroyViewMixin,
+    ObjectDestroyViewMixin,
+    ObjectDetailViewMixin,
+    ObjectListViewMixin,
 )
+from nautobot.core.views.generic import ObjectView
 from nautobot.core.views.paginator import EnhancedPaginator, get_paginate_count
+from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.extras.utils import get_base_template
 
 from nautobot_data_validation_engine import filters, forms, tables
@@ -23,7 +23,6 @@ from nautobot_data_validation_engine.models import (
     RequiredValidationRule,
     UniqueValidationRule,
 )
-
 
 #
 # RegularExpressionValidationRules

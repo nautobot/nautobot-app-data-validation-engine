@@ -3,6 +3,10 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 
+try:
+    from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+except ImportError:
+    CHARFIELD_MAX_LENGTH = 255
 from nautobot.core.forms import (
     BootstrapMixin,
     BulkEditNullBooleanSelect,
@@ -10,6 +14,7 @@ from nautobot.core.forms import (
     DynamicModelChoiceField,
     DynamicModelMultipleChoiceField,
     MultipleContentTypeField,
+    MultiValueCharField,
     StaticSelect2,
     TagFilterField,
 )
@@ -30,7 +35,6 @@ from nautobot_data_validation_engine.models import (
     UniqueValidationRule,
 )
 
-
 #
 # RegularExpressionValidationRules
 #
@@ -49,16 +53,7 @@ class RegularExpressionValidationRuleForm(NautobotModelForm):
         """Form metadata for the RegularExpressionValidationRule model."""
 
         model = RegularExpressionValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "regular_expression",
-            "context_processing",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class RegularExpressionValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -129,7 +124,7 @@ class MinMaxValidationRuleForm(NautobotModelForm):
         """Form metadata for the MinMaxValidationRule model."""
 
         model = MinMaxValidationRule
-        fields = ["name", "enabled", "content_type", "field", "min", "max", "error_message", "tags"]
+        fields = "__all__"
 
 
 class MinMaxValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -188,14 +183,7 @@ class RequiredValidationRuleForm(NautobotModelForm):
         """Form metadata for the RequiredValidationRule model."""
 
         model = RequiredValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class RequiredValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -259,15 +247,7 @@ class UniqueValidationRuleForm(NautobotModelForm):
         """Form metadata for the UniqueValidationRule model."""
 
         model = UniqueValidationRule
-        fields = [
-            "name",
-            "enabled",
-            "content_type",
-            "field",
-            "max_instances",
-            "error_message",
-            "tags",
-        ]
+        fields = "__all__"
 
 
 class UniqueValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
@@ -323,8 +303,8 @@ class DataComplianceFilterForm(BootstrapMixin, forms.Form):
     """Form for DataCompliance instances."""
 
     model = DataCompliance
-    compliance_class_name = forms.CharField(max_length=20, required=False)
-    validated_attribute = forms.CharField(max_length=20, required=False)
+    compliance_class_name = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
+    validated_attribute = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
     content_type = MultipleContentTypeField(
         feature=None,
