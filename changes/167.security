@@ -1,1 +1,0 @@
-Updated `requests` dependency to `2.32.2` due to CVE-2024-35195.
