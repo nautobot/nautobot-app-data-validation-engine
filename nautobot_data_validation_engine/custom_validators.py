@@ -1,7 +1,7 @@
 """
 This is the meat of this app.
 
-Here we dynamically generate a PluginCustomValidator class
+Here we dynamically generate a CustomValidator class
 for each model currently registered in the extras_features
 query registry 'custom_validators'.
 
@@ -23,7 +23,7 @@ from django.utils import timezone
 from nautobot.core.utils.data import render_jinja2
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
-from nautobot.extras.plugins import CustomValidator, PluginCustomValidator
+from nautobot.extras.plugins import CustomValidator
 from nautobot.extras.registry import registry
 
 from nautobot_data_validation_engine.models import (
@@ -38,8 +38,8 @@ from nautobot_data_validation_engine.models import (
 LOGGER = logging.getLogger(__name__)
 
 
-class BaseValidator(PluginCustomValidator):
-    """Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
+class BaseValidator(CustomValidator):
+    """Base CustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
 
     model = None
 
@@ -304,10 +304,10 @@ class DataComplianceRule(CustomValidator):
 
 
 class CustomValidatorIterator:
-    """Iterator that generates PluginCustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
+    """Iterator that generates CustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
 
     def __iter__(self):
-        """Return a generator of PluginCustomValidator classes for each registered model."""
+        """Return a generator of CustomValidator classes for each registered model."""
         for app_label, models in registry["model_features"]["custom_validators"].items():
             for model in models:
                 yield type(
