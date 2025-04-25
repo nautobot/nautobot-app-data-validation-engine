@@ -43,10 +43,37 @@ from nautobot_data_validation_engine.models import (
 class RegularExpressionValidationRuleForm(NautobotModelForm):
     """Base model form for the RegularExpressionValidationRule model."""
 
-    content_type = DynamicModelChoiceField(
-        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
-            "app_label", "model"
-        ),
+    class Meta:
+        """Meta attributes."""
+
+        model = models.ValidationRule
+        fields = "__all__"
+
+
+class ValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
+    """ValidationRule bulk edit form."""
+
+    pk = forms.ModelMultipleChoiceField(queryset=models.ValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    description = forms.CharField(required=False)
+
+    class Meta:
+        """Meta attributes."""
+
+        nullable_fields = [
+            "description",
+        ]
+
+
+class ValidationRuleFilterForm(NautobotFilterForm):
+    """Filter form to filter searches."""
+
+    model = models.ValidationRule
+    field_order = ["q", "name"]
+
+    q = forms.CharField(
+        required=False,
+        label="Search",
+        help_text="Search within Name.",
     )
 
     class Meta:

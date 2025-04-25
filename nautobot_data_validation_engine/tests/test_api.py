@@ -1,277 +1,45 @@
 """Unit tests for nautobot_data_validation_engine."""
 
-from django.contrib.contenttypes.models import ContentType
-from django.urls import reverse
-from nautobot.core.testing import APITestCase, APIViewTestCases
-from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed
+from nautobot.apps.testing import APIViewTestCases
 
-from nautobot_data_validation_engine.models import (
-    MinMaxValidationRule,
-    RegularExpressionValidationRule,
-    RequiredValidationRule,
-    UniqueValidationRule,
-)
+from nautobot_data_validation_engine import models
+from nautobot_data_validation_engine.tests import fixtures
 
 
-class AppTest(APITestCase):
-    """
-    Test base path for app
-    """
+class ValidationRuleAPIViewTest(APIViewTestCases.APIViewTestCase):
+    # pylint: disable=too-many-ancestors
+    """Test the API viewsets for ValidationRule."""
 
-    def test_root(self):
-        """
-        Test the root view
-        """
-        url = reverse("plugins-api:nautobot_data_validation_engine-api:api-root")
-        response = self.client.get(f"{url}?format=api", **self.header)
-
-        self.assertEqual(response.status_code, 200)
-
-
-class RegularExpressionValidationRuleTest(APIViewTestCases.APIViewTestCase):
-    """
-    API view test cases for the RegularExpressionValidationRule model
-    """
-
-    model = RegularExpressionValidationRule
-    brief_fields = [
-        "display",
-        "id",
-        "name",
-        "url",
-    ]
-    choices_fields = {"content_type"}
-
-    create_data = [
-        {
-            "name": "Regex rule 4",
-            "content_type": "dcim.location",
-            "field": "contact_name",
-            "regular_expression": "^.*$",
-        },
-        {
-            "name": "Regex rule 5",
-            "content_type": "dcim.location",
-            "field": "physical_address",
-            "regular_expression": "^.*$",
-        },
-        {
-            "name": "Regex rule 6",
-            "content_type": "dcim.location",
-            "field": "shipping_address",
-            "regular_expression": "^.*$",
-        },
-    ]
-    bulk_update_data = {
-        "enabled": False,
-    }
+    model = models.ValidationRule
+    # Any choice fields will require the choices_fields to be set
+    # to the field names in the model that are choice fields.
+    choices_fields = ()
 
     @classmethod
     def setUpTestData(cls):
-        """
-        Create test data
-        """
-        RegularExpressionValidationRule.objects.create(
-            name="Regex rule 1",
-            content_type=ContentType.objects.get_for_model(Location),
-            field="name",
-            regular_expression="^.*$",
-        )
-        RegularExpressionValidationRule.objects.create(
-            name="Regex rule 2",
-            content_type=ContentType.objects.get_for_model(Location),
-            field="description",
-            regular_expression="^.*$",
-        )
-        RegularExpressionValidationRule.objects.create(
-            name="Regex rule 3",
-            content_type=ContentType.objects.get_for_model(Location),
-            field="comments",
-            regular_expression="^.*$",
-        )
-
-
-class MinMaxValidationRuleTest(APIViewTestCases.APIViewTestCase):
-    """
-    API view test cases for the MinMaxValidationRule model
-    """
-
-    model = MinMaxValidationRule
-    brief_fields = [
-        "display",
-        "id",
-        "name",
-        "url",
-    ]
-    choices_fields = {"content_type"}
-
-    create_data = [
-        {
-            "name": "Min max rule 4",
-            "content_type": "dcim.device",
-            "field": "vc_position",
-            "min": 0,
-            "max": 1,
-        },
-        {
-            "name": "Min max rule 5",
-            "content_type": "dcim.device",
-            "field": "vc_priority",
-            "min": -5.6,
-            "max": 0,
-        },
-        {
-            "name": "Min max rule 6",
-            "content_type": "dcim.device",
-            "field": "position",
-            "min": 5,
-            "max": 6,
-        },
-    ]
-    bulk_update_data = {
-        "enabled": False,
-    }
-
-    @classmethod
-    def setUpTestData(cls):
-        """
-        Create test data
-        """
-        MinMaxValidationRule.objects.create(
-            name="Min max rule 1",
-            content_type=ContentType.objects.get_for_model(PowerFeed),
-            field="amperage",
-            min=1,
-        )
-        MinMaxValidationRule.objects.create(
-            name="Min max rule 2",
-            content_type=ContentType.objects.get_for_model(PowerFeed),
-            field="max_utilization",
-            min=1,
-        )
-        MinMaxValidationRule.objects.create(
-            name="Min max rule 3",
-            content_type=ContentType.objects.get_for_model(PowerFeed),
-            field="voltage",
-            min=1,
-        )
-
-
-class RequiredValidationRuleTest(APIViewTestCases.APIViewTestCase):
-    """
-    API view test cases for the RequiredValidationRule model
-    """
-
-    model = RequiredValidationRule
-    brief_fields = [
-        "display",
-        "id",
-        "name",
-        "url",
-    ]
-    choices_fields = {"content_type"}
-
-    create_data = [
-        {
-            "name": "Required rule 4",
-            "content_type": "dcim.location",
-            "field": "physical_address",
-        },
-        {
-            "name": "Required rule 5",
-            "content_type": "dcim.location",
-            "field": "asn",
-        },
-        {
-            "name": "Required rule 6",
-            "content_type": "dcim.location",
-            "field": "facility",
-        },
-    ]
-    bulk_update_data = {
-        "enabled": False,
-    }
-
-    @classmethod
-    def setUpTestData(cls):
-        """
-        Create test data
-        """
-        RequiredValidationRule.objects.create(
-            name="Required rule 1",
-            content_type=ContentType.objects.get_for_model(Location),
-            field="description",
-        )
-        RequiredValidationRule.objects.create(
-            name="Required rule 2",
-            content_type=ContentType.objects.get_for_model(Platform),
-            field="description",
-        )
-        RequiredValidationRule.objects.create(
-            name="Required rule 3",
-            content_type=ContentType.objects.get_for_model(Manufacturer),
-            field="description",
-        )
-
-
-class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
-    """
-    API view test cases for the UniqueValidationRule model
-    """
-
-    model = UniqueValidationRule
-    brief_fields = [
-        "display",
-        "id",
-        "name",
-        "url",
-    ]
-    choices_fields = {"content_type"}
-
-    create_data = [
-        {
-            "name": "Unique rule 4",
-            "content_type": "dcim.location",
-            "field": "physical_address",
-            "max_instances": 1,
-        },
-        {
-            "name": "Unique rule 5",
-            "content_type": "dcim.location",
-            "field": "asn",
-            "max_instances": 2,
-        },
-        {
-            "name": "Unique rule 6",
-            "content_type": "dcim.location",
-            "field": "facility",
-            "max_instances": 3,
-        },
-    ]
-    bulk_update_data = {
-        "enabled": False,
-    }
-
-    @classmethod
-    def setUpTestData(cls):
-        """
-        Create test data
-        """
-        UniqueValidationRule.objects.create(
-            name="Unique rule 1",
-            content_type=ContentType.objects.get_for_model(Location),
-            field="description",
-            max_instances=1,
-        )
-        UniqueValidationRule.objects.create(
-            name="Unique rule 2",
-            content_type=ContentType.objects.get_for_model(Platform),
-            field="description",
-            max_instances=2,
-        )
-        UniqueValidationRule.objects.create(
-            name="Unique rule 3",
-            content_type=ContentType.objects.get_for_model(Manufacturer),
-            field="description",
-            max_instances=3,
-        )
+        """Create test data for ValidationRule API viewset."""
+        super().setUpTestData()
+        # Create 3 objects for the generic API test cases.
+        fixtures.create_validationrule()
+        # Create 3 objects for the api test cases.
+        cls.create_data = [
+            {
+                "name": "API Test One",
+                "description": "Test One Description",
+            },
+            {
+                "name": "API Test Two",
+                "description": "Test Two Description",
+            },
+            {
+                "name": "API Test Three",
+                "description": "Test Three Description",
+            },
+        ]
+        cls.update_data = {
+            "name": "Update Test Two",
+            "description": "Test Two Description",
+        }
+        cls.bulk_update_data = {
+            "description": "Test Bulk Update Description",
+        }

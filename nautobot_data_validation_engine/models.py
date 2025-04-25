@@ -8,39 +8,16 @@ from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
 
-try:
-    from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
-except ImportError:
-    CHARFIELD_MAX_LENGTH = 255
-from nautobot.core.models.generics import PrimaryModel
-from nautobot.core.models.querysets import RestrictedQuerySet
-from nautobot.extras.utils import FeatureQuery, extras_features
+# Nautobot imports
+from nautobot.apps.models import PrimaryModel, extras_features
 
-
-def validate_regex(value):
-    """
-    Checks that the value is a valid regular expression.
-
-    Don't confuse this with RegexValidator, which *uses* a regex to validate a value.
-    """
-    try:
-        re.compile(value)
-    except re.error as e:
-        raise ValidationError(f"{value} is not a valid regular expression.") from e
-
-
-class ValidationRuleManager(RestrictedQuerySet):
-    """Adds a helper method for getting all active instances for a given content type."""
-
-    def get_for_model(self, content_type):
-        """Given a content type string (<app_label>.<model>), return all instances that are enabled for that model."""
-        app_label, model = content_type.split(".")
-
-        return self.filter(content_type__app_label=app_label, content_type__model=model)
-
-
-class ValidationRule(PrimaryModel):
-    """Base model for all validation engine rule models."""
+# If you want to choose a specific model to overload in your class declaration, please reference the following documentation:
+# how to chose a database model: https://docs.nautobot.com/projects/core/en/stable/plugins/development/#database-models
+# If you want to use the extras_features decorator please reference the following documentation
+# https://docs.nautobot.com/projects/core/en/stable/development/core/model-checklist/#extras-features
+@extras_features("custom_links", "custom_validators", "export_templates", "graphql", "webhooks")
+class ValidationRule(PrimaryModel):  # pylint: disable=too-many-ancestors
+    """Base model for Data Validation Engine app."""
 
     name = models.CharField(max_length=100, unique=True)
     content_type = models.ForeignKey(

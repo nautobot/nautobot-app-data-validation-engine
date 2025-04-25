@@ -35,14 +35,17 @@ _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS = [version.parse("1.5.2"), version.parse(
 class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
     """View test cases for the RegularExpressionValidationRule model."""
 
-    model = RegularExpressionValidationRule
+    model = models.ValidationRule
+    bulk_edit_data = {"description": "Bulk edit views"}
+    form_data = {
+        "name": "Test 1",
+        "description": "Initial model",
+    }
 
-    @skipIf(
-        _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
-        f"Skip test in Nautobot version {_NAUTOBOT_VERSION} due to Nautobot issue #2948",
-    )
-    def test_list_objects_with_permission(self):
-        super().test_list_objects_with_permission()
+    update_data = {
+        "name": "Test 2",
+        "description": "Updated model",
+    }
 
     @classmethod
     def setUpTestData(cls):
