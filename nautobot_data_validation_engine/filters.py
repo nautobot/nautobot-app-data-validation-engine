@@ -5,7 +5,7 @@ from nautobot.apps.filters import NameSearchFilterSet, NautobotFilterSet
 from nautobot_data_validation_engine import models
 
 
-class ValidationRuleFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint: disable=too-many-ancestors
+class ValidationRuleFilterSet(NameSearchFilterSet, NautobotFilterSet):  # pylint: disable=too-many-ancestors
     """Filter for ValidationRule."""
 
     class Meta:
@@ -14,4 +14,4 @@ class ValidationRuleFilterSet(NautobotFilterSet, NameSearchFilterSet):  # pylint
         model = models.ValidationRule
 
         # add any fields from the model that you would like to filter your searches by using those
-        fields = ["id", "name", "description"]
+        fields = "__all__"

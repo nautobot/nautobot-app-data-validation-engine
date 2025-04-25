@@ -1,16 +1,22 @@
 """Test ValidationRule Filter."""
 
-from django.test import TestCase
+from nautobot.apps.testing import FilterTestCases
 
 from nautobot_data_validation_engine import filters, models
 from nautobot_data_validation_engine.tests import fixtures
 
 
-class ValidationRuleFilterTestCase(TestCase):
+class ValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
     """ValidationRule Filter Test Case."""
 
     queryset = models.ValidationRule.objects.all()
     filterset = filters.ValidationRuleFilterSet
+    generic_filter_tests = (
+        ("id",),
+        ("created",),
+        ("last_updated",),
+        ("name",),
+    )
 
     @classmethod
     def setUpTestData(cls):

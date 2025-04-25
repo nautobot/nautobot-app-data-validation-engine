@@ -13,10 +13,7 @@ class ValidationRuleForm(NautobotModelForm):  # pylint: disable=too-many-ancesto
         """Meta attributes."""
 
         model = models.ValidationRule
-        fields = [
-            "name",
-            "description",
-        ]
+        fields = "__all__"
 
 
 class ValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
@@ -42,6 +39,6 @@ class ValidationRuleFilterForm(NautobotFilterForm):
     q = forms.CharField(
         required=False,
         label="Search",
-        help_text="Search within Name or Slug.",
+        help_text="Search within Name.",
     )
     name = forms.CharField(required=False, label="Name")
