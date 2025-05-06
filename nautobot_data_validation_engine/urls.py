@@ -10,11 +10,11 @@ from nautobot_data_validation_engine import models, views
 
 app_name = "nautobot_data_validation_engine"
 router = NautobotUIViewSetRouter()
-
-# The standard is for the route to be the hyphenated version of the model class name plural.
-# for example, ExampleModel would be example-models.
-router.register("validation-rules", views.ValidationRuleUIViewSet)
-
+router.register("data-compliance", views.DataComplianceListView)
+router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
+router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
+router.register("required-rules", views.RequiredValidationRuleUIViewSet)
+router.register("unique-rules", views.UniqueValidationRuleUIViewSet)
 
 urlpatterns = [
     path(
