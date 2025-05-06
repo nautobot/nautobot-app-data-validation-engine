@@ -109,9 +109,6 @@ nav:
       - Using the App: "user/app_use_cases.md"
       - Data Compliance: "user/app_data_compliance.md"
       - Frequently Asked Questions: "user/faq.md"
-      - External Interactions: "user/external_interactions.md"
-      - Data Models:
-          - Validation Rule: "models/validationrule.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
       - Upgrade: "admin/upgrade.md"
