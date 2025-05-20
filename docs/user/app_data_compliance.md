@@ -25,6 +25,7 @@ Any `DataComplianceRule` class can have a `name` defined to provide a friendly n
 The first step is to create your desired data compliance rules following whatever programming logic you want. These compliance rules should be included as methods within one or more classes that implement `DataComplianceRule`.
 
 There are two options for where to include these data compliance rule classes:
+
 1. In a remote Git repository *(recommended)*
 2. In the app's code
 
