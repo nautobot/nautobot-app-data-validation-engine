@@ -10,6 +10,8 @@
 
 # Closes: #<ISSUE NUMBER GOES HERE>
 
+# IMPORTANT: This app will be integrated into Nautobot v3.0. All pull requests into this repository should be ported to the [nautobot](https://github.com/nautobot/nautobot) repo.
+
 ## What's Changed
 
 <!--
