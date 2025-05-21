@@ -1,0 +1,1 @@
+Disallow validating DecimalField types with MinMaxValidationRule
