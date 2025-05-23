@@ -14,6 +14,7 @@ import logging
 import pkgutil
 import re
 import sys
+from decimal import Decimal
 from typing import Optional
 
 from django.contrib.contenttypes.models import ContentType
@@ -95,7 +96,7 @@ class BaseValidator(PluginCustomValidator):
                     }
                 )
 
-            elif not isinstance(field_value, (int, float)):
+            elif not isinstance(field_value, (int, float, Decimal)):
                 self.validation_error(
                     {
                         rule.field: f"Unable to validate against min/max rule {rule} because the field value is not numeric."
