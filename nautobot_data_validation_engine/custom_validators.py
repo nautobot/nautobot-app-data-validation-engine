@@ -295,7 +295,7 @@ class DataComplianceRule(CustomValidator):
             defaults={
                 "last_validation_date": self.result_date,
                 "validated_object_str": str(instance),
-                "validated_attribute_value": str(attribute_value) if attribute_value else "",
+                "validated_attribute_value": str(attribute_value)[:254] if attribute_value else "",
                 "message": message,
                 "valid": valid,
             },
