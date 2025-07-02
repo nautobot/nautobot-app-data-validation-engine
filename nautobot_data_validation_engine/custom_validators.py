@@ -283,7 +283,10 @@ class DataComplianceRule(CustomValidator):
         """Generate a DataCompliance object based on the given parameters."""
         instance = self.context["object"]
         attribute_value = None
-        if attribute:
+        if attribute and attribute.startswith("cf_"):
+            # Custom field attributes are prefixed with 'cf_'
+            attribute_value = instance.cf.get(attribute[3:], None)
+        elif attribute:
             attribute_value = getattr(instance, attribute)
         else:
             attribute = "__all__"
