@@ -18,6 +18,9 @@ Any `DataComplianceRule` class can have a `name` defined to provide a friendly n
 > 
 > For example, if a user fixes an object attribute that was incompliant with a built-in rule and then navigates to its `Data Compliance` tab, the object will still show as invalid for that built-in rule. This will remain the case until the job is ran again with the `Run built-in validation rules?` option checked.
 
+!!! note
+    When raising a ComplianceError, the attribute must exist on the object. To raise errors for custom fields, use cf_custom_field_name as the attribute name.
+
 ## How to Use
 
 ### Step 1. Create Data Compliance Rules

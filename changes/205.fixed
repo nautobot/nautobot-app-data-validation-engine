@@ -1,0 +1,1 @@
+Added support for validating custom fields by referencing them as cf_<custom_field_name> in ComplianceError exceptions
