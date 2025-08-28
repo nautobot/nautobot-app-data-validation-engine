@@ -14,7 +14,9 @@ import logging
 import pkgutil
 import re
 import sys
+import threading
 from typing import Optional
+
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -36,7 +38,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 LOGGER = logging.getLogger(__name__)
-
+_IMPORT_LOCK = threading.RLock()
 
 class BaseValidator(CustomValidator):
     """Base CustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
@@ -193,13 +195,14 @@ def get_classes_from_git_repo(repo: GitRepository):
     """Get list of DataComplianceRule classes found within the custom_validators folder of the given repo."""
     ensure_git_repository(repo, head=repo.current_head)
     class_list = []
-    for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
-        if discovered_module_name in sys.modules:
-            del sys.modules[discovered_module_name]
-        module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
-        for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
-            class_list.append(complance_class)
-    return class_list
+    with _IMPORT_LOCK:
+        for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
+            if discovered_module_name in sys.modules:
+                del sys.modules[discovered_module_name]
+            module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
+            for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
+                class_list.append(complance_class)
+        return class_list
 
 
 class ComplianceError(ValidationError):
