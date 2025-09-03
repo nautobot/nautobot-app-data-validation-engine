@@ -17,7 +17,6 @@ import sys
 import threading
 from typing import Optional
 
-
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
@@ -39,6 +38,7 @@ from nautobot_data_validation_engine.models import (
 
 LOGGER = logging.getLogger(__name__)
 _IMPORT_LOCK = threading.RLock()
+
 
 class BaseValidator(CustomValidator):
     """Base CustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
