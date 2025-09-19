@@ -27,7 +27,11 @@
             "pull_request_strategy": "create",
             "post_actions": [],
             "draft": false,
+<<<<<<< HEAD
             "baked_commit_ref": "a4f87d6db0205535a0f477d34a9ada25141e5d2a"
+=======
+            "baked_commit_ref": "7c52cb7dcfc2881e03e5db245950966fc1bca77a"
+>>>>>>> 29595d7 (fix conflicts)
         }
     }
 }
