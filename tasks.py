@@ -256,20 +256,19 @@ def _get_docker_nautobot_version(context, nautobot_ver=None, python_ver=None):
             "Generally intended to be used in CI and not for local development. (default: disabled)"
         ),
         "constrain_python_ver": (
-            "Target Python version to constrain resolution. Accepts X.Y or X.Y.Z. "
-            "Example: --constrain-python-ver=3.9.3 "
-            "This helps avoid poetry complaints about Python incompatibilities. "
+            "When using `constrain_nautobot_ver`, further constrain the nautobot version "
+            "to python_ver so that poetry doesn't complain about python version incompatibilities. "
             "Generally intended to be used in CI and not for local development. (default: disabled)"
         ),
     }
 )
-def lock(context, check=False, constrain_nautobot_ver=False, constrain_python_ver=""):
-    """Generate poetry.lock; optionally constrain Nautobot and/or Python (with patch)."""
+def lock(context, check=False, constrain_nautobot_ver=False, constrain_python_ver=False):
+    """Generate poetry.lock file."""
     if constrain_nautobot_ver:
         docker_nautobot_version = _get_docker_nautobot_version(context)
         command = f"poetry add --lock nautobot@{docker_nautobot_version}"
         if constrain_python_ver:
-            command += f" --python {constrain_python_ver}"
+            command += f" --python {context.nautobot_data_validation_engine.python_ver}"
         try:
             output = run_command(context, command, hide=True)
             print(output.stdout, end="")
@@ -278,10 +277,10 @@ def lock(context, check=False, constrain_nautobot_ver=False, constrain_python_ve
             print("Unable to add Nautobot dependency with version constraint, falling back to git branch.")
             command = f"poetry add --lock git+https://github.com/nautobot/nautobot.git#{context.nautobot_data_validation_engine.nautobot_ver}"
             if constrain_python_ver:
-                command += f" --python {constrain_python_ver}"
+                command += f" --python {context.nautobot_data_validation_engine.python_ver}"
             run_command(context, command)
     else:
-        command = f"poetry {'check' if check else 'lock'}"
+        command = f"poetry {'check' if check else 'lock --no-update'}"
         run_command(context, command)
 
 
@@ -774,12 +773,11 @@ def pylint(context):
 def autoformat(context):
     """Run code autoformatting."""
     ruff(context, action=["format"], fix=True)
-    djhtml(context)
 
 
 @task(
     help={
-        "action": "Available values are `['lint', 'format']`. Can be used multiple times. (default: `--action lint --action format`)",
+        "action": "Available values are `['lint', 'format']`. Can be used multiple times. (default: `['lint', 'format']`)",
         "target": "File or directory to inspect, repeatable (default: all files in the project will be inspected)",
         "fix": "Automatically fix selected actions. May not be able to fix all issues found. (default: False)",
         "output_format": "See https://docs.astral.sh/ruff/settings/#output-format for details. (default: `concise`)",
@@ -812,42 +810,6 @@ def ruff(context, action=None, target=None, fix=False, output_format="concise"):
         if not run_command(context, command, warn=True):
             exit_code = 1
 
-    if exit_code != 0:
-        raise Exit(code=exit_code)
-
-
-@task(
-    help={
-        "target": "File or directory to inspect, repeatable (default: all files in the project will be inspected)",
-    },
-    iterable=["target"],
-)
-def djlint(context, target=None):
-    """Run djlint to lint Django templates."""
-    if not target:
-        target = ["."]
-
-    command = "djlint --lint "
-    command += " ".join(target)
-
-    exit_code = 0 if run_command(context, command, warn=True) else 1
-    if exit_code != 0:
-        raise Exit(code=exit_code)
-
-
-@task(
-    help={
-        "check": "Run djhtml in check mode.",
-    },
-)
-def djhtml(context, check=False):
-    """Run djhtml to format Django HTML templates."""
-    command = "djhtml -t 4 nautobot_data_validation_engine/templates/"
-
-    if check:
-        command += " --check"
-
-    exit_code = 0 if run_command(context, command, warn=True) else 1
     if exit_code != 0:
         raise Exit(code=exit_code)
 
@@ -968,8 +930,6 @@ def tests(context, failfast=False, keepdb=False, lint_only=False):
     # Sorted loosely from fastest to slowest
     print("Running ruff...")
     ruff(context)
-    print("Running djlint...")
-    djlint(context)
     print("Running yamllint...")
     yamllint(context)
     print("Running markdownlint...")
