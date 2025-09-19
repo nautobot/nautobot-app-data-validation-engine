@@ -1,6 +1,5 @@
 """Views for nautobot_data_validation_engine."""
 
-<<<<<<< HEAD
 from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
 from django_tables2 import RequestConfig
@@ -14,11 +13,6 @@ from nautobot.core.views.generic import ObjectView
 from nautobot.core.views.paginator import EnhancedPaginator, get_paginate_count
 from nautobot.core.views.viewsets import NautobotUIViewSet
 from nautobot.extras.utils import get_base_template
-=======
-from nautobot.apps.views import NautobotUIViewSet
-from nautobot.apps.ui import ObjectDetailContent, ObjectFieldsPanel, ObjectTablePanel, SectionChoices
-from nautobot.core.templatetags import helpers
->>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 from nautobot_data_validation_engine import filters, forms, tables
 from nautobot_data_validation_engine.api import serializers
@@ -109,7 +103,6 @@ class DataComplianceListView(  # pylint: disable=W0223
     """Views for the DataComplianceListView model."""
 
     lookup_field = "pk"
-<<<<<<< HEAD
     queryset = DataCompliance.objects.all()
     table_class = tables.DataComplianceTable
     filterset_class = filters.DataComplianceFilterSet
@@ -142,39 +135,3 @@ class DataComplianceObjectView(ObjectView):
         paginate = {"paginator_class": EnhancedPaginator, "per_page": get_paginate_count(request)}
         RequestConfig(request, paginate).configure(compliance_table)
         return {"active_tab": request.GET["tab"], "table": compliance_table, "base_template": base_template}
-=======
-    queryset = models.ValidationRule.objects.all()
-    serializer_class = serializers.ValidationRuleSerializer
-    table_class = tables.ValidationRuleTable
-
-    # Here is an example of using the UI  Component Framework for the detail view.
-    # More information can be found in the Nautobot documentation:
-    # https://docs.nautobot.com/projects/core/en/stable/development/core/ui-component-framework/
-    object_detail_content = ObjectDetailContent(
-        panels=[
-            ObjectFieldsPanel(
-                weight=100,
-                section=SectionChoices.LEFT_HALF,
-                fields="__all__",
-                # Alternatively, you can specify a list of field names:
-                # fields=[
-                #     "name",
-                #     "description",
-                # ],
-                # Some fields may require additional configuration, we can use value_transforms
-                # value_transforms={
-                #     "name": [helpers.bettertitle]
-                # },
-            ),
-            # If there is a ForeignKey or M2M with this model we can use ObjectTablePanel
-            # to display them in a table format.
-            # ObjectTablePanel(
-                # weight=200,
-                # section=SectionChoices.RIGHT_HALF,
-                # table_class=tables.ValidationRuleTable,
-                # You will want to filter the table using the related_name
-                # filter="validationrules",
-            # ),
-        ],
-    )
->>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
