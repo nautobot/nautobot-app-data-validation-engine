@@ -10,8 +10,6 @@
         "project_slug": "nautobot-app-data-validation-engine",
         "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
         "base_url": "nautobot-data-validation-engine",
-        "min_nautobot_version": "2.1.9",
-        "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
         "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
         "model_class_name": "ValidationRule",
@@ -21,13 +19,17 @@
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "nautobot-app-v2.5.1",
+            "template_ref": "nautobot-app-v2.6.0",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
-            "pull_request_strategy": "create",
+            "pull_request_strategy": "update-or-create",
             "post_actions": [],
             "draft": false,
+<<<<<<< HEAD
             "baked_commit_ref": "a4f87d6db0205535a0f477d34a9ada25141e5d2a"
+=======
+            "baked_commit_ref": "ed5123f216ec4099295f9607b0f6a211299920be"
+>>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         }
     }
 }

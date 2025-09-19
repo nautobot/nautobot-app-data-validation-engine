@@ -1,7 +1,12 @@
 """Forms for nautobot_data_validation_engine."""
 
 from django import forms
+<<<<<<< HEAD
 from django.contrib.contenttypes.models import ContentType
+=======
+from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+from nautobot.apps.forms import NautobotBulkEditForm, NautobotFilterForm, NautobotModelForm, TagsBulkEditFormMixin
+>>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 try:
     from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
@@ -59,6 +64,7 @@ class RegularExpressionValidationRuleForm(NautobotModelForm):
 class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):
     """Base bulk edit form for the RegularExpressionValidationRule model."""
 
+<<<<<<< HEAD
     pk = DynamicModelMultipleChoiceField(
         queryset=RegularExpressionValidationRule.objects.all(), widget=forms.MultipleHiddenInput
     )
@@ -72,6 +78,10 @@ class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, Nautobo
         required=False,
         widget=BulkEditNullBooleanSelect(),
     )
+=======
+    pk = forms.ModelMultipleChoiceField(queryset=models.ValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
+>>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Bulk edit form metadata for the RegularExpressionValidationRule model."""

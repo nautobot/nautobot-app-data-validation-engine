@@ -8,6 +8,7 @@ from django.core.validators import MinValueValidator, ValidationError
 from django.db import models
 from django.shortcuts import reverse
 
+<<<<<<< HEAD
 try:
     from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
 except ImportError:
@@ -15,6 +16,11 @@ except ImportError:
 from nautobot.core.models.generics import PrimaryModel
 from nautobot.core.models.querysets import RestrictedQuerySet
 from nautobot.extras.utils import FeatureQuery, extras_features
+=======
+# Nautobot imports
+from nautobot.apps.constants import CHARFIELD_MAX_LENGTH
+from nautobot.apps.models import PrimaryModel, extras_features
+>>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 
 def validate_regex(value):
@@ -42,6 +48,7 @@ class ValidationRuleManager(RestrictedQuerySet):
 class ValidationRule(PrimaryModel):
     """Base model for all validation engine rule models."""
 
+<<<<<<< HEAD
     name = models.CharField(max_length=100, unique=True)
     content_type = models.ForeignKey(
         to=ContentType, on_delete=models.CASCADE, limit_choices_to=FeatureQuery("custom_validators")
@@ -52,6 +59,11 @@ class ValidationRule(PrimaryModel):
     )
 
     objects = ValidationRuleManager.as_manager()
+=======
+    name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, unique=True)
+    description = models.CharField(max_length=CHARFIELD_MAX_LENGTH, blank=True)
+    # additional model fields
+>>>>>>> c235c43 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Model metadata for all validation engine rule models."""

@@ -6,7 +6,7 @@ labels:
 ---
 
 ### Environment
-* Nautobot version:  <!-- Example: 2.1.9 -->
+* Nautobot version:  <!-- Example: 2.4.2 -->
 * nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
 
 <!--
