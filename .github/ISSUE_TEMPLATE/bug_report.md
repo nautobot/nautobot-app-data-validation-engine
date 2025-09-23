@@ -7,7 +7,7 @@ labels:
 
 ### Environment
 * Python version:  <!-- Example: 3.11.4 -->
-* Nautobot version:  <!-- Example: 2.1.9 -->
+* Nautobot version:  <!-- Example: 2.4.2 -->
 * nautobot-data-validation-engine version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->
