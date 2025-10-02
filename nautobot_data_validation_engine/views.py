@@ -97,10 +97,10 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
 #
 
 
-class DataComplianceListView(  # pylint: disable=W0223
+class DataComplianceUIViewSet(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
-    """Views for the DataComplianceListView model."""
+    """Views for the DataCompliance model."""
 
     lookup_field = "pk"
     queryset = DataCompliance.objects.all()
