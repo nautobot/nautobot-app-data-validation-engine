@@ -20,7 +20,6 @@ This document describes all new features and changes in the release. The format 
 
 - Removed support for Nautobot <2.4.
 - Removed support for Python 3.8.
-- Added support for Python 3.12.
 
 ### Housekeeping
 
