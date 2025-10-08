@@ -6,7 +6,6 @@ This document describes all new features and changes in the release. The format 
 
 - Removed support for Nautobot <2.4.
 - Removed support for Python 3.8.
-- Added support for Python 3.12.
 
 ## [v3.3.0 (2025-10-08)](https://github.com/nautobot/nautobot-app-data-validation-engine/releases/tag/v3.3.0)
 
