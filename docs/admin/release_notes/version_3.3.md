@@ -4,16 +4,16 @@ This document describes all new features and changes in the release. The format 
 
 ## Release Overview
 
-- Removed support for Nautobot <2.4
-- Removed support for Python 3.8
-- Added support for Python 3.12
+- Removed support for Nautobot <2.4.
+- Removed support for Python 3.8.
+- Added support for Python 3.12.
 
 ## [v3.3.0 (2025-10-08)](https://github.com/nautobot/nautobot-app-data-validation-engine/releases/tag/v3.3.0)
 
 ### Fixed
 
 - [#181](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/181) - Replaced all occurrences of PluginCustomValidator with CustomValidator.
-- [#191](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/191) - Correct class inheritance on Bulk Edit Forms to resolve issue loading the Bulk Edit Views.
+- [#191](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/191) - Updated class inheritance on Bulk Edit Forms to resolve issue loading the Bulk Edit Views.
 - [#210](https://github.com/nautobot/nautobot-app-data-validation-engine/issues/210) - Fixed a race condition when discovering/importing data compliance rules from a Git repository.
 
 ### Dependencies
