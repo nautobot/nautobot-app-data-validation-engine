@@ -1,0 +1,1 @@
+Fixed a race condition when discovering/importing data compliance rules from a Git repository.
