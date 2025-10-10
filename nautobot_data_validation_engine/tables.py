@@ -1,4 +1,4 @@
-"""Django tables."""
+"""Tables for nautobot_data_validation_engine."""
 
 import django_tables2 as tables
 from django.utils.html import format_html

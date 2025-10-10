@@ -1,4 +1,4 @@
-"""Django forms."""
+"""Forms for nautobot_data_validation_engine."""
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
@@ -56,7 +56,7 @@ class RegularExpressionValidationRuleForm(NautobotModelForm):
         fields = "__all__"
 
 
-class RegularExpressionValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
+class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):
     """Base bulk edit form for the RegularExpressionValidationRule model."""
 
     pk = DynamicModelMultipleChoiceField(
@@ -127,7 +127,7 @@ class MinMaxValidationRuleForm(NautobotModelForm):
         fields = "__all__"
 
 
-class MinMaxValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
+class MinMaxValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):
     """Base bulk edit form for the MinMaxValidationRule model."""
 
     pk = DynamicModelMultipleChoiceField(queryset=MinMaxValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
@@ -186,7 +186,7 @@ class RequiredValidationRuleForm(NautobotModelForm):
         fields = "__all__"
 
 
-class RequiredValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
+class RequiredValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):
     """Base bulk edit form for the RequiredValidationRule model."""
 
     pk = DynamicModelMultipleChoiceField(
@@ -250,7 +250,7 @@ class UniqueValidationRuleForm(NautobotModelForm):
         fields = "__all__"
 
 
-class UniqueValidationRuleBulkEditForm(NautobotBulkEditForm, TagsBulkEditFormMixin):
+class UniqueValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):
     """Base bulk edit form for the UniqueValidationRule model."""
 
     pk = DynamicModelMultipleChoiceField(queryset=UniqueValidationRule.objects.all(), widget=forms.MultipleHiddenInput)

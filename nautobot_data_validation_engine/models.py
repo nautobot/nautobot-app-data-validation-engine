@@ -1,4 +1,4 @@
-"""Django models."""
+"""Models for Data Validation Engine."""
 
 import re
 

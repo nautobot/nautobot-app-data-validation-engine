@@ -28,6 +28,8 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilt
 
     queryset = RegularExpressionValidationRule.objects.all()
     filterset = RegularExpressionValidationRuleFilterSet
+    # TODO Look into enabling the generic filter tests to replace the filter tests that are defined.
+    generic_filter_tests = []
 
     @classmethod
     def setUpTestData(cls):
@@ -103,6 +105,8 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase)
 
     queryset = MinMaxValidationRule.objects.all()
     filterset = MinMaxValidationRuleFilterSet
+    # TODO Look into enabling the generic filter tests to replace the filter tests that are defined.
+    generic_filter_tests = []
 
     @classmethod
     def setUpTestData(cls):
@@ -172,6 +176,8 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCas
 
     queryset = RequiredValidationRule.objects.all()
     filterset = RequiredValidationRuleFilterSet
+    # TODO Look into enabling the generic filter tests to replace the filter tests that are defined.
+    generic_filter_tests = []
 
     @classmethod
     def setUpTestData(cls):
@@ -238,6 +244,8 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase)
 
     queryset = UniqueValidationRule.objects.all()
     filterset = UniqueValidationRuleFilterSet
+    # TODO Look into enabling the generic filter tests to replace the filter tests that are defined.
+    generic_filter_tests = []
 
     @classmethod
     def setUpTestData(cls):

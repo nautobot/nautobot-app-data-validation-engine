@@ -1,4 +1,4 @@
-"""Django views."""
+"""Views for nautobot_data_validation_engine."""
 
 from django.apps import apps as global_apps
 from django.contrib.contenttypes.models import ContentType
@@ -97,10 +97,10 @@ class UniqueValidationRuleUIViewSet(NautobotUIViewSet):
 #
 
 
-class DataComplianceListView(  # pylint: disable=W0223
+class DataComplianceUIViewSet(  # pylint: disable=W0223
     ObjectListViewMixin, ObjectDetailViewMixin, ObjectDestroyViewMixin, ObjectBulkDestroyViewMixin
 ):
-    """Views for the DataComplianceListView model."""
+    """Views for the DataCompliance model."""
 
     lookup_field = "pk"
     queryset = DataCompliance.objects.all()
@@ -115,6 +115,7 @@ class DataComplianceObjectView(ObjectView):
     """View for the Audit Results tab dynamically generated on specific object detail views."""
 
     template_name = "nautobot_data_validation_engine/datacompliance_tab.html"
+    queryset = None
 
     def dispatch(self, request, *args, **kwargs):
         """Set the queryset for the given object and call the inherited dispatch method."""

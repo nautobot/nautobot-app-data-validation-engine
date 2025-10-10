@@ -1,4 +1,4 @@
-"""Django url patterns."""
+"""Django urlpatterns declaration for nautobot_data_validation_engine app."""
 
 from django.templatetags.static import static
 from django.urls import path
@@ -8,8 +8,9 @@ from nautobot.extras.views import ObjectChangeLogView, ObjectNotesView
 
 from nautobot_data_validation_engine import models, views
 
+app_name = "nautobot_data_validation_engine"
 router = NautobotUIViewSetRouter()
-router.register("data-compliance", views.DataComplianceListView)
+router.register("data-compliance", views.DataComplianceUIViewSet)
 router.register("regex-rules", views.RegularExpressionValidationRuleUIViewSet)
 router.register("min-max-rules", views.MinMaxValidationRuleUIViewSet)
 router.register("required-rules", views.RequiredValidationRuleUIViewSet)

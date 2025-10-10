@@ -1,7 +1,7 @@
 """
 This is the meat of this app.
 
-Here we dynamically generate a PluginCustomValidator class
+Here we dynamically generate a CustomValidator class
 for each model currently registered in the extras_features
 query registry 'custom_validators'.
 
@@ -14,6 +14,7 @@ import logging
 import pkgutil
 import re
 import sys
+import threading
 from typing import Optional
 
 from django.contrib.contenttypes.models import ContentType
@@ -23,7 +24,7 @@ from django.utils import timezone
 from nautobot.core.utils.data import render_jinja2
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
-from nautobot.extras.plugins import CustomValidator, PluginCustomValidator
+from nautobot.extras.plugins import CustomValidator
 from nautobot.extras.registry import registry
 
 from nautobot_data_validation_engine.models import (
@@ -36,10 +37,11 @@ from nautobot_data_validation_engine.models import (
 )
 
 LOGGER = logging.getLogger(__name__)
+_IMPORT_LOCK = threading.RLock()
 
 
-class BaseValidator(PluginCustomValidator):
-    """Base PluginCustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
+class BaseValidator(CustomValidator):
+    """Base CustomValidator class that implements the core logic for enforcing validation rules defined in this app."""
 
     model = None
 
@@ -193,13 +195,14 @@ def get_classes_from_git_repo(repo: GitRepository):
     """Get list of DataComplianceRule classes found within the custom_validators folder of the given repo."""
     ensure_git_repository(repo, head=repo.current_head)
     class_list = []
-    for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
-        if discovered_module_name in sys.modules:
-            del sys.modules[discovered_module_name]
-        module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
-        for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
-            class_list.append(complance_class)
-    return class_list
+    with _IMPORT_LOCK:
+        for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
+            if discovered_module_name in sys.modules:
+                del sys.modules[discovered_module_name]
+            module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
+            for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
+                class_list.append(complance_class)
+        return class_list
 
 
 class ComplianceError(ValidationError):
@@ -304,10 +307,10 @@ class DataComplianceRule(CustomValidator):
 
 
 class CustomValidatorIterator:
-    """Iterator that generates PluginCustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
+    """Iterator that generates CustomValidator classes for each model registered in the extras feature query registry 'custom_validators'."""
 
     def __iter__(self):
-        """Return a generator of PluginCustomValidator classes for each registered model."""
+        """Return a generator of CustomValidator classes for each registered model."""
         for app_label, models in registry["model_features"]["custom_validators"].items():
             for model in models:
                 yield type(
