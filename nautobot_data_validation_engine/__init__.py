@@ -21,7 +21,7 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     default_settings = {}
     caching_config = {}
     docs_view_name = "plugins:nautobot_data_validation_engine:docs"
-    searchable_models = ["validationrule"]
+    searchable_models = []
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name
