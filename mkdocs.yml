@@ -111,7 +111,7 @@ nav:
       - Frequently Asked Questions: "user/faq.md"
       - External Interactions: "user/external_interactions.md"
       - Data Models:
-          - Validation Rule: "models/validationrule.md"
+          - Regular Expression Validation Rule: "models/regularexpressionvalidationrule.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
       - Upgrade: "admin/upgrade.md"

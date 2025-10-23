@@ -6,11 +6,11 @@ from nautobot_data_validation_engine import models
 from nautobot_data_validation_engine.tests import fixtures
 
 
-class ValidationRuleViewTest(ViewTestCases.PrimaryObjectViewTestCase):
+class RegularExpressionValidationRuleViewTest(ViewTestCases.PrimaryObjectViewTestCase):
     # pylint: disable=too-many-ancestors
-    """Test the ValidationRule views."""
+    """Test the RegularExpressionValidationRule views."""
 
-    model = models.ValidationRule
+    model = models.RegularExpressionValidationRule
     bulk_edit_data = {"description": "Bulk edit views"}
     form_data = {
         "name": "Test 1",
@@ -24,4 +24,4 @@ class ValidationRuleViewTest(ViewTestCases.PrimaryObjectViewTestCase):
 
     @classmethod
     def setUpTestData(cls):
-        fixtures.create_validationrule()
+        fixtures.create_regularexpressionvalidationrule()

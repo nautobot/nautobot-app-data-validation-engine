@@ -4,13 +4,13 @@ from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuItem, NavMen
 
 items = (
     NavMenuItem(
-        link="plugins:nautobot_data_validation_engine:validationrule_list",
+        link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_list",
         name="Data Validation Engine",
-        permissions=["nautobot_data_validation_engine.view_validationrule"],
+        permissions=["nautobot_data_validation_engine.view_regularexpressionvalidationrule"],
         buttons=(
             NavMenuAddButton(
-                link="plugins:nautobot_data_validation_engine:validationrule_add",
-                permissions=["nautobot_data_validation_engine.add_validationrule"],
+                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_add",
+                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
             ),
         ),
     ),

@@ -1,10 +1,10 @@
 """Create fixtures for tests."""
 
-from nautobot_data_validation_engine.models import ValidationRule
+from nautobot_data_validation_engine.models import RegularExpressionValidationRule
 
 
-def create_validationrule():
-    """Fixture to create necessary number of ValidationRule for tests."""
-    ValidationRule.objects.create(name="Test One")
-    ValidationRule.objects.create(name="Test Two")
-    ValidationRule.objects.create(name="Test Three")
+def create_regularexpressionvalidationrule():
+    """Fixture to create necessary number of RegularExpressionValidationRule for tests."""
+    RegularExpressionValidationRule.objects.create(name="Test One")
+    RegularExpressionValidationRule.objects.create(name="Test Two")
+    RegularExpressionValidationRule.objects.create(name="Test Three")

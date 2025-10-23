@@ -7,20 +7,20 @@ from nautobot.apps.forms import NautobotBulkEditForm, NautobotFilterForm, Nautob
 from nautobot_data_validation_engine import models
 
 
-class ValidationRuleForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
-    """ValidationRule creation/edit form."""
+class RegularExpressionValidationRuleForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
+    """RegularExpressionValidationRule creation/edit form."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.ValidationRule
+        model = models.RegularExpressionValidationRule
         fields = "__all__"
 
 
-class ValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
-    """ValidationRule bulk edit form."""
+class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
+    """RegularExpressionValidationRule bulk edit form."""
 
-    pk = forms.ModelMultipleChoiceField(queryset=models.ValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelMultipleChoiceField(queryset=models.RegularExpressionValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
     description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
 
     class Meta:
@@ -31,10 +31,10 @@ class ValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  
         ]
 
 
-class ValidationRuleFilterForm(NautobotFilterForm):
+class RegularExpressionValidationRuleFilterForm(NautobotFilterForm):
     """Filter form to filter searches."""
 
-    model = models.ValidationRule
+    model = models.RegularExpressionValidationRule
     field_order = ["q", "name"]
 
     q = forms.CharField(

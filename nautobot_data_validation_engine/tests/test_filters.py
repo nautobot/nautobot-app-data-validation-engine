@@ -1,4 +1,4 @@
-"""Test ValidationRule Filter."""
+"""Test RegularExpressionValidationRule Filter."""
 
 from nautobot.apps.testing import FilterTestCases
 
@@ -6,11 +6,11 @@ from nautobot_data_validation_engine import filters, models
 from nautobot_data_validation_engine.tests import fixtures
 
 
-class ValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
-    """ValidationRule Filter Test Case."""
+class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
+    """RegularExpressionValidationRule Filter Test Case."""
 
-    queryset = models.ValidationRule.objects.all()
-    filterset = filters.ValidationRuleFilterSet
+    queryset = models.RegularExpressionValidationRule.objects.all()
+    filterset = filters.RegularExpressionValidationRuleFilterSet
     generic_filter_tests = (
         ("id",),
         ("created",),
@@ -20,15 +20,15 @@ class ValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
 
     @classmethod
     def setUpTestData(cls):
-        """Setup test data for ValidationRule Model."""
-        fixtures.create_validationrule()
+        """Setup test data for RegularExpressionValidationRule Model."""
+        fixtures.create_regularexpressionvalidationrule()
 
     def test_q_search_name(self):
-        """Test using Q search with name of ValidationRule."""
+        """Test using Q search with name of RegularExpressionValidationRule."""
         params = {"q": "Test One"}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
     def test_q_invalid(self):
-        """Test using invalid Q search for ValidationRule."""
+        """Test using invalid Q search for RegularExpressionValidationRule."""
         params = {"q": "test-five"}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 0)

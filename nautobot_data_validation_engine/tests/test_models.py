@@ -1,4 +1,4 @@
-"""Test ValidationRule."""
+"""Test RegularExpressionValidationRule."""
 
 from nautobot.apps.testing import ModelTestCases
 
@@ -6,27 +6,27 @@ from nautobot_data_validation_engine import models
 from nautobot_data_validation_engine.tests import fixtures
 
 
-class TestValidationRule(ModelTestCases.BaseModelTestCase):
-    """Test ValidationRule."""
+class TestRegularExpressionValidationRule(ModelTestCases.BaseModelTestCase):
+    """Test RegularExpressionValidationRule."""
 
-    model = models.ValidationRule
+    model = models.RegularExpressionValidationRule
 
     @classmethod
     def setUpTestData(cls):
-        """Create test data for ValidationRule Model."""
+        """Create test data for RegularExpressionValidationRule Model."""
         super().setUpTestData()
         # Create 3 objects for the model test cases.
-        fixtures.create_validationrule()
+        fixtures.create_regularexpressionvalidationrule()
 
-    def test_create_validationrule_only_required(self):
+    def test_create_regularexpressionvalidationrule_only_required(self):
         """Create with only required fields, and validate null description and __str__."""
-        validationrule = models.ValidationRule.objects.create(name="Development")
-        self.assertEqual(validationrule.name, "Development")
-        self.assertEqual(validationrule.description, "")
-        self.assertEqual(str(validationrule), "Development")
+        regularexpressionvalidationrule = models.RegularExpressionValidationRule.objects.create(name="Development")
+        self.assertEqual(regularexpressionvalidationrule.name, "Development")
+        self.assertEqual(regularexpressionvalidationrule.description, "")
+        self.assertEqual(str(regularexpressionvalidationrule), "Development")
 
-    def test_create_validationrule_all_fields_success(self):
-        """Create ValidationRule with all fields."""
-        validationrule = models.ValidationRule.objects.create(name="Development", description="Development Test")
-        self.assertEqual(validationrule.name, "Development")
-        self.assertEqual(validationrule.description, "Development Test")
+    def test_create_regularexpressionvalidationrule_all_fields_success(self):
+        """Create RegularExpressionValidationRule with all fields."""
+        regularexpressionvalidationrule = models.RegularExpressionValidationRule.objects.create(name="Development", description="Development Test")
+        self.assertEqual(regularexpressionvalidationrule.name, "Development")
+        self.assertEqual(regularexpressionvalidationrule.description, "Development Test")

@@ -1,15 +1,15 @@
-"""Test validationrule forms."""
+"""Test regularexpressionvalidationrule forms."""
 
 from django.test import TestCase
 
 from nautobot_data_validation_engine import forms
 
 
-class ValidationRuleTest(TestCase):
-    """Test ValidationRule forms."""
+class RegularExpressionValidationRuleTest(TestCase):
+    """Test RegularExpressionValidationRule forms."""
 
     def test_specifying_all_fields_success(self):
-        form = forms.ValidationRuleForm(
+        form = forms.RegularExpressionValidationRuleForm(
             data={
                 "name": "Development",
                 "description": "Development Testing",
@@ -19,7 +19,7 @@ class ValidationRuleTest(TestCase):
         self.assertTrue(form.save())
 
     def test_specifying_only_required_success(self):
-        form = forms.ValidationRuleForm(
+        form = forms.RegularExpressionValidationRuleForm(
             data={
                 "name": "Development",
             }
@@ -27,7 +27,7 @@ class ValidationRuleTest(TestCase):
         self.assertTrue(form.is_valid())
         self.assertTrue(form.save())
 
-    def test_validate_name_validationrule_is_required(self):
-        form = forms.ValidationRuleForm(data={"description": "Development Testing"})
+    def test_validate_name_regularexpressionvalidationrule_is_required(self):
+        form = forms.RegularExpressionValidationRuleForm(data={"description": "Development Testing"})
         self.assertFalse(form.is_valid())
         self.assertIn("This field is required.", form.errors["name"])
