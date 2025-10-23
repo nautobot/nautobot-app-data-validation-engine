@@ -6,8 +6,13 @@ from nautobot_data_validation_engine import filters, models
 from nautobot_data_validation_engine.api import serializers
 
 
+<<<<<<< HEAD
 class RegularExpressionValidationRuleViewSet(NautobotModelViewSet):
     """View to manage regular expression validation rules."""
+=======
+class RegularExpressionValidationRuleViewSet(NautobotModelViewSet):  # pylint: disable=too-many-ancestors
+    """RegularExpressionValidationRule viewset."""
+>>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     queryset = models.RegularExpressionValidationRule.objects.all()
     serializer_class = serializers.RegularExpressionValidationRuleSerializer

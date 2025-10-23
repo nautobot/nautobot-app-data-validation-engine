@@ -19,9 +19,12 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     base_url = "nautobot-data-validation-engine"
     required_settings = []
     default_settings = {}
-    caching_config = {}
     docs_view_name = "plugins:nautobot_data_validation_engine:docs"
+<<<<<<< HEAD
     searchable_models = []
+=======
+    searchable_models = ["regularexpressionvalidationrule"]
+>>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 
 config = NautobotDataValidationEngineConfig  # pylint:disable=invalid-name

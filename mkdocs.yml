@@ -110,6 +110,12 @@ nav:
       - Using the App: "user/app_use_cases.md"
       - Data Compliance: "user/app_data_compliance.md"
       - Frequently Asked Questions: "user/faq.md"
+<<<<<<< HEAD
+=======
+      - External Interactions: "user/external_interactions.md"
+      - Data Models:
+          - Regular Expression Validation Rule: "models/regularexpressionvalidationrule.md"
+>>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
   - Administrator Guide:
       - Install and Configure: "admin/install.md"
       - Upgrade: "admin/upgrade.md"

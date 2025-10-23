@@ -15,6 +15,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
+<<<<<<< HEAD
 class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
     """Base filterset for the RegularExpressionValidationRule model."""
 
@@ -32,10 +33,15 @@ class RegularExpressionValidationRuleFilterSet(NautobotFilterSet):
         choices=FeatureQuery("custom_validators").get_choices,
         conjoined=False,  # Make this an OR with multi-values
     )
+=======
+class RegularExpressionValidationRuleFilterSet(NameSearchFilterSet, NautobotFilterSet):  # pylint: disable=too-many-ancestors
+    """Filter for RegularExpressionValidationRule."""
+>>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Filterset metadata for the RegularExpressionValidationRule model."""
 
+<<<<<<< HEAD
         model = RegularExpressionValidationRule
         fields = "__all__"
 
@@ -161,4 +167,9 @@ class DataComplianceFilterSet(NautobotFilterSet):
         """Meta class for DataComplianceFilterSet."""
 
         model = DataCompliance
+=======
+        model = models.RegularExpressionValidationRule
+
+        # add any fields from the model that you would like to filter your searches by using those
+>>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         fields = "__all__"
