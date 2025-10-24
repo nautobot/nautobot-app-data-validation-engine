@@ -15,7 +15,6 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-<<<<<<< HEAD
 class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):
     """Serializer for `RegularExpressionValidationRule` objects."""
 
@@ -25,19 +24,11 @@ class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedM
     content_type = ContentTypeField(
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()),
     )
-=======
-class RegularExpressionValidationRuleSerializer(NautobotModelSerializer, TaggedModelSerializerMixin):  # pylint: disable=too-many-ancestors
-    """RegularExpressionValidationRule Serializer."""
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Serializer metadata for RegularExpressionValidationRule objects."""
 
-<<<<<<< HEAD
         model = RegularExpressionValidationRule
-=======
-        model = models.RegularExpressionValidationRule
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         fields = "__all__"
 
 

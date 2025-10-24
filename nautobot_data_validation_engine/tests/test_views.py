@@ -32,23 +32,10 @@ _NAUTOBOT_VERSION = version.parse(metadata.version("nautobot"))
 _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS = [version.parse("1.5.2"), version.parse("1.5.3"), version.parse("1.5.4")]
 
 
-<<<<<<< HEAD
 class RegularExpressionValidationRuleTestCase(ViewTestCases.PrimaryObjectViewTestCase):
     """View test cases for the RegularExpressionValidationRule model."""
 
     model = RegularExpressionValidationRule
-=======
-class RegularExpressionValidationRuleViewTest(ViewTestCases.PrimaryObjectViewTestCase):
-    # pylint: disable=too-many-ancestors
-    """Test the RegularExpressionValidationRule views."""
-
-    model = models.RegularExpressionValidationRule
-    bulk_edit_data = {"description": "Bulk edit views"}
-    form_data = {
-        "name": "Test 1",
-        "description": "Initial model",
-    }
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     @skipIf(
         _NAUTOBOT_VERSION in _FAILING_OBJECT_LIST_NAUTOBOT_VERSIONS,
@@ -59,7 +46,6 @@ class RegularExpressionValidationRuleViewTest(ViewTestCases.PrimaryObjectViewTes
 
     @classmethod
     def setUpTestData(cls):
-<<<<<<< HEAD
         """
         Create test data
         """
@@ -335,6 +321,3 @@ class DataComplianceObjectTestCase(TestCase):
         view.dispatch(mock_request, **kwargs)
         mocked_dispatch.assert_called()
         mocked_dispatch.assert_called_with(mock_request, other_arg="other_arg", another_arg="another_arg")
-=======
-        fixtures.create_regularexpressionvalidationrule()
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)

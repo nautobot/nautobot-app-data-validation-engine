@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 """
 Filterset test cases
 """
-=======
-"""Test RegularExpressionValidationRule Filter."""
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
 from django.contrib.contenttypes.models import ContentType
 from nautobot.core.testing.filters import FilterTestCases
@@ -25,7 +21,6 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-<<<<<<< HEAD
 class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
@@ -316,31 +311,3 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase)
         """Test field lookups."""
         params = {"max_instances__gte": [2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-=======
-class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
-    """RegularExpressionValidationRule Filter Test Case."""
-
-    queryset = models.RegularExpressionValidationRule.objects.all()
-    filterset = filters.RegularExpressionValidationRuleFilterSet
-    generic_filter_tests = (
-        ("id",),
-        ("created",),
-        ("last_updated",),
-        ("name",),
-    )
-
-    @classmethod
-    def setUpTestData(cls):
-        """Setup test data for RegularExpressionValidationRule Model."""
-        fixtures.create_regularexpressionvalidationrule()
-
-    def test_q_search_name(self):
-        """Test using Q search with name of RegularExpressionValidationRule."""
-        params = {"q": "Test One"}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
-
-    def test_q_invalid(self):
-        """Test using invalid Q search for RegularExpressionValidationRule."""
-        params = {"q": "test-five"}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 0)
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)

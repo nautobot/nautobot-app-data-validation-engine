@@ -1,7 +1,6 @@
 # Compatibility Matrix
 
 | Data Validation Engine Version | Nautobot First Support Version | Nautobot Last Support Version |
-<<<<<<< HEAD
 |--------------------------------|--------------------------------| ----------------------------- |
 | 1.0.X                          | 1.0.0                          | 1.3.10                        |
 | 2.0.X                          | 1.5.2                          | 1.5.24                        |
@@ -11,7 +10,4 @@
 | 3.1.X                          | 2.0.0                          | 2.99.99                       |
 | 3.2.X                          | 2.1.9                          | 2.99.99                       |
 | 3.3.X                          | 2.4.2                          | 2.99.99                       |
-=======
-| ------------- | -------------------- | ------------- |
-| 1.0.X         | 2.4.20                | 2.99.99        |
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
+| 3.4.X                          | 2.4.20                         | 2.99.99                       |

@@ -40,7 +40,6 @@ from nautobot_data_validation_engine.models import (
 #
 
 
-<<<<<<< HEAD
 class RegularExpressionValidationRuleForm(NautobotModelForm):
     """Base model form for the RegularExpressionValidationRule model."""
 
@@ -49,15 +48,10 @@ class RegularExpressionValidationRuleForm(NautobotModelForm):
             "app_label", "model"
         ),
     )
-=======
-class RegularExpressionValidationRuleForm(NautobotModelForm):  # pylint: disable=too-many-ancestors
-    """RegularExpressionValidationRule creation/edit form."""
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Form metadata for the RegularExpressionValidationRule model."""
 
-<<<<<<< HEAD
         model = RegularExpressionValidationRule
         fields = "__all__"
 
@@ -78,17 +72,6 @@ class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, Nautobo
         required=False,
         widget=BulkEditNullBooleanSelect(),
     )
-=======
-        model = models.RegularExpressionValidationRule
-        fields = "__all__"
-
-
-class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, NautobotBulkEditForm):  # pylint: disable=too-many-ancestors
-    """RegularExpressionValidationRule bulk edit form."""
-
-    pk = forms.ModelMultipleChoiceField(queryset=models.RegularExpressionValidationRule.objects.all(), widget=forms.MultipleHiddenInput)
-    description = forms.CharField(required=False, max_length=CHARFIELD_MAX_LENGTH)
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta:
         """Bulk edit form metadata for the RegularExpressionValidationRule model."""
@@ -98,7 +81,6 @@ class RegularExpressionValidationRuleBulkEditForm(TagsBulkEditFormMixin, Nautobo
 
 
 class RegularExpressionValidationRuleFilterForm(NautobotFilterForm):
-<<<<<<< HEAD
     """Base filter form for the RegularExpressionValidationRule model."""
 
     model = RegularExpressionValidationRule
@@ -119,14 +101,6 @@ class RegularExpressionValidationRuleFilterForm(NautobotFilterForm):
         queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
             "app_label", "model"
         ),
-=======
-    """Filter form to filter searches."""
-
-    model = models.RegularExpressionValidationRule
-    field_order = ["q", "name"]
-
-    q = forms.CharField(
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
         required=False,
     )
     tags = TagFilterField(model)

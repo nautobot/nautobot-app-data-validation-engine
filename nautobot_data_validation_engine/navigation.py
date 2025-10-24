@@ -2,7 +2,6 @@
 
 from nautobot.apps.ui import NavMenuAddButton, NavMenuGroup, NavMenuImportButton, NavMenuItem, NavMenuTab
 
-<<<<<<< HEAD
 menu_items = (
     NavMenuTab(
         name="Extensibility",
@@ -77,17 +76,6 @@ menu_items = (
                         permissions=["nautobot_data_validation_engine.view_datacompliance"],
                     ),
                 ),
-=======
-items = (
-    NavMenuItem(
-        link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_list",
-        name="Data Validation Engine",
-        permissions=["nautobot_data_validation_engine.view_regularexpressionvalidationrule"],
-        buttons=(
-            NavMenuAddButton(
-                link="plugins:nautobot_data_validation_engine:regularexpressionvalidationrule_add",
-                permissions=["nautobot_data_validation_engine.add_regularexpressionvalidationrule"],
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
             ),
         ),
     ),

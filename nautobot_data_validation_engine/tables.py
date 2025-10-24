@@ -18,37 +18,17 @@ from nautobot_data_validation_engine.models import (
 
 
 class RegularExpressionValidationRuleTable(BaseTable):
-<<<<<<< HEAD
     """Base table for the RegularExpressionValidationRule model."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
     tags = TagColumn()
-=======
-    # pylint: disable=R0903
-    """Table for list view."""
-
-    pk = ToggleColumn()
-    name = tables.Column(linkify=True)
-    actions = ButtonsColumn(
-        models.RegularExpressionValidationRule,
-        # Option for modifying the default action buttons on each row:
-        # buttons=("changelog", "edit", "delete"),
-        # Option for modifying the pk for the action buttons:
-        pk_field="pk",
-    )
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
 
     class Meta(BaseTable.Meta):
         """Table metadata for the RegularExpressionValidationRule model."""
 
-<<<<<<< HEAD
         model = RegularExpressionValidationRule
         fields = (  # pylint: disable=nb-use-fields-all
-=======
-        model = models.RegularExpressionValidationRule
-        fields = (
->>>>>>> 0777bd1 (Cookie updated by NetworkToCode Cookie Drift Manager Tool)
             "pk",
             "name",
             "enabled",
