@@ -2,7 +2,7 @@
 
 import django_tables2 as tables
 from django.utils.html import format_html
-from nautobot.core.tables import BaseTable, TagColumn, ToggleColumn
+from nautobot.core.tables import BaseTable, BooleanColumn, TagColumn, ToggleColumn
 
 from nautobot_data_validation_engine.models import (
     DataCompliance,
@@ -22,6 +22,8 @@ class RegularExpressionValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    enabled = BooleanColumn()
+    context_processing = BooleanColumn()
     tags = TagColumn()
 
     class Meta(BaseTable.Meta):
@@ -61,6 +63,7 @@ class MinMaxValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    enabled = BooleanColumn()
     tags = TagColumn()
 
     class Meta(BaseTable.Meta):
@@ -100,6 +103,7 @@ class RequiredValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    enabled = BooleanColumn()
     tags = TagColumn()
 
     class Meta(BaseTable.Meta):
@@ -135,6 +139,7 @@ class UniqueValidationRuleTable(BaseTable):
 
     pk = ToggleColumn()
     name = tables.LinkColumn(order_by=("name",))
+    enabled = BooleanColumn()
     tags = TagColumn()
 
     class Meta(BaseTable.Meta):
@@ -186,6 +191,7 @@ class DataComplianceTable(BaseTable):
     id = tables.Column(linkify=True, verbose_name="ID")
     validated_object = tables.RelatedLinkColumn()
     validated_attribute = ValidatedAttributeColumn()
+    valid = BooleanColumn()
 
     def order_validated_object(self, queryset, is_descending):
         """Reorder table by string representation of validated_object."""
@@ -226,6 +232,7 @@ class DataComplianceTableTab(BaseTable):  # pylint: disable=nb-sub-class-name
     """Base table for viewing the DataCompliance related to a single object."""
 
     validated_attribute = ValidatedAttributeColumn()
+    valid = BooleanColumn()
 
     class Meta(BaseTable.Meta):
         """Meta class for DataComplianceTableTab."""
