@@ -19,7 +19,6 @@ class NautobotDataValidationEngineConfig(NautobotAppConfig):
     base_url = "nautobot-data-validation-engine"
     required_settings = []
     default_settings = {}
-    caching_config = {}
     docs_view_name = "plugins:nautobot_data_validation_engine:docs"
     searchable_models = []
 
