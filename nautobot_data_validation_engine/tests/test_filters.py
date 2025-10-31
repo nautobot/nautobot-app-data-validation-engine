@@ -3,7 +3,7 @@ Filterset test cases
 """
 
 from django.contrib.contenttypes.models import ContentType
-from nautobot.core.testing.filters import FilterTestCases
+from nautobot.apps.testing import FilterTestCases
 from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed, Rack
 from nautobot.extras.models import Tag
 
@@ -21,7 +21,7 @@ from nautobot_data_validation_engine.models import (
 )
 
 
-class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
+class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
     """
     Filterset test cases for the RegularExpressionValidationRule model
     """
@@ -98,7 +98,7 @@ class RegularExpressionValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilt
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
+class MinMaxValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
     """
     Filterset test cases for the MinMaxValidationRule model
     """
@@ -169,7 +169,7 @@ class MinMaxValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase)
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
 
-class RequiredValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
+class RequiredValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
     """
     Filterset test cases for the RequiredValidationRule model
     """
@@ -237,7 +237,7 @@ class RequiredValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCas
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
 
 
-class UniqueValidationRuleFilterTestCase(FilterTestCases.NameOnlyFilterTestCase):
+class UniqueValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
     """
     Filterset test cases for the UniqueValidationRule model
     """

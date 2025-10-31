@@ -73,6 +73,7 @@ markdown_extensions:
       permalink: true
   - "attr_list"
   - "md_in_html"
+  - "pymdownx.details"
   - "pymdownx.highlight":
       anchor_linenums: true
   - "pymdownx.inlinehilite"
@@ -116,6 +117,7 @@ nav:
       - Compatibility Matrix: "admin/compatibility_matrix.md"
       - Release Notes:
           - "admin/release_notes/index.md"
+          - v3.3: "admin/release_notes/version_3.3.md"
           - v3.2: "admin/release_notes/version_3.2.md"
           - v3.1: "admin/release_notes/version_3.1.md"
           - v3.0: "admin/release_notes/version_3.0.md"

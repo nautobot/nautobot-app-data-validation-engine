@@ -78,7 +78,7 @@ class RunRegisteredDataComplianceRules(Job):
         for compliance_class in compliance_classes:
             if selected_data_compliance_rules and compliance_class.__name__ not in selected_data_compliance_rules:
                 continue
-            logger.info(f"Running {compliance_class.__name__}")
+            logger.info("Running %s", compliance_class.__name__)
             app_label, model = compliance_class.model.split(".")
             for obj in global_apps.get_model(app_label, model).objects.all():
                 ins = compliance_class(obj)

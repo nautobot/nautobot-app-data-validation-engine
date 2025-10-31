@@ -10,27 +10,22 @@
         "project_slug": "nautobot-app-data-validation-engine",
         "repo_url": "https://github.com/nautobot/nautobot-app-data-validation-engine",
         "base_url": "nautobot-data-validation-engine",
-        "min_nautobot_version": "2.1.9",
-        "max_nautobot_version": "2.9999",
         "camel_name": "NautobotDataValidationEngine",
         "project_short_description": "Provides UI to build custom data validation rules for data in Nautobot",
-        "model_class_name": "ValidationRule",
+        "model_class_name": "RegularExpressionValidationRule",
         "open_source_license": "Apache-2.0",
         "docs_base_url": "https://docs.nautobot.com",
         "docs_app_url": "https://docs.nautobot.com/projects/data-validation/en/latest",
         "_drift_manager": {
             "template": "https://github.com/nautobot/cookiecutter-nautobot-app.git",
             "template_dir": "nautobot-app",
-            "template_ref": "refs/tags/nautobot-app-v2.5.0",
+            "template_ref": "nautobot-app-v2.7.1",
             "cookie_dir": "",
             "branch_prefix": "drift-manager",
-            "pull_request_strategy": "create",
-            "post_actions": [
-                "ruff",
-                "poetry"
-            ],
+            "pull_request_strategy": "update-or-create",
+            "post_actions": [],
             "draft": false,
-            "baked_commit_ref": "ee3f9105f680de8ced0851bd5625b5cffa69df2c"
+            "baked_commit_ref": "675c46afd92b6f1e5bc214dbb41b6822b6d0c633"
         }
     }
 }
