@@ -12,6 +12,8 @@ build:
   tools:
     python: "3.12"
   jobs:
+    pre_build:
+      - "/bin/bash ./docs/insert-analytics.sh"
     post_install:
       # Install poetry
       # https://python-poetry.org/docs/#installing-manually
