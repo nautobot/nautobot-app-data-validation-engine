@@ -9,6 +9,7 @@ A common clean method for all these classes looks for any
 validation rules that have been defined for the given model.
 """
 
+import importlib.util
 import inspect
 import logging
 import pkgutil
@@ -199,7 +200,10 @@ def get_classes_from_git_repo(repo: GitRepository):
         for importer, discovered_module_name, _ in pkgutil.iter_modules([f"{repo.filesystem_path}/custom_validators"]):
             if discovered_module_name in sys.modules:
                 del sys.modules[discovered_module_name]
-            module = importer.find_module(discovered_module_name).load_module(discovered_module_name)
+            spec = importer.find_spec(discovered_module_name)
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[discovered_module_name] = module
+            spec.loader.exec_module(module)
             for _, complance_class in inspect.getmembers(module, is_data_compliance_rule):
                 class_list.append(complance_class)
         return class_list
