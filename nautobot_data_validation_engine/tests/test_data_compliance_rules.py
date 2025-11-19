@@ -78,3 +78,34 @@ class TestCompliance(TestCase):
             len(DataCompliance.objects.filter(compliance_class_name=TestFailedDataComplianceRule.__name__)),
             5,
         )
+
+    def test_custom_field_attribute_value(self):
+        # Simulate a Location with a custom field value
+        self.s.cf = {"foo": "bar"}
+        # Patch DataComplianceRule.context to include our instance
+        rule = TestPassedDataComplianceRule(self.s)
+        rule.context = {"object": self.s}
+
+        # Call _create_data_compliance_object with a custom field attribute
+        obj = rule._create_data_compliance_object(attribute="cf_foo", valid=True, message="msg")
+        self.assertEqual(obj.validated_attribute, "cf_foo")
+        self.assertEqual(obj.validated_attribute_value, "bar")
+
+    def test_custom_field_attribute_value_missing(self):
+        # Simulate a Location with no custom field value
+        self.s.cf = {}
+        rule = TestPassedDataComplianceRule(self.s)
+        rule.context = {"object": self.s}
+
+        obj = rule._create_data_compliance_object(attribute="cf_missing", valid=True, message="msg")
+        self.assertEqual(obj.validated_attribute, "cf_missing")
+        self.assertIsNone(obj.validated_attribute_value)
+
+    def test_regular_attribute_value(self):
+        # Test with a regular attribute
+        rule = TestPassedDataComplianceRule(self.s)
+        rule.context = {"object": self.s}
+
+        obj = rule._create_data_compliance_object(attribute="name", valid=True, message="msg")
+        self.assertEqual(obj.validated_attribute, "name")
+        self.assertEqual(obj.validated_attribute_value, self.s.name)
