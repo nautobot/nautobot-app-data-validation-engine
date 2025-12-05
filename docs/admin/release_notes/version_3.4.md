@@ -4,6 +4,8 @@ This document describes all new features and changes in the release. The format 
 
 ## Release Overview
 
+The functionality of this app has been moved to Nautobot as of version 3.0.0. The 3.4.x release of this app will continue to support Nautobot v2.4.x and will be maintained for security and critical bug fixes only. All new feature requests for data validation should go directly to [Nautobot](https://github.com/nautobot/nautobot).
+
 - Fixed Python 3.12 compatibility issues.
 - Changed minimum Nautobot version to 2.4.20.
 - Dropped support for Python 3.9.
