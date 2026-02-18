@@ -28,7 +28,7 @@ include = [
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 # Used for local development
-nautobot = ">=2.4.20,<3.0.0"
+nautobot = ">=2.4.20,<4.0.0"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "*"
