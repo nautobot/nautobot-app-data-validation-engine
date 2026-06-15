@@ -1,0 +1,1 @@
+Fixed Data Compliance filtering: the REST API ignored filter parameters, the list view raised a server error when filtering by content type, and the list view filter form's Compliance class name and Validated attribute dropdowns did not offer the existing values.
