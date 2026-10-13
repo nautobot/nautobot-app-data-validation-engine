@@ -1,1 +1,0 @@
-Added `regex` as an explicit dependency to support time-bounded evaluation of regular expressions.
