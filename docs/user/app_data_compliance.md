@@ -125,6 +125,7 @@ Additionally, the `nautobot_data_validation_engine` app automatically creates te
 ## Example
 
 Two data compliance rules will be created using two separate `DataComplianceRule` classes within a remote Git repository called `dve-datacompliance-demo` that check devices for the following:
+
 - `audit_device_name_chars` in `DeviceDataComplianceRules` - will mark a device invalid if the device name contains any special characters other than a dash (-), underscore (_), or period (.)
 - `audit_device_rack` in `RackDeviceComplianceRules` - will mark a device invalid if it is not assigned a rack
 

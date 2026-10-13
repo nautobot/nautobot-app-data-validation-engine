@@ -13,7 +13,6 @@ import importlib.util
 import inspect
 import logging
 import pkgutil
-import re
 import sys
 import threading
 from typing import Optional
@@ -22,7 +21,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import pluralize
 from django.utils import timezone
-from nautobot.core.utils.data import render_jinja2
 from nautobot.extras.datasources import ensure_git_repository
 from nautobot.extras.models import GitRepository
 from nautobot.extras.plugins import CustomValidator
@@ -35,6 +33,12 @@ from nautobot_data_validation_engine.models import (
     RequiredValidationRule,
     UniqueValidationRule,
     validate_regex,
+)
+from nautobot_data_validation_engine.utils import (
+    InvalidRegexError,
+    RegexTimeoutError,
+    regex_match,
+    render_jinja2_for_regex,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -63,7 +67,7 @@ class BaseValidator(CustomValidator):
             if rule.context_processing:
                 # Render the regular_expression as a jinja2 string and ensure it is valid
                 try:
-                    regular_expression = render_jinja2(rule.regular_expression, self.context)
+                    regular_expression = render_jinja2_for_regex(rule.regular_expression, self.context)
                     validate_regex(regular_expression)
                 # TODO: Switch to a less broad exception.
                 except Exception:  # pylint: disable=broad-exception-caught
@@ -81,7 +85,18 @@ class BaseValidator(CustomValidator):
             else:
                 regular_expression = rule.regular_expression
 
-            if not re.match(regular_expression, field_value):
+            try:
+                matched = regex_match(regular_expression, field_value)
+            except (InvalidRegexError, RegexTimeoutError) as exc:
+                LOGGER.error("Data validation rule '%s' could not be evaluated: %s", rule, exc.messages[0])
+                self.validation_error(
+                    {
+                        rule.field: f"Data validation rule '{rule}' could not be evaluated: {exc.messages[0]} "
+                        "Either fix the validation rule or disable it in order to save this data."
+                    }
+                )
+
+            if not matched:
                 self.validation_error(
                     {rule.field: rule.error_message or f"Value does not conform to regex: {regular_expression}"}
                 )
