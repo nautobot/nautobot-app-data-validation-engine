@@ -8,12 +8,10 @@ try:
 except ImportError:
     CHARFIELD_MAX_LENGTH = 255
 from nautobot.core.forms import (
-    BootstrapMixin,
     BulkEditNullBooleanSelect,
     CSVMultipleContentTypeField,
     DynamicModelChoiceField,
     DynamicModelMultipleChoiceField,
-    MultipleContentTypeField,
     MultiValueCharField,
     StaticSelect2,
     TagFilterField,
@@ -299,17 +297,37 @@ class UniqueValidationRuleFilterForm(NautobotFilterForm):
 #
 
 
-class DataComplianceFilterForm(BootstrapMixin, forms.Form):
+class DataComplianceFilterForm(NautobotFilterForm):
     """Form for DataCompliance instances."""
 
     model = DataCompliance
+    q = forms.CharField(required=False, label="Search")
     compliance_class_name = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     validated_attribute = MultiValueCharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     valid = forms.NullBooleanField(required=False, widget=StaticSelect2(choices=BOOLEAN_WITH_BLANK_CHOICES))
-    content_type = MultipleContentTypeField(
-        feature=None,
-        queryset=ContentType.objects.all().order_by("app_label", "model"),
-        choices_as_strings=True,
+    # "CSV" field is being used here because it is using the slug-form input for
+    # content-types, which improves UX.
+    content_type = CSVMultipleContentTypeField(
+        queryset=ContentType.objects.filter(FeatureQuery("custom_validators").get_query()).order_by(
+            "app_label", "model"
+        ),
         required=False,
     )
-    q = forms.CharField(required=False, label="Search")
+
+    def __init__(self, *args, **kwargs):
+        """Offer the distinct values already present in the database as selectable filter options.
+
+        ``compliance_class_name`` and ``validated_attribute`` are free-text fields, so their filter
+        widgets start empty. Seeding the widget choices with the existing distinct values lets users
+        pick from a dropdown instead of having to type an exact value, while still allowing
+        free-form entry.
+        """
+        super().__init__(*args, **kwargs)
+        for field_name in ("compliance_class_name", "validated_attribute"):
+            values = (
+                DataCompliance.objects.exclude(**{field_name: ""})
+                .order_by(field_name)
+                .values_list(field_name, flat=True)
+                .distinct()
+            )
+            self.fields[field_name].widget.choices = [(value, value) for value in values]

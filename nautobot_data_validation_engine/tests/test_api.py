@@ -3,13 +3,18 @@
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from nautobot.core.testing import APITestCase, APIViewTestCases
-from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed
+from nautobot.dcim.models import Location, LocationType, Manufacturer, Platform, PowerFeed
+from nautobot.extras.models import Status
 
 from nautobot_data_validation_engine.models import (
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
     UniqueValidationRule,
+)
+from nautobot_data_validation_engine.tests.test_data_compliance_rules import (
+    TestFailedDataComplianceRule,
+    TestPassedDataComplianceRule,
 )
 
 
@@ -275,3 +280,58 @@ class UniqueValidationRuleTest(APIViewTestCases.APIViewTestCase):
             field="description",
             max_instances=3,
         )
+
+
+class DataComplianceAPIFilterTest(APITestCase):
+    """
+    API filtering tests for the DataCompliance model.
+
+    Regression coverage for the DataCompliance API view ignoring filter parameters because it had
+    no ``filterset_class`` declared.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create DataCompliance records against a real object so the generic foreign key resolves.
+
+        ``TestFailedDataComplianceRule`` produces four ``valid=False`` records (one per audited
+        attribute) and ``TestPassedDataComplianceRule`` produces a single ``valid=True`` record.
+        """
+        location_type = LocationType(name="Region")
+        location_type.validated_save()
+        location = Location(
+            name="Test Location 1",
+            location_type=location_type,
+            status=Status.objects.get_by_natural_key("Active"),
+        )
+        location.save()
+        TestFailedDataComplianceRule(location).clean()
+        TestPassedDataComplianceRule(location).clean()
+
+    def setUp(self):
+        """Authenticate and grant view permission for the list endpoint."""
+        super().setUp()
+        self.add_permissions("nautobot_data_validation_engine.view_datacompliance")
+        self.list_url = reverse("plugins-api:nautobot_data_validation_engine-api:datacompliance-list")
+
+    def test_filter_valid(self):
+        """The ``valid`` filter must be honored by the API."""
+        response = self.client.get(f"{self.list_url}?valid=False", **self.header)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 5)
+        response = self.client.get(f"{self.list_url}?valid=True", **self.header)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
+
+    def test_filter_content_type(self):
+        """The ``content_type`` filter must be honored by the API."""
+        response = self.client.get(f"{self.list_url}?content_type=dcim.location", **self.header)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 6)
+
+    def test_filter_compliance_class_name(self):
+        """The ``compliance_class_name`` filter must be honored by the API."""
+        response = self.client.get(f"{self.list_url}?compliance_class_name=TestFailedDataComplianceRule", **self.header)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 5)
