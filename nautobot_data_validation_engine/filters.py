@@ -1,9 +1,7 @@
 """Filtering for nautobot_data_validation_engine."""
 
-import django_filters as filters
-from django.db import models
 from nautobot.apps.filters import NautobotFilterSet
-from nautobot.core.filters import ContentTypeMultipleChoiceFilter, SearchFilter
+from nautobot.core.filters import ContentTypeFilter, ContentTypeMultipleChoiceFilter, SearchFilter
 from nautobot.extras.utils import FeatureQuery
 
 from nautobot_data_validation_engine.models import (
@@ -117,32 +115,8 @@ class UniqueValidationRuleFilterSet(NautobotFilterSet):
 #
 
 
-class CustomContentTypeFilter(filters.MultipleChoiceFilter):
-    """Filter for ContentType that doesn't rely on the model's plural name to be in the registry."""
-
-    def filter(self, qs, value):
-        """Filter on value, which should be list of content-type names.
-
-        e.g. `['dcim.device', 'dcim.rack']`
-        """
-        q = models.Q()
-        for v in value:
-            try:
-                app_label, model = v.lower().split(".")
-            except ValueError:
-                continue
-            q |= models.Q(
-                **{
-                    f"{self.field_name}__app_label": app_label,
-                    f"{self.field_name}__model": model,
-                }
-            )
-        qs = qs.filter(q)
-        return qs
-
-
 class DataComplianceFilterSet(NautobotFilterSet):
-    """Base filterset for DataComplianceRule model."""
+    """Base filterset for the DataCompliance model."""
 
     q = SearchFilter(
         filter_predicates={
@@ -153,9 +127,12 @@ class DataComplianceFilterSet(NautobotFilterSet):
             "object_id": "icontains",
         }
     )
-    content_type = CustomContentTypeFilter(
-        choices=FeatureQuery("custom_validators").get_choices,
-    )
+    # DataCompliance records can reference any content type, so use the generic string-based
+    # ``ContentTypeFilter`` (as core does for ObjectChange/Note) rather than
+    # ``ContentTypeMultipleChoiceFilter``. The latter drives the advanced filter form to look up
+    # this model's ``verbose_name_plural`` as a registered feature, which raises a ``KeyError`` for
+    # "data compliance".
+    content_type = ContentTypeFilter()
 
     class Meta:
         """Meta class for DataComplianceFilterSet."""

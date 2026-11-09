@@ -43,3 +43,4 @@ class DataComplianceAPIView(NautobotModelViewSet):
 
     queryset = models.DataCompliance.objects.all()
     serializer_class = serializers.DataComplianceSerializer
+    filterset_class = filters.DataComplianceFilterSet

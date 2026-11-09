@@ -8,12 +8,14 @@ from nautobot.dcim.models import Location, Manufacturer, Platform, PowerFeed, Ra
 from nautobot.extras.models import Tag
 
 from nautobot_data_validation_engine.filters import (
+    DataComplianceFilterSet,
     MinMaxValidationRuleFilterSet,
     RegularExpressionValidationRuleFilterSet,
     RequiredValidationRuleFilterSet,
     UniqueValidationRuleFilterSet,
 )
 from nautobot_data_validation_engine.models import (
+    DataCompliance,
     MinMaxValidationRule,
     RegularExpressionValidationRule,
     RequiredValidationRule,
@@ -311,3 +313,70 @@ class UniqueValidationRuleFilterTestCase(FilterTestCases.FilterTestCase):
         """Test field lookups."""
         params = {"max_instances__gte": [2]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+
+class DataComplianceFilterTestCase(FilterTestCases.FilterTestCase):
+    """
+    Filterset test cases for the DataCompliance model
+    """
+
+    queryset = DataCompliance.objects.all()
+    filterset = DataComplianceFilterSet
+    # TODO Look into enabling the generic filter tests to replace the filter tests that are defined.
+    generic_filter_tests = []
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Create test data
+        """
+        device_ct = ContentType.objects.get_for_model(Rack)
+        location_ct = ContentType.objects.get_for_model(Location)
+        DataCompliance.objects.create(
+            compliance_class_name="DeviceDataComplianceRules",
+            content_type=device_ct,
+            object_id="1",
+            validated_attribute="name",
+            valid=True,
+        )
+        DataCompliance.objects.create(
+            compliance_class_name="DeviceDataComplianceRules",
+            content_type=location_ct,
+            object_id="2",
+            validated_attribute="name",
+            valid=False,
+        )
+        DataCompliance.objects.create(
+            compliance_class_name="LocationDataComplianceRules",
+            content_type=location_ct,
+            object_id="3",
+            validated_attribute="status",
+            valid=True,
+        )
+
+    def test_content_type(self):
+        """Test content type lookups by ``app_label.model``."""
+        params = {"content_type": "dcim.location"}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+        params = {"content_type": "dcim.rack"}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+    def test_compliance_class_name(self):
+        """Test compliance class name lookups."""
+        params = {"compliance_class_name": ["DeviceDataComplianceRules"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
+
+    def test_validated_attribute(self):
+        """Test validated attribute lookups."""
+        params = {"validated_attribute": ["status"]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 1)
+
+    def test_valid(self):
+        """Test boolean lookups on the valid field."""
+        self.assertEqual(self.filterset({"valid": True}, self.queryset).qs.count(), 2)
+        self.assertEqual(self.filterset({"valid": False}, self.queryset).qs.count(), 1)
+
+    def test_search(self):
+        """Test the q search filter against compliance class name and content type."""
+        self.assertEqual(self.filterset({"q": "LocationDataComplianceRules"}, self.queryset).qs.count(), 1)
+        self.assertEqual(self.filterset({"q": "rack"}, self.queryset).qs.count(), 1)
